@@ -5,7 +5,7 @@
         <div class="card-body">
           <h3 class="card-title text-center mb-4">ورود</h3>
 
-          <form (submit)="login()">
+          <form (ngSubmit)="login()">
             <div class="mb-3">
               <label for="username" class="form-label">نام کاربری</label>
               <input type="text" id="username" [(ngModel)]="username" name="username" class="form-control" required>

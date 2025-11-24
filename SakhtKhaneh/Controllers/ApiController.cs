@@ -7,7 +7,7 @@ using SakhtKhaneh.Models;
 
 namespace SakhtKhaneh.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class ApiController : ControllerBase
     {
@@ -70,9 +70,10 @@ namespace SakhtKhaneh.Controllers
         // نمونه تابع هش
         private string HashPassword(string password)
         {
-            return password; // برای تست، در عمل از هش واقعی استفاده شود
+            var hasher = new PasswordHasher<AppUser>();
+            var user = new AppUser(); // می‌تونی خالی بسازی
+            return hasher.HashPassword(user, password);
         }
-
 
     }
 }

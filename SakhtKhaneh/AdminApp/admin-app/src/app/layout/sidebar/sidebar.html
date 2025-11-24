@@ -1,0 +1,39 @@
+<div class="sidebar">
+
+  <ul class="sidebar-menu">
+
+    <li *ngFor="let item of menu">
+      <div class="menu-item"
+           (click)="item.children ? toggle(item) : null"
+           [class.active]="isActive(item)">
+        <i [class]="item.icon"></i> {{ item.title }}
+      </div>
+
+      <!-- ساب منو -->
+      <ul *ngIf="item.children && item.open" class="submenu">
+
+        <li *ngFor="let child of item.children">
+
+          <div class="menu-item"
+               (click)="child.children ? toggle(child) : null"
+               [class.active]="isActive(child)">
+            <i [class]="child.icon"></i> {{ child.title }}
+          </div>
+
+          <!-- لینک مستقیم در ساب منو -->
+          <a *ngIf="child.route && !child.children"
+             [routerLink]="child.route"
+             class="menu-item"
+             routerLinkActive="active">
+            {{ child.title }}
+          </a>
+
+        </li>
+
+      </ul>
+
+    </li>
+
+  </ul>
+
+</div>
