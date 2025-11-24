@@ -1,0 +1,18 @@
+<div class="layout-container">
+
+  <!-- Header -->
+  <header class="header w-100">
+    <div class="logo">پنل مدیریت</div>
+    <nav class="nav">
+      <button (click)="logout()">خروج</button>
+    </nav>
+  </header>
+
+  <!-- Main content area -->
+  <div class="content-wrapper">
+    <main>
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+
+</div>

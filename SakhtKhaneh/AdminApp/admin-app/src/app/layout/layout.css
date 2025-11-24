@@ -1,0 +1,19 @@
+.layout-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.header {
+  background: #2c3e50;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+}
+
+.content-wrapper {
+  flex: 1;
+  padding: 20px;
+  background: #f0f2f5;
+}

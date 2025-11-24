@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="AdminApp\admin-app\src\app\guards\" />
     <Folder Include="AdminApp\admin-app\src\environments\" />
     <Folder Include="AdminApp\admin-app\src\app\services\" />
     <Folder Include="wwwroot\" />

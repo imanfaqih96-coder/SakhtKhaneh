@@ -1,28 +1,66 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { delay } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 
-@Injectable({
-  providedIn: 'root', // <- this makes it globally injectable
-})
+
+export interface User {
+  username: string;
+  password: string;
+  email?: string;
+  AdministrativeApproval: boolean;
+}
+
+const STORAGE_KEY = 'auth_user';
+
+interface AuthResponse {
+  status: 'success' | 'fail' | 'pending';
+  message: string;
+}
+
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-  private mockUser = { email: 'user@example.com', password: '123456', token: 'fake-jwt-token' };
 
-  login(credentials: { email: string; password: string }): Observable<{ token: string }> {
-    if (
-      credentials.email === this.mockUser.email &&
-      credentials.password === this.mockUser.password
-    ) {
-      return of({ token: this.mockUser.token });
-    } else {
-      return throwError(() => new Error('Invalid credentials'));
+
+  private apiUrl = 'https://localhost:7115/api';
+
+  private users: User[] = [];
+
+  constructor(private http: HttpClient) {
+    if (!this.users.find(u => u.username === 'admin')) {
+      this.users.push({ username: 'admin', password: 'admin', AdministrativeApproval: true });
     }
   }
 
-  logout() {
-    localStorage.removeItem('token');
+  login(username: string, password: string): Observable<{ status: string }> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/auth/login`, { username, password });
+  }
+
+  register(username: string, password: string, email: string): Observable<{ status: string }> {
+    return this.http.post<{ status: string }>(`${this.apiUrl}/auth/register`, { username, password, email });
+  }
+
+  getUsers(): User[] {
+    return this.users;
   }
 
   isLoggedIn(): boolean {
-    return !!localStorage.getItem('token');
+    return localStorage.getItem('auth_user') !== null;
   }
+
+  // -------------------------
+  // session helpers (localStorage)
+  // -------------------------
+  setCurrentUser(username: string) {
+    localStorage.setItem(STORAGE_KEY, username);
+  }
+
+  getCurrentUser(): string | null {
+    return localStorage.getItem(STORAGE_KEY);
+  }
+
+  logout(): void {
+    localStorage.removeItem(STORAGE_KEY);
+  }
+
 }
