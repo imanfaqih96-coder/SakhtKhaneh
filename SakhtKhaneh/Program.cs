@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using SakhtKhaneh.Data;
 using SakhtKhaneh.Models;
 
@@ -24,5 +26,25 @@ app.UseStaticFiles();
 
 app.MapControllers();            // /api
 app.MapDefaultControllerRoute(); // /public
+
+// Serve Angular app on /admin
+app.Map("/admin", angular =>
+{
+    angular.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(
+            Path.Combine(app.Environment.WebRootPath, "admin")
+        ),
+        RequestPath = "" // leave as empty
+    });
+
+    angular.Run(async context =>
+    {
+        context.Response.ContentType = "text/html";
+        await context.Response.SendFileAsync(
+            Path.Combine(app.Environment.WebRootPath, "admin", "index.html")
+        );
+    });
+});
 
 app.Run();

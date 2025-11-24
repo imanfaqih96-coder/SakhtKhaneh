@@ -1,1 +1,17 @@
-<p>login works!</p>
+<div class="login-container">
+  <h2>Login</h2>
+  <form (ngSubmit)="login()" #loginForm="ngForm">
+    <input type="email"
+           name="email"
+           placeholder="Email"
+           [(ngModel)]="credentials.email"
+           required />
+    <input type="password"
+           name="password"
+           placeholder="Password"
+           [(ngModel)]="credentials.password"
+           required />
+    <button type="submit" [disabled]="!loginForm.form.valid">Login</button>
+  </form>
+  <p *ngIf="error" class="error">{{ error }}</p>
+</div>
