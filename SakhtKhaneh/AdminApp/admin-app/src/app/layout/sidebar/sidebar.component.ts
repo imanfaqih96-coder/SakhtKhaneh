@@ -1,36 +1,27 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { MENU_ITEMS, MenuItem } from '../menu';
+import { MatIconModule } from '@angular/material/icon';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MENU, MenuItem } from '../menu';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, MatIconModule, MatExpansionModule],
   templateUrl: './sidebar.html',
   styleUrls: ['./sidebar.css']
 })
 export class SidebarComponent {
+  menu: MenuItem[] = MENU;
 
-  menu: MenuItem[] = MENU_ITEMS;
-  activeRoute = '';
+  constructor(public router: Router) { }
 
-  constructor(private router: Router) {
-    this.activeRoute = this.router.url;
-    this.router.events.subscribe(() => {
-      this.activeRoute = this.router.url;
-    });
+  isActive(route?: string): boolean {
+    return !!route && this.router.url === route;
   }
 
-  toggle(item: MenuItem) {
-    item.open = !item.open;
-  }
-
-  isActive(item: MenuItem): boolean {
-    if (item.route && this.router.url === item.route) return true;
-    if (item.children) {
-      return item.children.some(child => this.isActive(child));
-    }
-    return false;
+  navigate(route?: string) {
+    if (route) this.router.navigate([route]);
   }
 }

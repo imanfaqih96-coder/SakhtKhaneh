@@ -1,33 +1,26 @@
 export interface MenuItem {
   title: string;
   icon: string;
-  route?: string;          // اگر لینک مستقیم است
-  open?: boolean;          // برای باز/بسته کردن accordion
-  children?: MenuItem[];   // اگر ساب منو دارد
+  route?: string;
+  children?: MenuItem[];
 }
 
-export const MENU_ITEMS: MenuItem[] = [
-  {
-    title: 'داشبورد',
-    icon: 'fa fa-home',
-    route: '/dashboard'
-  },
+export const MENU: MenuItem[] = [
+  { title: 'داشبورد', icon: 'dashboard', route: '/dashboard' },
   {
     title: 'مدیریت کاربران',
-    icon: 'fa fa-users',
-    open: false,
+    icon: 'group',
     children: [
-      { icon: 'fa fa-list', title: 'لیست کاربران', route: '/users/list' },
-      { icon: 'fa fa-user-plus', title: 'کاربر جدید', route: '/users/create' }
+      { title: 'لیست کاربران', icon: 'list', route: '/users/list' },
+      { title: 'افزودن کاربر', icon: 'person_add', route: '/users/add' }
     ]
   },
   {
-    title: 'تنظیمات سیستم',
-    icon: 'fa fa-wrench',
-    open: false,
+    title: 'محصولات',
+    icon: 'shopping_cart',
     children: [
-      { icon: 'fa fa-user-role', title: 'مدیریت نقش‌ها', route: '/roles/list' },
-      { icon: 'fa fa-user-role-plus', title: 'نقش جدید', route: '/roles/create' }
+      { title: 'لیست محصولات', icon: 'list', route: '/products/list' },
+      { title: 'افزودن محصول', icon: 'add_shopping_cart', route: '/products/add' }
     ]
   }
 ];

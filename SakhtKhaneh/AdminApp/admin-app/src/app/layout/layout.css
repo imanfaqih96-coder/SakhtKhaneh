@@ -1,22 +1,86 @@
+body {
+  font-family: "Vazirmatn", sans-serif !important;
+  direction: rtl;
+  text-align: right;
+}
+
+/* کل کانتینر layout */
 .layout-container {
   display: flex;
-  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+}
+
+/* mat-sidenav-container باید 100% ارتفاع داشته باشد */
+mat-sidenav-container {
   height: 100vh;
 }
 
-.header {
-  background: #2c3e50;
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  padding: 10px 20px;
-  position:fixed;
-  top:0;
-  z-index:9;
+/* sidebar */
+mat-sidenav {
+  width: 250px;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  background-color: #fff; /* رنگ سفید برای sidebar */
+  padding-top: 64px; /* فاصله از بالای هدر */
 }
 
-.content-wrapper {
-  flex: 1;
-  padding: 20px;
-  background: #ddd;
+/* main content */
+mat-sidenav-content {
+  background-color: #f5f5f5;
+  padding: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
+
+/* toolbar */
+mat-toolbar {
+  position: fixed;
+  top: 0;
+  z-index: 9;
+  width: 100%;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+  /* spacer برای دکمه‌ها در toolbar */
+  mat-toolbar .spacer {
+    flex: 1 1 auto;
+  }
+
+/* main area زیر toolbar */
+.content-wrapper {
+  margin-top: 64px; /* ارتفاع toolbar */
+  padding: 16px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* sidebar menu */
+.menu {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-item, .submenu-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  cursor: pointer;
+  color: #333;
+  font-weight: 500;
+}
+
+  .menu-item mat-icon, .submenu-item mat-icon {
+    margin-right: 8px;
+  }
+
+  /* حالت hover */
+  .menu-item:hover, .submenu-item:hover {
+    background-color: #eee;
+  }
+
+  /* حالت active */
+  .menu-item.active, .submenu-item.active {
+    border-right: 4px solid #3f51b5;
+    background-color: #e8eaf6;
+  }

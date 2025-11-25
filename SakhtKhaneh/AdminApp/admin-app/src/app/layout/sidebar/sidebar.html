@@ -1,39 +1,29 @@
-<div class="sidebar">
+<div class="menu">
+  <ng-container *ngFor="let item of menu">
+    <!-- آیتم بدون زیرمنو -->
+    <div *ngIf="!item.children"
+         class="menu-item"
+         [class.active]="isActive(item.route)"
+         (click)="navigate(item.route)">
+      <mat-icon>{{ item.icon }}</mat-icon>
+      <span>{{ item.title }}</span>
+    </div>
 
-  <ul class="sidebar-menu">
+    <!-- آیتم با زیرمنو -->
+    <mat-expansion-panel *ngIf="item.children">
+      <mat-expansion-panel-header>
+        <mat-icon>{{ item.icon }}</mat-icon>
+        <span>{{ item.title }}</span>
+      </mat-expansion-panel-header>
 
-    <li *ngFor="let item of menu">
-      <div class="menu-item"
-           (click)="item.children ? toggle(item) : null"
-           [class.active]="isActive(item)">
-        <i [class]="item.icon"></i> {{ item.title }}
+      <div class="submenu">
+        <div *ngFor="let child of item.children"
+             class="submenu-item"
+             [class.active]="isActive(child.route)"
+             (click)="navigate(child.route)">
+          <span>{{ child.title }}</span>
+        </div>
       </div>
-
-      <!-- ساب منو -->
-      <ul *ngIf="item.children && item.open" class="submenu">
-
-        <li *ngFor="let child of item.children">
-
-          <div class="menu-item"
-               (click)="child.children ? toggle(child) : null"
-               [class.active]="isActive(child)">
-            <i [class]="child.icon"></i> {{ child.title }}
-          </div>
-
-          <!-- لینک مستقیم در ساب منو -->
-          <a *ngIf="child.route && !child.children"
-             [routerLink]="child.route"
-             class="menu-item"
-             routerLinkActive="active">
-            {{ child.title }}
-          </a>
-
-        </li>
-
-      </ul>
-
-    </li>
-
-  </ul>
-
+    </mat-expansion-panel>
+  </ng-container>
 </div>

@@ -1,21 +1,25 @@
-<div class="layout-container">
+<mat-sidenav-container class="layout-container">
 
-  <!-- Header -->
-  <header class="header w-100">
-    <div class="logo">پنل مدیریت</div>
-    <nav class="nav">
-      <button (click)="logout()">خروج</button>
-    </nav>
-  </header>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <!-- Burger Menu -->
+      <button mat-icon-button (click)="drawer.toggle()" class="menu-btn">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span>پنل مدیریت</span>
+      <span class="spacer"></span>
+      <button mat-icon-button (click)="logout()">
+        <mat-icon>logout</mat-icon>
+      </button>
+    </mat-toolbar>
 
-  <!-- Sidebar -->
-  <app-sidebar></app-sidebar>
+    <mat-sidenav #drawer [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile">
+      <app-sidebar></app-sidebar>
+    </mat-sidenav>
 
-  <!-- Main content area -->
-  <div class="content-wrapper">
-    <main>
+    <main class="content-wrapper">
       <router-outlet></router-outlet>
     </main>
-  </div>
+  </mat-sidenav-content>
 
-</div>
+</mat-sidenav-container>
