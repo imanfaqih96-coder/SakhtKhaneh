@@ -1,16 +1,22 @@
-mat-sidenav {
+mat-sidenav.sidebar {
   width: 260px;
   background: #fff;
   border-left: 1px solid #ddd;
-  padding-top:55px !important;
+  position:fixed !important;
+  right:0 !important;
+  top:64px;
 }
 
   .sidebar .mat-expansion-panel, .sidebar .mat-expansion-panel-header {
     border-radius: 0 !important;
   }
 
-.mat-expansion-panel .mat-expansion-panel-header span {
+.mat-expansion-panel .mat-expansion-panel-header span,.submenu .submenu-item span {
   font-family: "Vazirmatn", sans-serif !important;
+}
+
+.mat-expansion-panel-body{
+    padding:0 !important;
 }
 
 .menu {
