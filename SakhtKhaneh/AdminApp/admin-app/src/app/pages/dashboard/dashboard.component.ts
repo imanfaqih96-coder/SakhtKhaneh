@@ -27,7 +27,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 })
 export class DashboardComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['path', 'count', 'lastVisit', 'type', 'param', 'link'];
+  displayedColumns: string[] = ['index', 'path', 'count', 'lastVisit', 'type', 'param', 'link'];
   dataSource = new MatTableDataSource<PopularVisit>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;

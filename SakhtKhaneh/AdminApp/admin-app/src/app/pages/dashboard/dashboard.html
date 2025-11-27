@@ -67,6 +67,14 @@
         <div class="mat-elevation-z8">
           <table mat-table [dataSource]="dataSource">
 
+            <!-- Index Column -->
+            <ng-container matColumnDef="index">
+              <th mat-header-cell *matHeaderCellDef>#</th>
+              <td mat-cell *matCellDef="let element; let i = index">
+                {{ i + 1 }}
+              </td>
+            </ng-container>
+
             <!-- Path Column -->
             <ng-container matColumnDef="path">
               <th mat-header-cell *matHeaderCellDef>مسیر</th>
