@@ -1,10 +1,15 @@
 mat-sidenav.sidebar {
   width: 260px;
-  background: #fff;
+  background: #ddd;
   border-left: 1px solid #ddd;
   position:fixed !important;
   right:0 !important;
   top:64px;
+}
+
+.sidebar .menu .menu-item span{
+    font-size:14px;
+    font-weight:500;
 }
 
   .sidebar .mat-expansion-panel, .sidebar .mat-expansion-panel-header {
@@ -13,11 +18,24 @@ mat-sidenav.sidebar {
 
 .mat-expansion-panel .mat-expansion-panel-header span,.submenu .submenu-item span {
   font-family: "Vazirmatn", sans-serif !important;
+  font-size:14px;
+  font-weight:500;
 }
 
-.mat-expansion-panel-body{
-    padding:0 !important;
+.sidebar .mat-expansion-panel-header {
+  padding: 0 15px !important;
 }
+
+  .sidebar .mat-expansion-panel-header span{
+      min-height:35px !important;
+      line-height:35px !important;
+      font-size:14px;
+      font-weight:500;
+  }
+
+  .mat-expansion-panel-body {
+    padding: 0 !important;
+  }
 
 .menu {
   padding: 0px;
@@ -26,7 +44,7 @@ mat-sidenav.sidebar {
 .menu-item, .submenu-item {
   display: flex;
   align-items: center;
-  padding: 10px;
+  padding: 5px 10px;
   cursor: pointer;
   border-right: 4px solid transparent;
   transition: 0.2s;
@@ -37,8 +55,8 @@ mat-sidenav.sidebar {
     background: #f4f6ff;
   }
 
-  .menu-item mat-icon {
-    margin-left: 10px;
+  .sidebar mat-icon {
+    margin: 5px;
   }
 
 .submenu {

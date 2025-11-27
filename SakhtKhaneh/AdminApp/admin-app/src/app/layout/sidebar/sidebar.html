@@ -5,14 +5,14 @@
          class="menu-item"
          [class.active]="isActive(item.route)"
          (click)="navigate(item.route)">
-      <mat-icon>{{ item.icon }}</mat-icon>
+      <mat-icon fontSet="material-icons-outlined">{{ item.icon }}</mat-icon>
       <span>{{ item.title }}</span>
     </div>
 
     <!-- آیتم با زیرمنو -->
     <mat-expansion-panel *ngIf="item.children">
       <mat-expansion-panel-header>
-        <mat-icon>{{ item.icon }}</mat-icon>
+        <mat-icon fontSet="material-icons-outlined">{{ item.icon }}</mat-icon>
         <span>{{ item.title }}</span>
       </mat-expansion-panel-header>
 
@@ -21,6 +21,7 @@
              class="submenu-item"
              [class.active]="isActive(child.route)"
              (click)="navigate(child.route)">
+          <mat-icon fontSet="material-icons-outlined">{{ child.icon }}</mat-icon>
           <span>{{ child.title }}</span>
         </div>
       </div>

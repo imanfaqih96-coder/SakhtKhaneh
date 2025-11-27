@@ -29,6 +29,8 @@ export class AuthService {
   constructor(private http: HttpClient) {
     if (!this.users.find(u => u.username === 'admin')) {
       this.users.push({ username: 'admin', password: 'admin', AdministrativeApproval: true });
+      const { protocol, hostname, port } = window.location;
+      this.apiUrl = `${protocol}//${hostname}${port ? ':' + port : ''}/api`;
     }
   }
 

@@ -8,19 +8,44 @@ export interface MenuItem {
 export const MENU: MenuItem[] = [
   { title: 'داشبورد', icon: 'dashboard', route: '/dashboard' },
   {
-    title: 'مدیریت کاربران',
-    icon: 'group',
+    title: 'صفحات',
+    icon: 'layers',
     children: [
-      { title: 'لیست کاربران', icon: 'list', route: '/users/list' },
-      { title: 'افزودن کاربر', icon: 'person_add', route: '/users/add' }
+      { title: 'صفحه اصلی', icon: 'home', route: '/pages/home' },
+      { title: 'درباره ما', icon: 'info', route: '/pages/about' },
+      { title: 'خدمات', icon: 'home_repair_service', route: '/pages/services' },
+      { title: 'تماس با ما', icon: 'phone_enabled', route: '/pages/contacts' }
     ]
   },
   {
-    title: 'محصولات',
-    icon: 'shopping_cart',
+    title: 'پروژه ها',
+    icon: 'perm_media',
     children: [
-      { title: 'لیست محصولات', icon: 'list', route: '/products/list' },
-      { title: 'افزودن محصول', icon: 'add_shopping_cart', route: '/products/add' }
+      { title: 'فهرست پروژه ها', icon: 'grid_view', route: '/projects/list' },
+      { title: 'افزودن پروژه جدید', icon: 'add', route: '/projects/new' }
+    ]
+  }, {
+    title: 'بلاگ',
+    icon: 'articles',
+    children: [
+      { title: 'دسته بندی ها', icon: 'dashboard_customize', route: '/blog/categories' },
+      { title: 'فهرست مطلب ها', icon: 'grid_view', route: '/blog/list' },
+      { title: 'افزودن مطلب جدید', icon: 'add', route: '/blog/new' }
+    ]
+  },
+  {
+    title: 'مدیریت کاربران',
+    icon: 'group',
+    children: [
+      { title: 'فهرست کاربران', icon: 'grid_view', route: '/users/list' },
+      { title: 'افزودن کاربر جدید', icon: 'person_add', route: '/users/add' }
+    ]
+  },
+  {
+    title: 'تنظیمات',
+    icon: 'handyman',
+    children: [
+      { title: 'تنظیمات پنل', icon: 'handyman', route: '/settings' }
     ]
   }
 ];

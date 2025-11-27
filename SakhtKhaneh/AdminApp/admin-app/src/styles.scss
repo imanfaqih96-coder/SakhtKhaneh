@@ -1,0 +1,17 @@
+@use '@angular/material' as mat;
+
+// Primary: dark blue shades
+$primary: mat.m2-define-palette( ( 50: #e3eaf8, 100: #bac7f0, 200: #8ea0e6, 300: #6280db, 400: #4267d5, 500: #1e4ecf, // main
+600: #1b49c4, 700: #1740b5, 800: #1337a6, 900: #0d2390, A100: #6f99ff, A200: #497cff, A400: #1e4ecf, A700: #173eab, contrast: ( 50: black, 100: black, 200: black, 300: white, 400: white, 500: white, 600: white, 700: white, 800: white, 900: white, A100: black, A200: white, A400: white, A700: white ) ) );
+
+// Accent: gold
+$accent: mat.m2-define-palette( ( 50: #fff8e6, 100: #ffedc2, 200: #ffe099, 300: #ffd466, 400: #ffca3f, 500: #ffc107, // main
+600: #ffb800, 700: #ffa500, 800: #ff9900, 900: #ff8800, A100: #ffe58f, A200: #ffd73f, A400: #ffc107, A700: #ffb300, contrast: ( 50: black, 100: black, 200: black, 300: black, 400: black, 500: black, 600: black, 700: black, 800: black, 900: black, A100: black, A200: black, A400: black, A700: black ) ) );
+
+// Warn: pink
+$warn: mat.m2-define-palette(mat.$m2-pink-palette);
+
+// Theme
+$brand-theme: mat.m2-define-light-theme(( color: ( primary: $primary, accent: $accent, warn: $warn ) ));
+
+@include mat.all-component-themes($brand-theme);

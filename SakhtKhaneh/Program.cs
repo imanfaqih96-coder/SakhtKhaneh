@@ -26,7 +26,11 @@ var app = builder.Build();
 app.UseStaticFiles();
 
 app.MapControllers();            // /api
-app.MapDefaultControllerRoute(); // /public
+app.MapDefaultControllerRoute();
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Public}/{action=Index}/{id?}");
+// /public
 
 // Serve Angular app on /admin
 app.Map("/admin", angular =>

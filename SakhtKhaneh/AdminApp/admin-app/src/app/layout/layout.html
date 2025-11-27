@@ -1,22 +1,22 @@
+<mat-toolbar color="primary" class="main-header">
+  <!-- Burger Menu -->
+  <button mat-icon-button (click)="drawer.toggle()" class="menu-btn" matTooltip="دسترسی ها">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span class="vazirmatn">پنل مدیریت</span>
+  <span class="spacer"></span>
+  <button matFab color="warn" (click)="logout()" matTooltip="خروج از حساب کاربری" class="logout-button">
+    <mat-icon style="margin:0 !important;">logout</mat-icon>
+  </button>
+</mat-toolbar>
+
 <mat-sidenav-container class="layout-container">
 
+  <mat-sidenav #drawer [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile" position="start" class="sidebar">
+    <app-sidebar></app-sidebar>
+  </mat-sidenav>
+
   <mat-sidenav-content>
-
-    <mat-toolbar color="primary" class="main-header">
-      <!-- Burger Menu -->
-      <button mat-icon-button (click)="drawer.toggle()" class="menu-btn">
-        <mat-icon>menu</mat-icon>
-      </button>
-      <span>پنل مدیریت</span>
-      <span class="spacer"></span>
-      <button mat-icon-button (click)="logout()">
-        <mat-icon>logout</mat-icon>
-      </button>
-    </mat-toolbar>
-
-    <mat-sidenav #drawer [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile" position="end" dir="rtl" class="sidebar">
-      <app-sidebar></app-sidebar>
-    </mat-sidenav>
 
     <main class="content-wrapper">
       <router-outlet></router-outlet>

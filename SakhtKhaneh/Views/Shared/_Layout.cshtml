@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title - ساخت خانه</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <link rel="shortcut icon" href="img/favicon.png" type="image/png">
+    <meta name="description" content="وب سایت ساخت خانه">
+    <meta name="keywords" content="طراحی معماری داخلی بنا سازه دیزاین فرنیش فرنیچر">
+    <meta name="author" content="Iman Faghih">
+    <meta name="robots" content="index, follow">
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Didact+Gothic&amp;family=Oswald:wght@200..700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/plugins.css" />
+    <link rel="stylesheet" href="/assets/css/style.css" />
+</head>
+<body>
+    <!-- jQuery -->
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script src="js/jquery-migrate-3.5.0.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    @RenderBody()
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

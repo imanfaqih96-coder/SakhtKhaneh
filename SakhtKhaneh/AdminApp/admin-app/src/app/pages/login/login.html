@@ -1,28 +1,56 @@
 <div class="container vh-100">
-  <div class="row justify-content-center h-100 align-items-center">
+  <div class="row h-100 justify-content-center align-items-center">
     <div class="col-md-4">
-      <div class="card shadow">
-        <div class="card-body">
-          <h3 class="card-title text-center mb-4">ورود</h3>
+      <div class="login-wrapper flex justify-center items-center h-screen bg-gray-50">
 
-          <form (ngSubmit)="login()">
-            <div class="mb-3">
-              <label for="username" class="form-label">نام کاربری</label>
-              <input type="text" id="username" [(ngModel)]="username" name="username" class="form-control" required>
-            </div>
-            <div class="mb-3">
-              <label for="password" class="form-label">رمز عبور</label>
-              <input type="password" id="password" [(ngModel)]="password" name="password" class="form-control" required>
+        <mat-card class="w-full max-w-sm p-4 rounded-2xl shadow-lg">
+
+          <div class="row my-3 justify-content-center">
+            <img src="../../../assets/img/standard-white-bg.png" alt="Logo" class="w-50" />
+          </div>
+
+          <h3 class="text-center font-semibold text-xl mat-primary">
+            پنل مدیریت ساخت خانه
+          </h3>
+          <h5 class="text-center mb-4">ورود به پنل</h5>
+
+          <form (ngSubmit)="login()" class="flex flex-col gap-3">
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>نام کاربری</mat-label>
+                <input matInput [(ngModel)]="username" name="username" required>
+                <mat-icon matPrefix>person</mat-icon>
+              </mat-form-field>
             </div>
 
-            <div *ngIf="message" class="alert alert-warning">{{ message }}</div>
-
-            <button type="submit" class="btn btn-primary w-100">ورود</button>
-            <div class="mt-3 text-center">
-              <a href="./register">ثبت‌نام</a>
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>رمز عبور</mat-label>
+                <input matInput [(ngModel)]="password" name="password" type="password" required>
+                <mat-icon matPrefix>lock</mat-icon>
+              </mat-form-field>
             </div>
+
+            <mat-toolbar *ngIf="message" color="warn" class="mb-3 rounded">
+              <span>{{ message }}</span>
+            </mat-toolbar>
+
+            <div class="form-row">
+              <button mat-raised-button color="primary" class="w-full py-2 text-base rounded-xl">
+                <mat-icon>login</mat-icon>
+                ورود
+              </button>
+            </div>
+
+            <div class="text-center mt-2 text-sm">
+              <a routerLink="/register" class="text-blue-600 hover:underline">ثبت نام</a>
+            </div>
+
           </form>
-        </div>
+
+        </mat-card>
+
       </div>
     </div>
   </div>

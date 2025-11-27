@@ -19,13 +19,18 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.0-rc.1.25458.5" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="AdminApp\admin-app\src\app\guards\" />
+    <Folder Include="AdminApp\admin-app\src\app\pages\components\logout\" />
     <Folder Include="AdminApp\admin-app\src\environments\" />
     <Folder Include="AdminApp\admin-app\src\app\services\" />
-    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\assets\img\logo-circular.png" />
   </ItemGroup>
   
 
