@@ -6,8 +6,8 @@ export const loginGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
   const router = inject(Router);
 
-  if (auth.isLoggedIn()) {
-    return router.parseUrl('/dashboard'); 
+  if (auth.isLoggedIn()) {    // اگر لاگین بود، اجازه ورود به صفحه login نده
+    return router.parseUrl('/dashboard');
   }
 
   return true;

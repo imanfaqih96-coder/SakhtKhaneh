@@ -1,9 +1,16 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SakhtKhaneh.Data;
 using SakhtKhaneh.Models;
+using SakhtKhaneh.Models.Dto.Dashboard;
+using SakhtKhaneh.Models.Dto.Profile;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace SakhtKhaneh.Controllers
 {
@@ -12,10 +19,59 @@ namespace SakhtKhaneh.Controllers
     public class ApiController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
 
-        public ApiController(ApplicationDbContext context)
+        public ApiController(ApplicationDbContext context, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
         {
             _context = context;
+            _userManager = userManager;
+            _signInManager = signInManager;
+        }
+
+        [HttpGet("GetProfile")]
+        public async Task<IActionResult> GetProfile()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Unauthorized();
+
+            return Ok(new
+            {
+                UserName = user.UserName,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName
+            });
+        }
+
+        [HttpPost("updateProfile")]
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileDto model)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Unauthorized();
+
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.Email = model.Email;
+
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+                return BadRequest(result.Errors);
+
+            return Ok();
+        }
+
+        [HttpPost("changePassword")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto model)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Unauthorized();
+
+            var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+            if (!result.Succeeded)
+                return BadRequest(result.Errors);
+
+            return Ok();
         }
 
         public Guid getUniqueIdForVisit()
@@ -34,23 +90,25 @@ namespace SakhtKhaneh.Controllers
         }
 
         [HttpPost("auth/login")]
-        public IActionResult Login([FromBody] AuthRequest request)
+        public async Task<IActionResult> Login([FromBody] AuthRequest request)
         {
-            var user = _context.Users
-                .FirstOrDefault(u => u.UserName == request.Username);
+            var user = _context.Users.FirstOrDefault(u => u.UserName == request.Username);
 
-            if (user == null)
-                return Ok(new AuthResponse { Status = "fail", Message = "نام کاربری یا رمز عبور اشتباه است" });
-
-            // بررسی رمز عبور - فرض کنید از هش استفاده می‌کنید
-            if (!VerifyPassword(request.Password, user.PasswordHash))
+            if (user == null || !VerifyPassword(request.Password, user.PasswordHash))
                 return Ok(new AuthResponse { Status = "fail", Message = "نام کاربری یا رمز عبور اشتباه است" });
 
             if (!user.AdministrativeApproval)
                 return Ok(new AuthResponse { Status = "pending", Message = "اکانت شما هنوز تایید نشده است" });
 
-            return Ok(new AuthResponse { Status = "success", Message = "ورود موفق" });
+            await _signInManager.SignInAsync(user, true);
+
+            return Ok(new AuthResponse
+            {
+                Status = "success",
+                Message = "ورود موفق"
+            });
         }
+
 
         [HttpPost("submitVisitRecord")]
         public string submitVisitRecord([FromBody] VisitRecord data)
@@ -90,6 +148,25 @@ namespace SakhtKhaneh.Controllers
             return result;
         }
 
+        [HttpGet("dashboard/stats")]
+        public IActionResult GetDashboardStats()
+        {
+            var totalVisits = _context.Visits.Count();
+            var totalUsers = _context.Visits.Select(v => v.Ip).Distinct().Count();
+            var citiesCount = _context.Visits.Select(v => v.City).Distinct().Count();
+            var countriesCount = _context.Visits.Select(v => v.Country).Distinct().Count();
+
+            var stats = new
+            {
+                TotalVisits = totalVisits,
+                totalUsers = totalUsers,
+                CitiesCount = citiesCount,
+                CountriesCount = countriesCount
+            };
+
+            return Ok(stats);
+        }
+
         // نمونه تابع بررسی پسورد (باید هش واقعی داشته باشید)
 
         private bool VerifyPassword(string password, string hash)
@@ -127,6 +204,25 @@ namespace SakhtKhaneh.Controllers
             var user = new AppUser(); // می‌تونی خالی بسازی
             return hasher.HashPassword(user, password);
         }
+
+        [HttpGet("popular-paths")]
+        public async Task<ActionResult> GetPopularPaths()
+        {
+            var popular = await _context.Visits
+                .GroupBy(v => new { v.Path, v.PathType, v.PathParam })
+                .Select(g => new {
+                    path = g.Key.Path,
+                    type = g.Key.PathType,
+                    param = g.Key.PathParam,
+                    count = g.Count(),
+                    lastVisit = g.Max(v => v.Time)
+                })
+                .OrderByDescending(x => x.count)
+                .ToListAsync();
+
+            return Ok(popular);
+        }
+
 
     }
 }

@@ -1,26 +1,132 @@
-
 <div class="container-fluid py-4 px-4">
   <div class="row">
-    <div class="col-xl-4 col-md-4 col-sm-12">
-      <mat-card class="w-100 mat-primary mat-primary-bg">
-        <h6 class="text-muted">بیش از</h6>
-        <h2>12،723</h2>
-        <h4>بازدید کننده</h4>
+    <div class="col-xl-3 col-md-3 col-sm-12">
+      <mat-card class="w-100 mat-primary mat-primary-bg mat-primary-bg-shade-10 rounded px-4 py-4 mb-3">
+        <div class="row">
+          <div class="col-xl-6 col-md-6 col-sm-6 col-6">
+            <mat-icon fontSet="material-icons-outlined" class="w-100 dashboard-card-icon">visibility</mat-icon>
+          </div>
+          <div class="col-xl-6 col-md-6 col-sm-6 col-6">
+            <h6 class="text-muted">بیش از</h6>
+            <h2 class="text-right m-0">{{ stats.totalVisits | number }}</h2>
+            <h5 class="text-right text-muted m-0">بازدید</h5>
+          </div>
+        </div>
       </mat-card>
     </div>
-    <div class="col-xl-4 col-md-4 col-sm-12">
-      <mat-card class="w-100 primary-card">
-        <h6 class="text-muted">در</h6>
-        <h2>723</h2>
-        <h4>شهر</h4>
+    <div class="col-xl-3 col-md-3 col-sm-12">
+      <mat-card class="w-100 mat-primary mat-primary-bg mat-primary-bg-shade-10 rounded px-4 py-4 mb-3">
+        <div class="row">
+          <div class="col-xl-6 col-md-6 col-sm-6 col-6">
+            <mat-icon fontSet="material-icons-outlined" class="w-100 dashboard-card-icon">person</mat-icon>
+          </div>
+          <div class="col-xl-6 col-md-6 col-sm-6 col-6">
+            <h6 class="text-muted">توسط</h6>
+            <h2 class="text-right m-0">{{ stats.totalUsers | number }}</h2>
+            <h5 class="text-right text-muted m-0">کاربر</h5>
+          </div>
+        </div>
       </mat-card>
     </div>
-    <div class="col-xl-4 col-md-4 col-sm-12">
-      <mat-card class="w-100 primary-card">
-        <h6 class="text-muted">از</h6>
-        <h2>17</h2>
-        <h4>کشور</h4>
+    <div class="col-xl-3 col-md-3 col-sm-12">
+      <mat-card class="w-100 mat-primary mat-primary-bg mat-primary-bg-shade-10 rounded px-4 py-4 mb-3">
+        <div class="row">
+          <div class="col-xl-6 col-md-6 col-sm-6 col-6">
+            <mat-icon fontSet="material-icons-outlined" class="w-100 dashboard-card-icon">pin_drop</mat-icon>
+          </div>
+          <div class="col-xl-6 col-md-6 col-sm-6 col-6">
+            <h6 class="text-muted">در</h6>
+            <h2 class="text-right m-0">{{ stats.citiesCount| number }}</h2>
+            <h5 class="text-right text-muted m-0">شهر</h5>
+          </div>
+        </div>
       </mat-card>
+    </div>
+    <div class="col-xl-3 col-md-3 col-sm-12">
+      <mat-card class="w-100 mat-primary mat-primary-bg mat-primary-bg-shade-10 rounded px-4 py-4 mb-3">
+        <div class="row">
+          <div class="col-xl-6 col-md-6 col-sm-6 col-6">
+            <mat-icon fontSet="material-icons-outlined" class="w-100 dashboard-card-icon">language</mat-icon>
+          </div>
+          <div class="col-xl-6 col-md-6 col-sm-6 col-6">
+            <h6 class="text-muted">از</h6>
+            <h2 class="text-right m-0">{{ stats.countriesCount | number }}</h2>
+            <h5 class="text-right text-muted m-0">کشور</h5>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+    <div class="col-12">
+      <hr />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <h4 class="color-primary">محبوب ترین صفحات</h4>
+      <div class="popular-pages">
+        <div class="mat-elevation-z8">
+          <table mat-table [dataSource]="dataSource">
+
+            <!-- Path Column -->
+            <ng-container matColumnDef="path">
+              <th mat-header-cell *matHeaderCellDef>مسیر</th>
+              <td mat-cell *matCellDef="let e">{{ e.path }}</td>
+            </ng-container>
+
+            <!-- Count -->
+            <ng-container matColumnDef="count">
+              <th mat-header-cell *matHeaderCellDef>بازدید</th>
+              <td mat-cell *matCellDef="let e">
+                <span class="countup-number">{{ e.count }}</span>
+              </td>
+            </ng-container>
+
+            <!-- Last Visit -->
+            <ng-container matColumnDef="lastVisit">
+              <th mat-header-cell *matHeaderCellDef>آخرین بازدید</th>
+              <td mat-cell *matCellDef="let e">
+                {{ e.lastVisit | date:'yyyy/MM/dd HH:mm' }}
+              </td>
+            </ng-container>
+
+            <!-- Type -->
+            <ng-container matColumnDef="type">
+              <th mat-header-cell *matHeaderCellDef>نوع صفحه</th>
+              <td mat-cell *matCellDef="let e">
+                <span class="countup-number">{{ e.type }}</span>
+              </td>
+            </ng-container>
+
+            <!-- Param -->
+            <ng-container matColumnDef="param">
+              <th mat-header-cell *matHeaderCellDef>پارامتر ورودی</th>
+              <td mat-cell *matCellDef="let e">
+                <span class="countup-number">{{ e.param }}</span>
+              </td>
+            </ng-container>
+
+            <!-- Link -->
+            <ng-container matColumnDef="link">
+              <th mat-header-cell *matHeaderCellDef>لینک</th>
+              <td mat-cell *matCellDef="let e">
+                <a [href]="e.link" target="_blank" class="external-link">
+                  <mat-icon fontSet="material-icons-outlined">open_in_new</mat-icon>
+                </a>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+
+          <mat-paginator [pageSize]="7"
+                         [pageSizeOptions]="[5,7,10,20]"
+                         showFirstLastButtons>
+          </mat-paginator>
+
+        </div>
+
+      </div>
     </div>
   </div>
 </div>

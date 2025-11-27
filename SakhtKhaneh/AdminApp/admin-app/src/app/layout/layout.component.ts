@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ViewEncapsulation } from '@angular/core';
 import { HostListener, ViewChild } from '@angular/core'
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
@@ -14,6 +14,7 @@ import { RouterOutlet } from '@angular/router';
 import { GlobalService } from '../services/global.service';
 import { CommonModule } from '@angular/common';
 import { LogoutConfirmationDialogComponent } from '../pages/components/logout/logout-confirmation-dialog.component';
+import { ProfileService, Profile } from '../services/profile.service';
 
 @Component({
   selector: 'app-layout',
@@ -33,6 +34,8 @@ import { LogoutConfirmationDialogComponent } from '../pages/components/logout/lo
   ]
 })
 export class LayoutComponent implements OnInit {
+
+  profile: Profile | null = null;
 
   @ViewChild('drawer') sidenav!: MatSidenav;
 
@@ -56,12 +59,27 @@ export class LayoutComponent implements OnInit {
   constructor(
     private global: GlobalService,
     private breakpoint: BreakpointObserver,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private profileService: ProfileService,
+    private cd: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
+
     this.breakpoint.observe([Breakpoints.Handset]).subscribe(result => {
       this.isMobile = result.matches;
+    });
+    this.profileService.getProfile().subscribe({
+      next: (data) => {
+        this.profile = data;
+        this.cd.detectChanges();
+        console.log('profile data', data);
+      },
+      error: (err) => {
+        console.error(err);
+        this.global.logout();
+      }
+
     });
   }
 

@@ -2,9 +2,9 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow-x:hidden;
-  direction:rtl;
-  text-align:right;
+  overflow-x: hidden;
+  direction: rtl;
+  text-align: right;
 }
 
 h1, h2, h3, h4, h5, h6, p, span, a, .mat-mdc-dialog-title {
@@ -110,14 +110,43 @@ div[role=tooltip], mat-tooltip-component {
 .logout-button {
   position: absolute !important;
   left: 15px;
-  width:40px !important;
-  height:40px !important;
+  width: 40px !important;
+  height: 40px !important;
 }
 
 .mat-primary-bg {
   background: #1e4ecf !important;
+  color: #fff;
+}
+
+.mat-primary-bg-shade-10 {
+  background: #c8d8ff !important;
+  color: #092e90 !important;
+}
+
+.color-primary {
+  color: #092e90 !important;
 }
 
 .mat-accent-bg {
   background: #b6ff00 !important;
+}
+
+.text-left {
+  text-align: left !important;
+}
+
+.dashboard-card-icon {
+  width: 65px !important;
+  height: 100% !important;
+  font-size: 65px !important;
+  float: left;
+  margin-top: 15px;
+  line-height: 100% !important;
+  overflow: visible !important;
+}
+
+mat-toolbar.main-header span.username {
+  position: absolute;
+  left: 65px;
 }

@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
+import { tap } from 'rxjs';
+
 
 
 export interface User {
@@ -23,6 +25,7 @@ export class AuthService {
 
 
   private apiUrl = 'https://localhost:7115/api';
+  private tokenKey = 'jwtToken';
 
   private users: User[] = [];
 
@@ -34,8 +37,18 @@ export class AuthService {
     }
   }
 
-  login(username: string, password: string): Observable<{ status: string }> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/auth/login`, { username, password });
+  login(username: string, password: string) {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/auth/login`, { username, password })
+      .pipe(tap(res => {
+        if (res.status === 'success') {
+          //success
+          console.log('success login.');
+        }
+      }));
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem(this.tokenKey);
   }
 
   register(username: string, password: string, email: string): Observable<{ status: string }> {

@@ -5,6 +5,9 @@
   </button>
   <span class="vazirmatn">پنل مدیریت</span>
   <span class="spacer"></span>
+  <span *ngIf="profile?.userName" class="username">
+    {{ profile?.userName }}
+  </span>
   <button matFab color="warn" (click)="logout()" matTooltip="خروج از حساب کاربری" class="logout-button">
     <mat-icon style="margin:0 !important;">logout</mat-icon>
   </button>
