@@ -3,6 +3,7 @@ import { LayoutComponent } from './layout/layout.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 import { authGuard } from './guards/auth.guard';
 import { loginGuard } from './guards/login.gaurd';
 
@@ -21,6 +22,7 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: 'dashboard', component: DashboardComponent },
+      { path: 'profile', component: ProfileComponent },
       // صفحه‌های دیگر نیز همینجا
       // { path: 'users', component: UsersComponent },
     ]

@@ -1,0 +1,103 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <h4 class="mt-3 color-primary">حساب کاربری</h4>
+      <p class="mb-0">
+        به منظور تغییر مشخصات فردی و تعویض رمزعبور می توانید از این صفحه استفاده نمائید.
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <hr />
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-md-5">
+      <!-- CARD 1 : مشخصات فردی -->
+      <mat-card class="w-100 rounded px-4 py-4 mb-3">
+
+        <h6 class="color-primary">مشخصات فردی</h6>
+
+        <form>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>نام</mat-label>
+              <input matInput [(ngModel)]="FirstName" name="FirstName" required>
+              <span class="material-symbols-outlined" matPrefix>
+                id_card
+              </span>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>نام خانوادگی</mat-label>
+              <input matInput [(ngModel)]="LastName" name="LastName" required>
+              <span class="material-symbols-outlined" matPrefix>
+                id_card
+              </span>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>آدرس ایمیل</mat-label>
+              <input type="email" matInput [(ngModel)]="Email" name="Email" required>
+              <mat-icon fontSet="material-icons-outlined" matPrefix>mail</mat-icon>
+            </mat-form-field>
+          </div>
+
+          <button mat-raised-button color="primary" (click)="saveProfile()">
+            <mat-icon fontSet="material-icons-outlined">check</mat-icon>
+            ذخیره کن
+          </button>
+
+        </form>
+
+      </mat-card>
+
+    </div>
+    <div class="col-md-5">
+      <!-- CARD 2 : تغییر رمزعبور -->
+      <mat-card class="w-100 rounded px-4 py-4 mt-4">
+        <h6 class="color-primary">تغییر رمز عبور</h6>
+
+        <form name="changePassword">
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>رمز فعلی</mat-label>
+              <input matInput type="password" [(ngModel)]="currentPassword" name="currentPass">
+              <mat-icon matPrefix fontSet="material-icons-outlined">lock</mat-icon>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>رمز جدید</mat-label>
+              <input matInput type="password" [(ngModel)]="newPassword" name="newPass">
+              <mat-icon matPrefix fontSet="material-icons-outlined">vpn_key</mat-icon>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>تکرار رمز جدید</mat-label>
+              <input matInput type="password" [(ngModel)]="confirmPassword" name="confirmPass">
+              <mat-icon matPrefix fontSet="material-icons-outlined">key</mat-icon>
+            </mat-form-field>
+          </div>
+
+          <button mat-raised-button color="primary" (click)="updatePassword()">
+            <mat-icon fontSet="material-icons-outlined">published_with_changes</mat-icon>
+            تغییر رمز
+          </button>
+
+        </form>
+
+      </mat-card>
+    </div>
+  </div>
+</div>

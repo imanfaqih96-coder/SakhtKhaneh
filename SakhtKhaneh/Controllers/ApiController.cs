@@ -35,7 +35,7 @@ namespace SakhtKhaneh.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return Unauthorized();
 
-            return Ok(new
+            return Ok(new AppUser
             {
                 UserName = user.UserName,
                 Email = user.Email,

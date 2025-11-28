@@ -9,8 +9,10 @@ export interface Profile {
   email: string;
 }
 
+
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
+
   private apiUrl = `${window.location.origin}/api/GetProfile`;
 
   constructor(private http: HttpClient) { }

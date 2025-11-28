@@ -71,7 +71,13 @@ export class LayoutComponent implements OnInit {
     });
     this.profileService.getProfile().subscribe({
       next: (data) => {
-        this.profile = data;
+        var profileObj = {
+          userName: data.userName,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email
+        }
+        this.profile = profileObj;
         this.cd.detectChanges();
         console.log('profile data', data);
       },

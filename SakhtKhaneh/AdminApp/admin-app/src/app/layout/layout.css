@@ -150,3 +150,7 @@ mat-toolbar.main-header span.username {
   position: absolute;
   left: 65px;
 }
+
+mat-form-field span.material-symbols-outlined{
+    padding:0 12px;
+}

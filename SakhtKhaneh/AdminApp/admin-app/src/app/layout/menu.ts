@@ -37,7 +37,7 @@ export const MENU: MenuItem[] = [
     title: 'مدیریت کاربران',
     icon: 'group',
     children: [
-      { title: 'حساب کاربری', icon: 'person', route: '/users/profile' },
+      { title: 'حساب کاربری', icon: 'person', route: '/profile' },
       { title: 'فهرست کاربران', icon: 'grid_view', route: '/users/list' },
       { title: 'افزودن کاربر جدید', icon: 'person_add', route: '/users/add' }
     ]
