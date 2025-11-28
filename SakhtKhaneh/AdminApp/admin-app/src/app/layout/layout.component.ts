@@ -42,10 +42,12 @@ export class LayoutComponent implements OnInit {
   @HostListener('window:resize')
   onResize() {
     this.checkSidebarForMobile();
+    this.cd.detectChanges();
   }
 
   ngAfterViewInit() {
     this.checkSidebarForMobile(); // چک اولیه هنگام لود
+    this.cd.detectChanges();
   }
 
   private checkSidebarForMobile() {

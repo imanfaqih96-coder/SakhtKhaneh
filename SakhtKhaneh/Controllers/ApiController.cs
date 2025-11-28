@@ -210,7 +210,8 @@ namespace SakhtKhaneh.Controllers
         {
             var popular = await _context.Visits
                 .GroupBy(v => new { v.Path, v.PathType, v.PathParam })
-                .Select(g => new {
+                .Select(g => new
+                {
                     path = g.Key.Path,
                     type = g.Key.PathType,
                     param = g.Key.PathParam,
@@ -223,6 +224,11 @@ namespace SakhtKhaneh.Controllers
             return Ok(popular);
         }
 
+        [HttpGet("users")]
+        public async Task<List<AppUser>?> users()
+        {
+            return await _context.Users.ToListAsync();
+        }
 
     }
 }

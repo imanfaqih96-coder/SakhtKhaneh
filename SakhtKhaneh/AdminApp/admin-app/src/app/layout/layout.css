@@ -154,3 +154,7 @@ mat-toolbar.main-header span.username {
 mat-form-field span.material-symbols-outlined{
     padding:0 12px;
 }
+
+.mat-mdc-select-value{
+    padding:0 12px;
+}

@@ -1,0 +1,101 @@
+<div class="flex justify-center mt-6">
+  <mat-card class="w-[70%] p-4 rounded-2xl shadow-md">
+
+    <h5 class="mb-3 text-xl font-semibold text-primary">فهرست کاربران</h5>
+
+    <div class="col-md-6">
+      <div class="row">
+
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>جستجو</mat-label>
+            <input matInput (keyup)="dataSource.filter = $event.target.value">
+            <mat-icon matPrefix>search</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="w-100 px-3">
+            <mat-label class="px-3">وضعیت اکانت</mat-label>
+            <mat-select>
+              <mat-icon matPrefix>filter_alt</mat-icon>
+              <mat-option class="px-4" value="all">همه</mat-option>
+              <mat-option class="px-4" value="success">تایید شده</mat-option>
+              <mat-option class="px-4" value="warn">در انتظار تایید</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="flex justify-center my-4" *ngIf="loading">
+      <mat-spinner diameter="45"></mat-spinner>
+    </div>
+
+    <table mat-table [dataSource]="dataSource" class="w-100 rounded-lg overflow-hidden">
+
+      <!-- نام کاربری -->
+      <ng-container matColumnDef="userName">
+        <th mat-header-cell *matHeaderCellDef>نام کاربری</th>
+        <td mat-cell *matCellDef="let user"> {{user.userName}} </td>
+      </ng-container>
+
+      <!-- ایمیل -->
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>ایمیل</th>
+        <td mat-cell *matCellDef="let user"> {{user.email}} </td>
+      </ng-container>
+
+      <!-- نام -->
+      <ng-container matColumnDef="firstName">
+        <th mat-header-cell *matHeaderCellDef>نام</th>
+        <td mat-cell *matCellDef="let user"> {{user.firstName || '-'}} </td>
+      </ng-container>
+
+      <!-- نام خانوادگی -->
+      <ng-container matColumnDef="lastName">
+        <th mat-header-cell *matHeaderCellDef>نام خانوادگی</th>
+        <td mat-cell *matCellDef="let user"> {{user.lastName || '-'}} </td>
+      </ng-container>
+
+      <!-- وضعیت ادمین -->
+      <ng-container matColumnDef="admin">
+        <th mat-header-cell *matHeaderCellDef>وضعیت</th>
+        <td mat-cell *matCellDef="let user">
+          <mat-chip [color]="user.administrativeApproval ? 'primary' : 'warn'">
+            {{user.administrativeApproval ? 'تایید شده' : 'در انتظار'}}
+          </mat-chip>
+        </td>
+      </ng-container>
+
+      <!-- عملیات -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="text-center">عملیات</th>
+        <td mat-cell *matCellDef="let user" class="text-center">
+
+          <button mat-icon-button color="primary">
+            <mat-icon>edit</mat-icon>
+          </button>
+
+          <button mat-icon-button color="warn">
+            <mat-icon>delete</mat-icon>
+          </button>
+
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+
+    <!-- 🔽 paginator کنترل تعداد سطر در هر صفحه -->
+    <mat-paginator showFirstLastButtons
+                   [pageSize]="10"
+                   [pageSizeOptions]="[5, 10, 20, 50]"
+                   aria-label="صفحه‌بندی کاربران">
+    </mat-paginator>
+
+  </mat-card>
+</div>
