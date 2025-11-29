@@ -158,3 +158,9 @@ mat-form-field span.material-symbols-outlined{
 .mat-mdc-select-value{
     padding:0 12px;
 }
+
+.message-dialog-body {
+  min-width: 300px;
+  min-height: 150px;
+  padding: 25px 40px;
+}

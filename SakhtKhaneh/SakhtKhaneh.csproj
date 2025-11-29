@@ -29,6 +29,7 @@
   <ItemGroup>
     <Folder Include="AdminApp\admin-app\src\app\guards\" />
     <Folder Include="AdminApp\admin-app\src\app\pages\components\logout\" />
+    <Folder Include="AdminApp\admin-app\src\app\pages\components\message\" />
     <Folder Include="AdminApp\admin-app\src\environments\" />
     <Folder Include="AdminApp\admin-app\src\app\services\" />
   </ItemGroup>

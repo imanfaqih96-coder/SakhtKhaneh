@@ -13,12 +13,12 @@ export interface Profile {
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
 
-  private apiUrl = `${window.location.origin}/api/GetProfile`;
+  private apiUrl = `${window.location.origin}/api`;
 
   constructor(private http: HttpClient) { }
 
   getProfile(): Observable<Profile> {
-    return this.http.get<Profile>(this.apiUrl);
+    return this.http.get<Profile>(`${this.apiUrl}/GetProfile`);
   }
 
   updateProfile(data: Profile): Observable<any> {
