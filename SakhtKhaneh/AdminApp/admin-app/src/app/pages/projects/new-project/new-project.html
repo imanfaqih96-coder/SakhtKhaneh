@@ -18,18 +18,25 @@
     </div>
 
     <div class="form-row two">
+      <!-- تاریخ شروع -->
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>تاریخ شروع</mat-label>
-        <input type="date" matInput [(ngModel)]="startDate" name="startDate">
+        <input matInput [matDatepicker]="startPicker" [(ngModel)]="startDate" name="startDate">
         <mat-icon matPrefix>event</mat-icon>
+        <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+        <mat-datepicker #startPicker></mat-datepicker>
       </mat-form-field>
 
+      <!-- تاریخ پایان -->
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>تاریخ پایان</mat-label>
-        <input type="date" matInput [(ngModel)]="endDate" name="endDate">
+        <input matInput [matDatepicker]="endPicker" [(ngModel)]="endDate" name="endDate">
         <mat-icon matPrefix>event</mat-icon>
+        <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+        <mat-datepicker #endPicker></mat-datepicker>
       </mat-form-field>
     </div>
+
 
     <div class="form-row">
       <mat-form-field appearance="outline" class="w-100">

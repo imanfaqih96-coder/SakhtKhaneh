@@ -14,6 +14,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 // Local dialog (you already have MessageDialogComponent)
@@ -44,7 +46,9 @@ interface GalleryPreview {
     MatProgressBarModule,
     MatTooltipModule,
     MatDialogModule,
-    NgxEditorModule
+    NgxEditorModule,
+    MatNativeDateModule,
+    MatDatepickerModule
   ],
   templateUrl: './new-project.html',
   styleUrls: ['./new-project.css']
@@ -89,7 +93,8 @@ export class NewProjectComponent implements OnInit, AfterViewInit {
     private http: HttpClient,
     private cd: ChangeDetectorRef,
     private ngZone: NgZone,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+
   ) { }
 
   ngOnInit(): void {
