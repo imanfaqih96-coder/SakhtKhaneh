@@ -58,8 +58,8 @@ export class NewProjectComponent implements OnInit, AfterViewInit {
   title = '';
   description = '';
   content = '';
-  startDate: string | null = null;
-  endDate: string | null = null;
+  startDate: Date | null = null;
+  endDate: Date | null = null;
   location = '';
   owner = '';
 

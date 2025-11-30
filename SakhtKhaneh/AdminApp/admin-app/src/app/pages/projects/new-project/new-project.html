@@ -10,15 +10,24 @@
       </mat-form-field>
     </div>
 
-    <div class="form-row two">
-      <mat-form-field appearance="outline" class="w-50">
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="w-100">
         <mat-label>عنوان پروژه</mat-label>
         <input matInput [(ngModel)]="title" name="title" required>
       </mat-form-field>
+    </div>
 
-      <mat-form-field appearance="outline" class="w-50">
+    <div class="form-row two">
+      <mat-form-field appearance="outline" class="w-100">
         <mat-label>تاریخ شروع</mat-label>
-        <input matInput [(ngModel)]="startDate" name="startDate" placeholder="YYYY-MM-DD" required>
+        <input type="date" matInput [(ngModel)]="startDate" name="startDate">
+        <mat-icon matPrefix>event</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>تاریخ پایان</mat-label>
+        <input type="date" matInput [(ngModel)]="endDate" name="endDate">
+        <mat-icon matPrefix>event</mat-icon>
       </mat-form-field>
     </div>
 
