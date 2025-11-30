@@ -264,10 +264,39 @@ namespace SakhtKhaneh.Controllers
         [HttpPost("projects/uploadGallery")]
         public async Task<IActionResult> UploadGallery(List<IFormFile> gallery)
         {
-            if (gallery == null || gallery.Count == 0) return BadRequest();
-            // Logic save multiple files
-            return Ok("gallery uploaded");
+            if (gallery == null || gallery.Count == 0)
+                return BadRequest("No files uploaded");
+
+            var uploadDir = Path.Combine("wwwroot/uploads/gallery");
+
+            if (!Directory.Exists(uploadDir))
+                Directory.CreateDirectory(uploadDir);
+
+            var urls = new List<string>();
+
+            foreach (var file in gallery)
+            {
+                if (file == null || file.Length == 0)
+                    continue;
+
+                var filePath = Path.Combine(uploadDir, file.FileName);
+
+                using (var stream = System.IO.File.Create(filePath))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                // ساخت URL عمومی
+                var fileUrl = $"{Request.Scheme}://{Request.Host}/uploads/gallery/{file.FileName}";
+                urls.Add(fileUrl);
+            }
+
+            if (urls.Count == 0)
+                return BadRequest("No valid images uploaded");
+
+            return Ok(new { urls }); // ✅ JSON با key: "urls"
         }
+
 
         [HttpPost("projects/create")]
         public async Task<IActionResult> CreateProject([FromBody] Project project)

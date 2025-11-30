@@ -32,6 +32,7 @@
     <Folder Include="AdminApp\admin-app\src\app\pages\components\message\" />
     <Folder Include="AdminApp\admin-app\src\environments\" />
     <Folder Include="AdminApp\admin-app\src\app\services\" />
+    <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 
   <ItemGroup>

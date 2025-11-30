@@ -1,88 +1,126 @@
-<div class="container pt-3">
-  <div class="row">
-    <div class="col-md-6">
+<div class="new-project container pt-2">
 
-      <mat-card class="w-100 rounded px-4 py-4 mb-3">
+  <mat-card class="form-card">
+    <h3 class="color-primary mb-5">ایجاد پروژه جدید</h3>
 
-        <form>
-
-          <!-- Endpoint Path -->
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>مسیر Endpoint</mat-label>
-            <input type="text" matInput [(ngModel)]="endpoint_Path" name="endpoint" required>
-            <mat-icon matPrefix>route</mat-icon>
-          </mat-form-field>
-
-          <!-- Title -->
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>عنوان پروژه</mat-label>
-            <input type="text" matInput [(ngModel)]="title" name="title" required>
-            <mat-icon matPrefix>title</mat-icon>
-          </mat-form-field>
-
-          <!-- Description -->
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>توضیحات</mat-label>
-            <input type="text" matInput [(ngModel)]="description" name="description">
-            <mat-icon matPrefix>description</mat-icon>
-          </mat-form-field>
-
-          <!-- Content -->
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>محتوا</mat-label>
-            <textarea matInput [(ngModel)]="content" name="content" required></textarea>
-          </mat-form-field>
-
-          <!-- Cover Image Upload -->
-          <div class="drop-box"
-               (drop)="onCoverDrop($event)"
-               (dragover)="onDragOver($event)">
-            <p>کاور را Drag & Drop یا Select کنید</p>
-            <input type="file" accept="image/*" (change)="onCoverSelect($event)" class="d-none" #coverInput>
-            <button type="button" mat-button (click)="coverInput.click()">انتخاب تصویر</button>
-          </div>
-
-          <div *ngIf="coverImageUrl">
-            <img [src]="coverUrl" class="preview-img">
-            <div>
-              <button mat-button (click)="coverInput.click()">تغییر</button>
-              <button mat-button (click)="removeCover()">ریست</button>
-            </div>
-          </div>
-
-          <!-- Gallery Upload -->
-          <div class="drop-box"
-               (drop)="onGalleryDrop($event)"
-               (dragover)="onDragOver($event)">
-            <p>گالری را Drag & Drop یا Select کنید</p>
-            <input type="file" accept="image/*" multiple (change)="onGallerySelect($event)" class="d-none" #galleryInput>
-            <button type="button" mat-button (click)="galleryInput.click()">انتخاب تصاویر</button>
-          </div>
-
-          <div class="row mt-3" *ngIf="galleryPreviews.length">
-            <div class="col-4 mb-2" *ngFor="let img of galleryPreviews; index as i">
-              <img [src]="img" class="gallery-preview">
-              <button type="button" mat-icon-button (click)="removeGalleryImage(i)">
-                <mat-icon>close</mat-icon>
-              </button>
-            </div>
-
-            <div class="col-12">
-              <button type="button" mat-stroked-button color="warn" (click)="resetGallery()">پاک کردن گالری</button>
-            </div>
-          </div>
-
-          <hr />
-
-          <button type="button" mat-raised-button color="primary" (click)="submitProject()" [disabled]="!title || !endpoint_Path || !content">
-            <mat-icon>cloud_upload</mat-icon>
-            ارسال پروژه
-          </button>
-
-        </form>
-
-      </mat-card>
-
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>مسیر Endpoint</mat-label>
+        <input matInput [(ngModel)]="endpoint_Path" name="endpoint" required>
+      </mat-form-field>
     </div>
-  </div>
+
+    <div class="form-row two">
+      <mat-form-field appearance="outline" class="w-50">
+        <mat-label>عنوان پروژه</mat-label>
+        <input matInput [(ngModel)]="title" name="title" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-50">
+        <mat-label>تاریخ شروع</mat-label>
+        <input matInput [(ngModel)]="startDate" name="startDate" placeholder="YYYY-MM-DD" required>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>توضیحات کوتاه</mat-label>
+        <input matInput [(ngModel)]="description" name="description" required>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>محتوا</mat-label>
+        <textarea matInput rows="6" [(ngModel)]="content" name="content" required></textarea>
+      </mat-form-field>
+    </div>
+
+    <hr />
+
+    <!-- COVER UPLOADER -->
+    <div class="uploader-section">
+      <label class="section-title">کاور پروژه</label>
+
+      <div class="drop-box"
+           (drop)="onCoverDrop($event)"
+           (dragover)="onDragOver($event)">
+        <input #coverInput type="file" accept="image/*" (change)="onCoverSelect($event, coverInput)" class="file-input">
+        <div class="drop-inner">
+          <mat-icon class="section-icon">photo_camera</mat-icon>
+          <div *ngIf="coverState==='idle'">کاور را Drag & Drop کنید یا انتخاب کنید</div>
+          <div *ngIf="coverState==='selected'">فایل انتخاب شد — آماده آپلود</div>
+          <div *ngIf="coverState==='uploading'">در حال آپلود ...</div>
+          <div *ngIf="coverState==='uploaded'">آپلود شده</div>
+
+          <div class="drop-actions">
+            <button mat-stroked-button color="primary" type="button" (click)="coverInput.click()">انتخاب</button>
+            <button mat-stroked-button type="button" color="warn" (click)="removeCover()" *ngIf="coverState!=='uploading'">پاک کردن</button>
+            <button mat-stroked-button type="button" color="accent" (click)="retryCoverUpload()" *ngIf="coverState==='error'">تلاش مجدد</button>
+            <button mat-stroked-button type="button" (click)="cancelCoverUpload()" *ngIf="coverState==='uploading'">لغو</button>
+          </div>
+        </div>
+      </div>
+
+      <mat-progress-bar *ngIf="coverState==='uploading'" mode="determinate" [value]="coverProgress"></mat-progress-bar>
+
+      <div class="preview-box" [hidden]="!coverPreview && !coverUrl">
+        <img [src]="coverPreview ?? coverUrl" class="preview-img">
+        <div class="preview-actions">
+          <button mat-button (click)="coverInput.click()"><mat-icon>edit</mat-icon> تغییر</button>
+          <button mat-button color="warn" (click)="removeCover()"><mat-icon>delete</mat-icon> حذف</button>
+        </div>
+      </div>
+    </div>
+
+    <hr />
+
+    <!-- GALLERY UPLOADER -->
+    <div class="uploader-section">
+      <label class="section-title">گالری تصاویر</label>
+
+      <div class="drop-box"
+           (drop)="onGalleryDrop($event)"
+           (dragover)="onDragOver($event)">
+        <input #galleryInput type="file" accept="image/*" multiple (change)="onGallerySelect($event)" class="file-input">
+        <div class="drop-inner">
+          <mat-icon class="section-icon">photo_library</mat-icon>
+          <div>تصاویر را Drag & Drop کنید یا انتخاب نمایید</div>
+          <div class="drop-actions">
+            <button mat-stroked-button color="primary" type="button" (click)="galleryInput.click()">انتخاب تصاویر</button>
+            <button mat-stroked-button type="button" color="warn" (click)="resetGallery()">پاک کردن همه</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="gallery-grid" *ngIf="gallery.length">
+        <div class="gallery-item" *ngFor="let item of gallery; let i = index">
+          <img class="thumb" [src]="item.src" alt="preview">
+          <mat-progress-bar *ngIf="item.state==='uploading'" mode="determinate" [value]="item.progress"></mat-progress-bar>
+
+          <div class="gallery-actions">
+            <button mat-icon-button color="primary" (click)="retryGalleryUpload(i)" *ngIf="item.state==='error'"><mat-icon>replay</mat-icon></button>
+            <button mat-icon-button color="warn" (click)="cancelGalleryUpload(i)" *ngIf="item.state==='uploading'"><mat-icon>cancel</mat-icon></button>
+            <button mat-icon-button color="accent" (click)="removeGalleryImage(i)"><mat-icon>delete</mat-icon></button>
+          </div>
+
+          <div class="status" [ngClass]="{'error': item.state==='error', 'uploaded': item.state==='uploaded'}">
+            <span *ngIf="item.state==='uploading'">در حال آپلود {{item.progress}}%</span>
+            <span *ngIf="item.state==='uploaded'">آپلود شده</span>
+            <span *ngIf="item.state==='error'">خطا در آپلود</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="form-actions">
+      <button mat-flat-button color="primary" (click)="submitProject()" [disabled]="!title || !endpoint_Path || !content">
+        <mat-icon>cloud_upload</mat-icon> ارسال پروژه
+      </button>
+      <button mat-stroked-button color="warn" (click)="resetForm()">ریست فرم</button>
+    </div>
+
+  </mat-card>
 </div>
