@@ -21,7 +21,7 @@ export const MENU: MenuItem[] = [
     title: 'پروژه ها',
     icon: 'perm_media',
     children: [
-      { title: 'فهرست پروژه ها', icon: 'grid_view', route: '/projects/list' },
+      { title: 'فهرست پروژه ها', icon: 'grid_view', route: '/projects/all' },
       { title: 'افزودن پروژه جدید', icon: 'add', route: '/projects/new' }
     ]
   }, {
@@ -39,7 +39,7 @@ export const MENU: MenuItem[] = [
     children: [
       { title: 'حساب کاربری', icon: 'person', route: '/profile' },
       { title: 'فهرست کاربران', icon: 'grid_view', route: '/users/all' },
-      { title: 'افزودن کاربر جدید', icon: 'person_add', route: '/users/new' }
+      { title: 'افزودن کاربر جدید', icon: 'person_add', route: '/users/new' },
     ]
   },
   {

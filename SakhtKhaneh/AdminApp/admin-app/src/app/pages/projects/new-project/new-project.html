@@ -1,0 +1,88 @@
+<div class="container pt-3">
+  <div class="row">
+    <div class="col-md-6">
+
+      <mat-card class="w-100 rounded px-4 py-4 mb-3">
+
+        <form>
+
+          <!-- Endpoint Path -->
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>مسیر Endpoint</mat-label>
+            <input type="text" matInput [(ngModel)]="endpoint_Path" name="endpoint" required>
+            <mat-icon matPrefix>route</mat-icon>
+          </mat-form-field>
+
+          <!-- Title -->
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>عنوان پروژه</mat-label>
+            <input type="text" matInput [(ngModel)]="title" name="title" required>
+            <mat-icon matPrefix>title</mat-icon>
+          </mat-form-field>
+
+          <!-- Description -->
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>توضیحات</mat-label>
+            <input type="text" matInput [(ngModel)]="description" name="description">
+            <mat-icon matPrefix>description</mat-icon>
+          </mat-form-field>
+
+          <!-- Content -->
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>محتوا</mat-label>
+            <textarea matInput [(ngModel)]="content" name="content" required></textarea>
+          </mat-form-field>
+
+          <!-- Cover Image Upload -->
+          <div class="drop-box"
+               (drop)="onCoverDrop($event)"
+               (dragover)="onDragOver($event)">
+            <p>کاور را Drag & Drop یا Select کنید</p>
+            <input type="file" accept="image/*" (change)="onCoverSelect($event)" class="d-none" #coverInput>
+            <button type="button" mat-button (click)="coverInput.click()">انتخاب تصویر</button>
+          </div>
+
+          <div *ngIf="coverImageUrl">
+            <img [src]="coverUrl" class="preview-img">
+            <div>
+              <button mat-button (click)="coverInput.click()">تغییر</button>
+              <button mat-button (click)="removeCover()">ریست</button>
+            </div>
+          </div>
+
+          <!-- Gallery Upload -->
+          <div class="drop-box"
+               (drop)="onGalleryDrop($event)"
+               (dragover)="onDragOver($event)">
+            <p>گالری را Drag & Drop یا Select کنید</p>
+            <input type="file" accept="image/*" multiple (change)="onGallerySelect($event)" class="d-none" #galleryInput>
+            <button type="button" mat-button (click)="galleryInput.click()">انتخاب تصاویر</button>
+          </div>
+
+          <div class="row mt-3" *ngIf="galleryPreviews.length">
+            <div class="col-4 mb-2" *ngFor="let img of galleryPreviews; index as i">
+              <img [src]="img" class="gallery-preview">
+              <button type="button" mat-icon-button (click)="removeGalleryImage(i)">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+
+            <div class="col-12">
+              <button type="button" mat-stroked-button color="warn" (click)="resetGallery()">پاک کردن گالری</button>
+            </div>
+          </div>
+
+          <hr />
+
+          <button type="button" mat-raised-button color="primary" (click)="submitProject()" [disabled]="!title || !endpoint_Path || !content">
+            <mat-icon>cloud_upload</mat-icon>
+            ارسال پروژه
+          </button>
+
+        </form>
+
+      </mat-card>
+
+    </div>
+  </div>
+</div>

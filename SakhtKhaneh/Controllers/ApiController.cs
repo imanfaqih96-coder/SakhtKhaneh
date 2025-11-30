@@ -8,6 +8,7 @@ using SakhtKhaneh.Data;
 using SakhtKhaneh.Models;
 using SakhtKhaneh.Models.Dto.Dashboard;
 using SakhtKhaneh.Models.Dto.Profile;
+using SakhtKhaneh.Models.Projects;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -229,6 +230,55 @@ namespace SakhtKhaneh.Controllers
         {
             return await _context.Users.ToListAsync();
         }
+
+        // Projects 
+        [HttpGet("getProjects")]
+        public async Task<List<Project>?> getProjects()
+        {
+            return await _context.Projects.OrderByDescending(p => p.StartDate).ToListAsync();
+        }
+
+        [HttpPost("projects/uploadCover")]
+        public async Task<IActionResult> UploadCover(IFormFile cover)
+        {
+            if (cover == null || cover.Length == 0)
+                return BadRequest("No file uploaded");
+
+            var rootDirectory = Path.Combine("wwwroot/uploads");
+
+            if (!Path.Exists(rootDirectory))
+            {
+                Directory.CreateDirectory(rootDirectory);
+            }
+
+            var filePath = Path.Combine("wwwroot/uploads", cover.FileName);
+            using (var stream = System.IO.File.Create(filePath))
+            {
+                await cover.CopyToAsync(stream);
+            }
+
+            var fileUrl = $"{Request.Scheme}://{Request.Host}/uploads/{cover.FileName}";
+            return Ok(new { url = fileUrl }); // ⚠ حتما JSON با key "url"
+        }
+
+        [HttpPost("projects/uploadGallery")]
+        public async Task<IActionResult> UploadGallery(List<IFormFile> gallery)
+        {
+            if (gallery == null || gallery.Count == 0) return BadRequest();
+            // Logic save multiple files
+            return Ok("gallery uploaded");
+        }
+
+        [HttpPost("projects/create")]
+        public async Task<IActionResult> CreateProject([FromBody] Project project)
+        {
+            if (project == null) return BadRequest();
+            _context.Projects.Add(project);
+            await _context.SaveChangesAsync();
+            return Ok("created");
+        }
+
+
 
     }
 }
