@@ -1,0 +1,86 @@
+<div class="container pt-3">
+  <div class="row">
+    <div class="col-12">
+      <h5 class="color-primary">
+        افزودن کاربر جدید
+      </h5>
+      <p class="alert class-mb-0">
+        ** توجه: نقش کاربر در این سامانه به مدیریت محتوا با سطح دسترسی بالا تعریف می شود، لذا به منظور حفظ ماهیت دسترسی به محتوای سایت، بررسی های امنیتی را در نظر داشته باشید.
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+
+      <mat-card class="w-100 rounded px-4 py-4 mb-3">
+
+        <form name="newUser" #form="ngForm">
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>نام کاربری</mat-label>
+              <input type="text" matInput [(ngModel)]="userName" name="userName" required>
+              <mat-icon fontSet="material-icons-outlined" matPrefix>
+                person
+              </mat-icon>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>آدرس ایمیل</mat-label>
+              <input type="email" matInput [(ngModel)]="email" name="email" required>
+              <mat-icon fontSet="material-icons-outlined" matPrefix>
+                mail
+              </mat-icon>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>نام</mat-label>
+              <input matInput [(ngModel)]="firstName" name="firstName">
+              <span class="material-symbols-outlined" matPrefix>
+                id_card
+              </span>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>نام خانوادگی</mat-label>
+              <input matInput [(ngModel)]="lastName" name="lastName">
+              <span class="material-symbols-outlined" matPrefix>
+                id_card
+              </span>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>رمز عبور</mat-label>
+              <input matInput type="password" [(ngModel)]="password" name="password" required>
+              <mat-icon matPrefix fontSet="material-icons-outlined">lock</mat-icon>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>تکرار رمز عبور</mat-label>
+              <input matInput type="password" [(ngModel)]="rePassword" name="rePassword" required>
+              <mat-icon matPrefix fontSet="material-icons-outlined">lock</mat-icon>
+            </mat-form-field>
+          </div>
+
+          <button mat-raised-button color="primary" (click)="createUser()" [disabled]="!form.valid">
+            <mat-icon fontSet="material-icons-outlined">add</mat-icon>
+            ایجاد کاربر
+          </button>
+
+        </form>
+
+      </mat-card>
+
+    </div>
+  </div>
+</div>

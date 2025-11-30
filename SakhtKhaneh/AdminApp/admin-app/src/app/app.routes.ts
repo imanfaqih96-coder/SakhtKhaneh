@@ -7,6 +7,7 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { authGuard } from './guards/auth.guard';
 import { loginGuard } from './guards/login.gaurd';
 import { UsersComponent } from './pages/users/all/users.component';
+import { NewUserComponent } from './pages/users/new/new-user.component';
 
 
 
@@ -24,7 +25,8 @@ export const routes: Routes = [
     children: [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'profile', component: ProfileComponent },
-      { path: 'users/all', component: UsersComponent }
+      { path: 'users/all', component: UsersComponent },
+      { path: 'users/new', component: NewUserComponent }
       // صفحه‌های دیگر نیز همینجا
       // { path: 'users', component: UsersComponent },
     ]

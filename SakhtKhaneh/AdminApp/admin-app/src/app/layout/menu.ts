@@ -39,7 +39,7 @@ export const MENU: MenuItem[] = [
     children: [
       { title: 'حساب کاربری', icon: 'person', route: '/profile' },
       { title: 'فهرست کاربران', icon: 'grid_view', route: '/users/all' },
-      { title: 'افزودن کاربر جدید', icon: 'person_add', route: '/users/add' }
+      { title: 'افزودن کاربر جدید', icon: 'person_add', route: '/users/new' }
     ]
   },
   {
