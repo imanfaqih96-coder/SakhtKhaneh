@@ -30,10 +30,16 @@
     </div>
 
     <div class="form-row">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>محتوا</mat-label>
-        <textarea matInput rows="6" [(ngModel)]="content" name="content" required></textarea>
-      </mat-form-field>
+      <!-- Ngx Editor -->
+      <div class="editor-wrapper">
+        <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"></ngx-editor-menu>
+        <ngx-editor [editor]="editor"
+                    [(ngModel)]="content"
+                    name="content"
+                    [placeholder]="'متن پروژه را اینجا بنویسید...'"
+                    class="ngx-editor">
+        </ngx-editor>
+      </div>
     </div>
 
     <hr />

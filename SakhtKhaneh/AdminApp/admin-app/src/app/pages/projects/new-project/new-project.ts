@@ -1,6 +1,8 @@
-import { Component, AfterViewInit, ChangeDetectorRef, NgZone } from '@angular/core';
+import { Component, AfterViewInit, ChangeDetectorRef, NgZone, OnInit } from '@angular/core';
 import { HttpClient, HttpEventType, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs';
+
+import { NgxEditorModule, Editor, Toolbar } from 'ngx-editor';
 
 // Angular Material modules are imported in the component `imports` array (standalone)
 import { CommonModule } from '@angular/common';
@@ -41,12 +43,13 @@ interface GalleryPreview {
     MatCardModule,
     MatProgressBarModule,
     MatTooltipModule,
-    MatDialogModule
+    MatDialogModule,
+    NgxEditorModule
   ],
   templateUrl: './new-project.html',
   styleUrls: ['./new-project.css']
 })
-export class NewProjectComponent implements AfterViewInit {
+export class NewProjectComponent implements OnInit, AfterViewInit {
 
   private apiUrl = `${window.location.origin}/api/projects`;
 
@@ -71,12 +74,27 @@ export class NewProjectComponent implements AfterViewInit {
   // Gallery uploader (multiple)
   gallery: GalleryPreview[] = [];
 
+  // NGX-EDITOR
+  editor!: Editor;
+  toolbar: Toolbar = [
+    ['bold', 'italic', 'underline', 'strike'],
+    ['code', 'blockquote'],
+    ['ordered_list', 'bullet_list'],
+    ['link'],
+    ['text_color', 'background_color'],
+    ['align_left', 'align_center', 'align_right', 'align_justify'],
+  ];
+
   constructor(
     private http: HttpClient,
     private cd: ChangeDetectorRef,
     private ngZone: NgZone,
     private dialog: MatDialog
   ) { }
+
+  ngOnInit(): void {
+    this.editor = new Editor(); // ✅ initialize
+  }
 
   ngAfterViewInit(): void {
     // ensure initial CD
