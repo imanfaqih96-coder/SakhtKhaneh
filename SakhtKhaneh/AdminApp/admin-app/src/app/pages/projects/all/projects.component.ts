@@ -11,6 +11,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 
 export interface ProjectItem {
   id: string;
@@ -32,10 +34,12 @@ export interface ProjectItem {
   templateUrl: './projects.html',
   styleUrls: ['./projects.css'],
   imports: [
+    MatButtonModule,
     MatTableModule,
     MatPaginatorModule,
     MatIconModule,
-    MatCardModule
+    MatCardModule,
+    MatTooltipModule
   ]
 })
 
@@ -65,15 +69,6 @@ export class ProjectsComponent implements AfterViewInit {
         }));
         this.dataSource.paginator = this.paginator;
       });
-  }
-
-  openInfo(project: ProjectItem) {
-    this.dialog.open(MessageDialogComponent, {
-      data: {
-        title: project.title,
-        message: project.description ?? 'بدون توضیحات'
-      }
-    });
   }
 
   applyFilter(event: Event) {

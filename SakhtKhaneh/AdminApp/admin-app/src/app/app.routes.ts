@@ -10,6 +10,7 @@ import { UsersComponent } from './pages/users/all/users.component';
 import { NewUserComponent } from './pages/users/new/new-user.component';
 import { ProjectsComponent } from './pages/projects/all/projects.component';
 import { NewProjectComponent } from './pages/projects/new-project/new-project';
+import { EditProjectComponent } from './pages/projects/edit-project/edit-project';
 
 
 
@@ -30,7 +31,8 @@ export const routes: Routes = [
       { path: 'users/all', component: UsersComponent },
       { path: 'users/new', component: NewUserComponent },
       { path: 'projects/all', component: ProjectsComponent },
-      { path: 'projects/new', component: NewProjectComponent }
+      { path: 'projects/new', component: NewProjectComponent },
+      { path: 'projects/edit/:project_guid', component: EditProjectComponent }
       // صفحه‌های دیگر نیز همینجا
       // { path: 'users', component: UsersComponent },
     ]

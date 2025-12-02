@@ -26,8 +26,8 @@
           <!-- image -->
           <ng-container matColumnDef="image">
             <th mat-header-cell *matHeaderCellDef>تصویر</th>
-            <td mat-cell *matCellDef="let row">
-              <img [src]="row.coverImageUrl" class="w-12 h-12 rounded object-cover">
+            <td mat-cell *matCellDef="let row" style="width:150px;">
+              <img [src]="row.coverImageUrl" class="w-100 rounded object-cover">
             </td>
           </ng-container>
 
@@ -51,9 +51,17 @@
           <ng-container matColumnDef="options">
             <th mat-header-cell *matHeaderCellDef>عملیات</th>
             <td mat-cell *matCellDef="let row">
-              <button mat-icon-button (click)="openInfo(row)">
-                <mat-icon>visibility</mat-icon>
+
+              <a mat-fab color="primary"
+                 href="/admin/projects/edit/{{row.id}}"
+                 aria-label="edit" class="profile-option-button" matTooltip="ویرایش پروژه">
+                <mat-icon fontSet="material-icons-outlined">settings</mat-icon>
+              </a>
+
+              <button mat-fab color="warn" aria-label="delete" class="profile-option-button" matTooltip="حذف پروژه">
+                <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
               </button>
+
             </td>
           </ng-container>
 

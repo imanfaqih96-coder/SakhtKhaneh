@@ -1,12 +1,11 @@
-import { Component, AfterViewInit, ChangeDetectorRef, NgZone, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, NgZone } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CommonModule, NgIf, NgFor } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpEventType, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 
-import { NgxEditorModule, Editor, Toolbar } from 'ngx-editor';
-
 // Angular Material modules are imported in the component `imports` array (standalone)
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,6 +20,9 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 // Local dialog (you already have MessageDialogComponent)
 import { MessageDialogComponent } from '../../components/message/message-dialog.component';
 
+import { NgxEditorModule, Editor, Toolbar } from 'ngx-editor';
+
+
 type UploadState = 'idle' | 'selected' | 'uploading' | 'uploaded' | 'error';
 
 interface GalleryPreview {
@@ -33,11 +35,13 @@ interface GalleryPreview {
 }
 
 @Component({
-  selector: 'new-project',
+  selector: 'edit-project',
   standalone: true,
   imports: [
     CommonModule,
     FormsModule,
+    NgIf,
+    NgFor,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
@@ -45,17 +49,18 @@ interface GalleryPreview {
     MatCardModule,
     MatProgressBarModule,
     MatTooltipModule,
-    MatDialogModule,
-    NgxEditorModule,
     MatNativeDateModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    MatDialogModule,
+    NgxEditorModule
   ],
-  templateUrl: './new-project.html',
-  styleUrls: ['./new-project.css']
+  templateUrl: './edit-project.html',
+  styleUrls: ['./edit-project.css']
 })
-export class NewProjectComponent implements OnInit, AfterViewInit {
+export class EditProjectComponent implements OnInit, OnDestroy {
 
-  private apiUrl = `${window.location.origin}/api/projects`;
+  apiUrl = "https://localhost:7115/api/projects";
+  projectId: string = "";
 
   // form fields
   endpoint_Path = '';
@@ -90,20 +95,63 @@ export class NewProjectComponent implements OnInit, AfterViewInit {
   ];
 
   constructor(
-    private http: HttpClient,
-    private cd: ChangeDetectorRef,
     private ngZone: NgZone,
-    private dialog: MatDialog,
-
+    private route: ActivatedRoute,
+    private http: HttpClient,
+    private router: Router,
+    private cd: ChangeDetectorRef
   ) { }
 
-  ngOnInit(): void {
-    this.editor = new Editor(); // ✅ initialize
+  ngOnInit() {
+    this.editor = new Editor();
+    this.projectId = this.route.snapshot.params['project_guid'];
+
+    this.loadProject();
   }
 
-  ngAfterViewInit(): void {
-    // ensure initial CD
-    this.cd.detectChanges();
+  ngOnDestroy() {
+    this.editor.destroy();
+  }
+
+  // =======================================================
+  // LOAD PROJECT
+  // =======================================================
+  loadProject() {
+    this.http.get(`${this.apiUrl}/get/${this.projectId}`).subscribe({
+      next: (p: any) => {
+
+        console.log(`project:`, p);
+
+        this.title = p.title;
+        this.endpoint_Path = p.endpoint_Path;
+        this.description = p.description;
+        this.content = p.content;
+
+        this.location = p.location;
+        this.owner = p.owner;
+
+        this.startDate = p.startDate?.split('T')[0];
+        this.endDate = p.endDate?.split('T')[0];
+
+        this.ngZone.run(() => {
+
+          this.coverUrl = p.coverImageUrl;
+          this.gallery = (p.gallery || []).map((url: string) => ({
+            file: null,
+            url,
+            progress: 100,
+            state: 'uploaded',
+            sub: null
+          }));
+
+          console.log('gallery:', this.gallery);
+
+          this.cd.detectChanges();
+
+        });
+
+      }
+    });
   }
 
   // ---------- COVER HANDLERS ----------
@@ -306,78 +354,32 @@ export class NewProjectComponent implements OnInit, AfterViewInit {
     this.cd.markForCheck();
   }
 
-  // ---------- SUBMIT ----------
-  submitProject() {
-    // ensure required fields
-    if (!this.title || !this.endpoint_Path || !this.content) {
-      this.dialog.open(MessageDialogComponent, { data: { title: 'خطا', message: 'لطفاً فیلدهای ضروری را پر کنید.' } });
-      return;
-    }
 
-    // collect gallery URLs of uploaded items
-    const galleryUrls = this.gallery.map(g => g.url).filter(u => !!u) as string[];
+  // =======================================================
+  // SUBMIT UPDATE
+  // =======================================================
+  saveChanges() {
 
-    var gallery = [];
-
-    for (var i = 0; i < galleryUrls.length; i++) {
-      var item = galleryUrls[i];
-      var obj = {
-        url: item
-      };
-      gallery.push(obj);
-    }
-
-    const body = {
-      title: this.title,
-      endpoint_Path: this.endpoint_Path,
-      coverImageUrl: this.coverUrl,
-      description: this.description,
-      content: this.content,
-      startDate: this.startDate,
-      endDate: this.endDate,
-      location: this.location,
-      owner: this.owner,
-      gallery: gallery
+    const updated = {
+      Id: this.projectId,
+      Title: this.title,
+      ShortDescription: this.description,
+      Content: this.content,
+      CoverImage: this.coverUrl,
+      Gallery: this.gallery.filter(g => g.url).map(g => g.url),
+      StartDate: this.startDate,
+      EndDate: this.endDate
     };
 
-    this.http.post(`${this.apiUrl}/create`, body).subscribe({
-      next: (res: any) => {
-
-        if (res.status == 'success') {
-          this.dialog.open(MessageDialogComponent, { data: { title: 'موفق', message: 'پروژه با موفقیت ثبت شد.' } });
-          // reset
-          this.resetForm();
-        }
-        else if (res.status == 'fail') {
-          if (res.message == 'path-already-exists') {
-            this.dialog.open(MessageDialogComponent, { data: { title: 'هشدار', message: 'مسیر endpoint که برای پروژه انتخاب شده در حال حاضر به پروژه دیگری اختصاص دارد.' } });
-          }
-          else {
-            this.dialog.open(MessageDialogComponent, { data: { title: 'خطا', message: ':خطایی در ثبت پروژه رخ داده است. \n\n' + res.message } });
-          }
-        }
-
+    this.http.post(`${this.apiUrl}/update`, updated).subscribe({
+      next: () => {
+        alert("پروژه با موفقیت ویرایش شد");
+        this.router.navigate(['/admin/projects']);
       },
-      error: (err) => {
-        console.error('Create project error', err);
-        this.dialog.open(MessageDialogComponent, { data: { title: 'خطا', message: 'خطای ناشناخته در ثبت پروژه رخ داده است.' } });
+      error: () => {
+        alert("خطا در ذخیره تغییرات");
       }
     });
   }
 
-  resetForm() {
-    this.title = '';
-    this.endpoint_Path = '';
-    this.description = '';
-    this.content = '';
-    this.startDate = null;
-    this.endDate = null;
-    this.location = '';
-    this.owner = '';
-    // cover
-    this.cancelCoverUpload();
-    // gallery
-    this.resetGallery();
-    this.cd.markForCheck();
-  }
 }

@@ -22,6 +22,12 @@ namespace SakhtKhaneh.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        
+        public class messageResponse
+        {
+            public string status { get; set; }
+            public string message { get; set; }
+        }
 
         public ApiController(ApplicationDbContext context, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
         {
@@ -297,17 +303,121 @@ namespace SakhtKhaneh.Controllers
             return Ok(new { urls }); // ✅ JSON با key: "urls"
         }
 
-
-        [HttpPost("projects/create")]
-        public async Task<IActionResult> CreateProject([FromBody] Project project)
+        private async Task<Guid> GetNewUniqueProjectId()
         {
-            if (project == null) return BadRequest();
-            _context.Projects.Add(project);
-            await _context.SaveChangesAsync();
-            return Ok("created");
+            var id = Guid.NewGuid();
+            bool isExisted = await _context.Projects.Where(p => p.Id == id).FirstOrDefaultAsync() != null;
+            if (!isExisted)
+            {
+                return id;
+            }
+            else
+            {
+                return await GetNewUniqueProjectId();
+            }
         }
 
+        private async Task<Guid> GetUniqueIdForProjectGalleryItem()
+        {
+            var id = Guid.NewGuid();
+            bool isExisted = await _context.GalleryItems.Where(p => p.Id == id).FirstOrDefaultAsync() != null;
+            if (!isExisted)
+            {
+                return id;
+            }
+            else
+            {
+                return await GetNewUniqueProjectId();
+            }
+        }
 
+        [HttpPost("projects/create")]
+        public async Task<IActionResult> CreateProject([FromBody] ProjectCoreDto project)
+        {
+            if (project == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                bool pathAlreadyExists = _context.Projects.Where(p => p.Endpoint_Path.ToLower() == project.endpoint_Path.ToLower()).FirstOrDefault() != null;
+
+                if (!pathAlreadyExists)
+                {
+                    try
+                    {
+                        var dbProject = new Project
+                        {
+                            Id = await GetNewUniqueProjectId(),
+                            CoverImageUrl = project.coverImageUrl,
+                            Endpoint_Path = project.endpoint_Path,
+                            Title = project.title,
+                            Description = project.description,
+                            Content = project.content,
+                            StartDate = project.startDate,
+                            EndDate = project.endDate,
+                            Location = project.location,
+                            Owner = project.owner,
+                            Gallery = null
+                        };
+
+                        _context.Projects.Add(dbProject);
+                        await _context.SaveChangesAsync();
+
+                        var theAddedProject = _context.Projects.Where(p => p.Endpoint_Path == dbProject.Endpoint_Path).FirstOrDefault();
+
+                        var project_id = theAddedProject.Id;
+
+                        bool hasGallery = project.gallery != null && project.gallery.Count > 0;
+
+                        if (hasGallery)
+                        {
+                            foreach (var item in project.gallery)
+                            {
+                                ProjectGalleryItem galleryItem = new ProjectGalleryItem();
+
+                                galleryItem.ProjectId = project_id;
+                                galleryItem.Id = await GetUniqueIdForProjectGalleryItem();
+                                galleryItem.ImageUrl = item.url;
+
+                                _context.GalleryItems.Add(galleryItem);
+                                await _context.SaveChangesAsync();
+                            }
+                        }
+
+                        return Ok(new messageResponse
+                        {
+                            status = "success",
+                            message = "created"
+                        });
+                    }
+                    catch(Exception ex)
+                    {
+                        var message = ex.Message;
+                        return Ok(new messageResponse
+                        {
+                            status = "fail",
+                            message = "unknown exception occurance: " + message
+                        });
+                    }
+                }
+                else
+                {
+                    return Ok(new messageResponse
+                    {
+                        status = "fail",
+                        message = "path-already-exists"
+                    });
+                }
+                
+            }
+        }
+
+        [HttpGet("projects/get/{projectId}")]
+        public async Task<Project?> GetProject(Guid projectId)
+        {
+            return await _context.Projects.Where(p => p.Id == projectId).FirstOrDefaultAsync();
+        }
 
     }
 }

@@ -46,6 +46,20 @@
     </div>
 
     <div class="form-row">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>کارفرما پروژه</mat-label>
+        <input matInput [(ngModel)]="owner" name="owner">
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>موقعیت مکانی پروژه</mat-label>
+        <input matInput [(ngModel)]="location" name="location">
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
       <!-- Ngx Editor -->
       <div class="editor-wrapper">
         <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"></ngx-editor-menu>
