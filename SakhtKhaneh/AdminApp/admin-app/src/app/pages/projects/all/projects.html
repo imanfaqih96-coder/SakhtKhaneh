@@ -9,9 +9,22 @@
   <div class="row justify-content-center">
     <div class="col-md-10">
 
-      <mat-card class="p-4 rounded-2xl shadow-md">
+      <mat-card class="p-4 rounded-2xl shadow-md mobile-horizontal-scroll">
 
-        <input matInput placeholder="جستجو ..." (input)="applyFilter($event)" class="mb-3 w-full border rounded p-2">
+        <div class="row">
+          <div class="col-10">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-icon matPrefix fontSet="material-icons-outlined">search</mat-icon>
+              <mat-label>جستجو</mat-label>
+              <input matInput (input)="applyFilter($event)">
+            </mat-form-field>
+          </div>
+          <div class="col-2">
+            <a href="/admin/projects/new" mat-flat-button color="primary" class="add-new-project-button w-100">
+              <mat-icon>add</mat-icon> پروژه جدید
+            </a>
+          </div>
+        </div>
 
         <table mat-table [dataSource]="dataSource" class="w-full">
 
@@ -26,8 +39,8 @@
           <!-- image -->
           <ng-container matColumnDef="image">
             <th mat-header-cell *matHeaderCellDef>تصویر</th>
-            <td mat-cell *matCellDef="let row" style="width:150px;">
-              <img [src]="row.coverImageUrl" class="w-100 rounded object-cover">
+            <td mat-cell *matCellDef="let row">
+              <img [src]="row.coverImageUrl" class="rounded my-3 object-cover border border-1 border-primary" style="max-width:100px;min-width:80px;">
             </td>
           </ng-container>
 

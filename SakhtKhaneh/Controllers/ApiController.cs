@@ -22,7 +22,7 @@ namespace SakhtKhaneh.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
-        
+
         public class messageResponse
         {
             public string status { get; set; }
@@ -391,7 +391,7 @@ namespace SakhtKhaneh.Controllers
                             message = "created"
                         });
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         var message = ex.Message;
                         return Ok(new messageResponse
@@ -409,14 +409,84 @@ namespace SakhtKhaneh.Controllers
                         message = "path-already-exists"
                     });
                 }
-                
+
             }
         }
 
         [HttpGet("projects/get/{projectId}")]
         public async Task<Project?> GetProject(Guid projectId)
         {
-            return await _context.Projects.Where(p => p.Id == projectId).FirstOrDefaultAsync();
+            var project = await _context.Projects.Where(p => p.Id == projectId).FirstOrDefaultAsync();
+
+            if (project != null)
+            {
+                var project_id = project.Id;
+                var galleryItems = await _context.GalleryItems.Where(p => p.ProjectId == project_id).ToListAsync();
+                if (galleryItems != null && galleryItems.Count > 0)
+                {
+                    project.Gallery = galleryItems;
+                }
+            }
+
+            return project;
+        }
+
+        [HttpPost("projects/update")]
+        public async Task<IActionResult> UpdateProject([FromBody] ProjectCoreDto project)
+        {
+            if (project == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+
+                var dbProject = await _context.Projects.Where(p => p.Id == project.id).FirstOrDefaultAsync();
+
+                if (dbProject != null)
+                {
+                    dbProject.Title = project.title;
+                    dbProject.Description = project.description;
+                    dbProject.StartDate = project.startDate;
+                    dbProject.EndDate = project.endDate;
+                    dbProject.Content = project.content;
+                    dbProject.CoverImageUrl = project.coverImageUrl;
+                    dbProject.Endpoint_Path = project.endpoint_Path;
+                    dbProject.Location = project.location;
+                    dbProject.Owner = project.owner;
+
+                    await _context.SaveChangesAsync();
+
+                    if (project.gallery != null && project.gallery.Count > 0)
+                    {
+                        var dbGalleryItems = await _context.GalleryItems.Where(p => p.ProjectId == dbProject.Id).ToListAsync();
+                        if (dbGalleryItems.Count > 0)
+                        {
+                            // remove all galleries
+                            foreach (var dbGalleryItem in dbGalleryItems)
+                            {
+                                _context.GalleryItems.Remove(dbGalleryItem);
+                            }
+                            await _context.SaveChangesAsync();
+                            // add new gallery settings 
+                            foreach (var galleryItem in project.gallery)
+                            {
+                                var dbItem = new ProjectGalleryItem
+                                {
+                                    Id = await GetUniqueIdForProjectGalleryItem(),
+                                    ProjectId = dbProject.Id,
+                                    ImageUrl = galleryItem.url
+                                };
+
+                                _context.Add(dbItem);
+                            }
+                            await _context.SaveChangesAsync();
+                        }
+                    }
+                }
+
+                return Ok(new messageResponse { status = "success", message = "updated" });
+            }
         }
 
     }

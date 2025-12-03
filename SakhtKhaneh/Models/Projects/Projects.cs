@@ -29,6 +29,7 @@ namespace SakhtKhaneh.Models.Projects
     }
     public class ProjectCoreDto
     {
+        public Guid? id { get; set; }
         public string endpoint_Path { get; set; }
         public string coverImageUrl { get; set; }
         public string title { get; set; }

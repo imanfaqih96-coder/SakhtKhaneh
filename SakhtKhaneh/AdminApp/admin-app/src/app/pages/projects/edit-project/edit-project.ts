@@ -34,6 +34,17 @@ interface GalleryPreview {
   file?: File;             // original file reference
 }
 
+interface messageResponse {
+  status: string;
+  message: string;
+}
+
+interface GalleryItem {
+  id: string;
+  projectId: string;
+  imageUrl: string;
+}
+
 @Component({
   selector: 'edit-project',
   standalone: true,
@@ -59,10 +70,11 @@ interface GalleryPreview {
 })
 export class EditProjectComponent implements OnInit, OnDestroy {
 
-  apiUrl = "https://localhost:7115/api/projects";
+  apiUrl = window.location.origin + "/api/projects";
   projectId: string = "";
 
   // form fields
+  id = '';
   endpoint_Path = '';
   title = '';
   description = '';
@@ -99,7 +111,8 @@ export class EditProjectComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private http: HttpClient,
     private router: Router,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -122,6 +135,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
 
         console.log(`project:`, p);
 
+        this.id = p.id;
         this.title = p.title;
         this.endpoint_Path = p.endpoint_Path;
         this.description = p.description;
@@ -136,13 +150,30 @@ export class EditProjectComponent implements OnInit, OnDestroy {
         this.ngZone.run(() => {
 
           this.coverUrl = p.coverImageUrl;
-          this.gallery = (p.gallery || []).map((url: string) => ({
-            file: null,
-            url,
-            progress: 100,
-            state: 'uploaded',
-            sub: null
-          }));
+
+          if (p.gallery != null && p.gallery.length > 0) {
+
+            var list: GalleryPreview[] = [];
+
+            for (var i = 0; i < p.gallery.length; i++) {
+              var item: GalleryItem = p.gallery[i];
+
+              var imageUrl = item.imageUrl;
+
+              var itemGalleryObject: GalleryPreview = {
+                src: imageUrl,
+                url: imageUrl,
+                file: undefined,
+                progress: 100,
+                state: 'uploaded',
+                sub: null
+              }
+
+              list.push(itemGalleryObject);
+            }
+
+            this.gallery = list;
+          }
 
           console.log('gallery:', this.gallery);
 
@@ -304,7 +335,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
             item.url = Array.isArray(body?.urls) && body.urls.length > 0 ? body.urls[0] : null;
 
             // ✅ تعیین حالت بر اساس وجود URL
-            item.state = item.url ? 'uploaded' : 'error';
+            item.state = 'uploaded';
             item.sub = null;
 
             this.cd.markForCheck();
@@ -360,24 +391,49 @@ export class EditProjectComponent implements OnInit, OnDestroy {
   // =======================================================
   saveChanges() {
 
+    var galleryItems = [];
+
+    if (this.gallery != null && this.gallery.length > 0) {
+      for (var i = 0; i < this.gallery.length; i++) {
+        var item = this.gallery[i];
+        galleryItems.push({
+          url: item.url
+        })
+      }
+    }
+
     const updated = {
-      Id: this.projectId,
-      Title: this.title,
-      ShortDescription: this.description,
-      Content: this.content,
-      CoverImage: this.coverUrl,
-      Gallery: this.gallery.filter(g => g.url).map(g => g.url),
-      StartDate: this.startDate,
-      EndDate: this.endDate
+      id: this.projectId,
+      endpoint_Path: this.endpoint_Path,
+      title: this.title,
+      description: this.description,
+      content: this.content,
+      location: this.location,
+      owner: this.owner,
+      coverImageUrl: this.coverUrl,
+      gallery: galleryItems,
+      startDate: this.startDate,
+      endDate: this.endDate
     };
 
+    console.log('attempting to update:', updated);
+
     this.http.post(`${this.apiUrl}/update`, updated).subscribe({
-      next: () => {
-        alert("پروژه با موفقیت ویرایش شد");
-        this.router.navigate(['/admin/projects']);
+      next: (res: any) => {
+        var serverMessage: messageResponse = res;
+        if (serverMessage.status == 'success') {
+          this.dialog.open(MessageDialogComponent, { data: { title: 'موفق', message: 'پروژه با موفقیت بروزرسانی شد.' } });
+          this.router.navigate(['/projects/all']);
+          this.cd.detectChanges();
+        }
+        else {
+          this.dialog.open(MessageDialogComponent, { data: { title: 'خطا', message: serverMessage.message } });
+          this.cd.detectChanges();
+        }
       },
       error: () => {
-        alert("خطا در ذخیره تغییرات");
+        this.dialog.open(MessageDialogComponent, { data: { title: 'خطا', message: 'خطای پیش بینی نشده در بروزرسانی پروژه' } });
+        this.cd.detectChanges();
       }
     });
   }

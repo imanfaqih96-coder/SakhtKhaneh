@@ -7,8 +7,18 @@
         <h2 class="color-primary mb-5">ویرایش پروژه</h2>
 
         <form name="editProject">
+
           <div class="form-row">
             <mat-form-field appearance="outline" class="w-100">
+              <mat-icon matPrefix fontSet="material-icons-outlined">vpn_key</mat-icon>
+              <mat-label>شناسه پروژه</mat-label>
+              <input matInput [(ngModel)]="id" name="id" readonly>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-icon matPrefix fontSet="material-icons-outlined">route</mat-icon>
               <mat-label>مسیر Endpoint</mat-label>
               <input matInput [(ngModel)]="endpoint_Path" name="endpoint" required>
             </mat-form-field>
@@ -17,6 +27,7 @@
           <!-- TITLE -->
           <div class="form-row">
             <mat-form-field appearance="outline" class="w-100">
+              <mat-icon matPrefix fontSet="material-icons-outlined">title</mat-icon>
               <mat-label>عنوان پروژه</mat-label>
               <input matInput [(ngModel)]="title" name="title" required>
             </mat-form-field>
@@ -46,6 +57,7 @@
           <!-- SHORT DESCRIPTION -->
           <div class="form-row">
             <mat-form-field appearance="outline" class="w-100">
+              <mat-icon matPrefix fontSet="material-icons-outlined">text_fields</mat-icon>
               <mat-label>توضیحات کوتاه</mat-label>
               <input matInput [(ngModel)]="description" name="description" required>
             </mat-form-field>
@@ -53,6 +65,7 @@
 
           <div class="form-row">
             <mat-form-field appearance="outline" class="w-100">
+              <mat-icon matPrefix fontSet="material-icons-outlined">account_circle</mat-icon>
               <mat-label>کارفرما پروژه</mat-label>
               <input matInput [(ngModel)]="owner" name="owner">
             </mat-form-field>
@@ -60,6 +73,7 @@
 
           <div class="form-row">
             <mat-form-field appearance="outline" class="w-100">
+              <mat-icon matPrefix fontSet="material-icons-outlined">location_on</mat-icon>
               <mat-label>موقعیت مکانی پروژه</mat-label>
               <input matInput [(ngModel)]="location" name="location">
             </mat-form-field>
