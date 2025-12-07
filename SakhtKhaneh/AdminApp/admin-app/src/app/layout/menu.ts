@@ -28,9 +28,9 @@ export const MENU: MenuItem[] = [
     title: 'بلاگ',
     icon: 'articles',
     children: [
-      { title: 'دسته بندی ها', icon: 'dashboard_customize', route: '/blog/categories' },
-      { title: 'فهرست مطلب ها', icon: 'grid_view', route: '/blog/list' },
-      { title: 'افزودن مطلب جدید', icon: 'add', route: '/blog/new' }
+      { title: 'دسته بندی ها', icon: 'dashboard_customize', route: '/blog-categories/all' },
+      { title: 'فهرست مطلب ها', icon: 'grid_view', route: '/blog-posts/all' },
+      { title: 'افزودن مطلب جدید', icon: 'add', route: '/blog-posts/new' }
     ]
   },
   {

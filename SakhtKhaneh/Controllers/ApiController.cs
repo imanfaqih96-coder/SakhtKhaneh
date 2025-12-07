@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SakhtKhaneh.Data;
 using SakhtKhaneh.Models;
+using SakhtKhaneh.Models.Blog;
+using SakhtKhaneh.Models.Dto.Blog;
 using SakhtKhaneh.Models.Dto.Dashboard;
 using SakhtKhaneh.Models.Dto.Profile;
 using SakhtKhaneh.Models.Projects;
@@ -306,7 +308,8 @@ namespace SakhtKhaneh.Controllers
         private async Task<Guid> GetNewUniqueProjectId()
         {
             var id = Guid.NewGuid();
-            bool isExisted = await _context.Projects.Where(p => p.Id == id).FirstOrDefaultAsync() != null;
+            var target = await _context.Projects.Where(p => p.Id == id).FirstOrDefaultAsync();
+            bool isExisted = target != null;
             if (!isExisted)
             {
                 return id;
@@ -320,7 +323,8 @@ namespace SakhtKhaneh.Controllers
         private async Task<Guid> GetUniqueIdForProjectGalleryItem()
         {
             var id = Guid.NewGuid();
-            bool isExisted = await _context.GalleryItems.Where(p => p.Id == id).FirstOrDefaultAsync() != null;
+            var target = await _context.GalleryItems.Where(p => p.Id == id).FirstOrDefaultAsync();
+            bool isExisted = target != null;
             if (!isExisted)
             {
                 return id;
@@ -488,6 +492,172 @@ namespace SakhtKhaneh.Controllers
                 return Ok(new messageResponse { status = "success", message = "updated" });
             }
         }
+
+        //Blog
+
+        [HttpGet("blog/categories/get")]
+        public async Task<List<BlogCategory>> GetBlogCategories()
+        {
+            var categories = await _context.BlogCategories.ToListAsync();
+            return categories;
+        }
+
+        [HttpGet("blog/posts/get")]
+        public async Task<List<BlogPost>> GetBlogPosts()
+        {
+            var posts = await _context.BlogPosts.Include(p => p.Category).ToListAsync();
+            return posts;
+        }
+
+        private async Task<Guid> getUniqueIdForBlogPost()
+        {
+            Guid Id = Guid.NewGuid();
+            var target = await _context.BlogPosts.Where(p => p.Id == Id).FirstOrDefaultAsync();
+            bool isExisted = target != null;
+            if (isExisted)
+            {
+                return await getUniqueIdForBlogPost();
+            }
+            else
+            {
+                return Id;
+            }
+        }
+
+        public int RandomBetween(int min, int max)
+        {
+            var rnd = new Random();
+            return rnd.Next(min, max);
+        }
+
+        private async Task<int> getUniqueIdForBlogCategory()
+        {
+            int Id = RandomBetween(10000, 99999);
+            var target = await _context.BlogCategories.Where(p => p.Id == Id).FirstOrDefaultAsync();
+            bool isExisted = target != null;
+            if (!isExisted)
+            {
+                return Id;
+            }
+            else
+            {
+                return await getUniqueIdForBlogCategory();
+            }
+        }
+        private async Task<bool> isEndpointPathUniqueForPost(string endpoint)
+        {
+            var target = await _context.BlogPosts.Where(p => p.EndpointPath.ToLower() == endpoint.ToLower()).FirstOrDefaultAsync();
+            if (target == null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        [HttpPost("blog/posts/create")]
+        public async Task<IActionResult> CreateNewBlogPost([FromBody] BlogPostCoreDto blogPost)
+        {
+            try
+            {
+
+                if (await isEndpointPathUniqueForPost(blogPost.endpointPath))
+                {
+                    BlogPost dbPost = new BlogPost
+                    {
+                        Id = await getUniqueIdForBlogPost(),
+                        EndpointPath = blogPost.endpointPath,
+                        Title = blogPost.title,
+                        Description = blogPost.description,
+                        ImageUrl = blogPost.imageUrl,
+                        Author = blogPost.author,
+                        Content = blogPost.content,
+                        CreationDate = DateTime.Now,
+                        LastUpdateDate = null,
+                    };
+
+                    _context.BlogPosts.Add(dbPost);
+                    await _context.SaveChangesAsync();
+
+                    return Ok(new messageResponse { status = "success", message = "post was successfully added to the database." });
+                }
+                else
+                {
+                    return BadRequest(new messageResponse { status = "fail", message = "post path already occupied." });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new messageResponse { status = "fail", message = ex.Message });
+            }
+        }
+
+        [HttpPost("blog/categories/create")]
+        public async Task<IActionResult> CreateNewBlogCategory([FromBody] BlogCategoryCoreDto category)
+        {
+            try
+            {
+                BlogCategory dbCat = new BlogCategory
+                {
+                    Id = await getUniqueIdForBlogCategory(),
+                    Title = category.title
+                };
+
+                _context.BlogCategories.Add(dbCat);
+                await _context.SaveChangesAsync();
+
+                return Ok(new messageResponse { status = "success", message = "category was successfully added to the database." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new messageResponse { status = "fail", message = ex.Message });
+            }
+        }
+
+        [HttpPost("blog/posts/update")]
+        public async Task<IActionResult> UpdateBlogPost([FromBody] BlogPostCoreDto blogPost)
+        {
+            try
+            {
+                var dbPost = await _context.BlogPosts.FirstOrDefaultAsync(p => p.Id == blogPost.id);
+
+                if (dbPost == null)
+                    return NotFound(new messageResponse { status = "fail", message = "Post not found." });
+
+                bool pathIsUpdated = dbPost.EndpointPath.ToLower() != blogPost.endpointPath;
+                bool newPathIsUnique = await isEndpointPathUniqueForPost(blogPost.endpointPath);
+
+                if (!pathIsUpdated || (pathIsUpdated && newPathIsUnique))
+                {
+                    dbPost.Title = blogPost.title;
+                    dbPost.EndpointPath = blogPost.endpointPath;
+                    dbPost.Description = blogPost.description;
+                    dbPost.ImageUrl = blogPost.imageUrl;
+                    dbPost.Author = blogPost.author;
+                    dbPost.Content = blogPost.content;
+                    dbPost.CategoryId = blogPost.categoryId;
+                    dbPost.LastUpdateDate = DateTime.Now;
+
+                    await _context.SaveChangesAsync();
+
+                    return Ok(new messageResponse { status = "success", message = "Post updated." });
+                }
+                else
+                {
+                    return BadRequest(new messageResponse { status = "fail", message = "post path already occupied" });
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new messageResponse { status = "fail", message = ex.Message });
+            }
+        }
+
 
     }
 }
