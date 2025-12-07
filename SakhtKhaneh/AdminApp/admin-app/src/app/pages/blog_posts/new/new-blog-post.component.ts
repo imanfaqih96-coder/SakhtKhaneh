@@ -1,4 +1,5 @@
 import { Component, AfterViewInit, ChangeDetectorRef, NgZone, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpEventType, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 
@@ -9,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
@@ -21,6 +23,12 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 // Local dialog (you already have MessageDialogComponent)
 import { MessageDialogComponent } from '../../components/message/message-dialog.component';
 
+export interface BlogCategoryItem {
+  id: number;
+  title: string;
+}
+
+
 type UploadState = 'idle' | 'selected' | 'uploading' | 'uploaded' | 'error';
 
 @Component({
@@ -31,6 +39,7 @@ type UploadState = 'idle' | 'selected' | 'uploading' | 'uploaded' | 'error';
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSelectModule,
     MatButtonModule,
     MatIconModule,
     MatCardModule,
@@ -49,7 +58,10 @@ export class NewBlogPostComponent implements OnInit, AfterViewInit {
 
   private apiUrl = `${window.location.origin}/api`;
 
+  categories: BlogCategoryItem[] = [];
+
   // form fields
+  categoryId = 0;
   endpointPath = '';
   title = '';
   description = '';
@@ -79,6 +91,7 @@ export class NewBlogPostComponent implements OnInit, AfterViewInit {
 
 
   constructor(
+    private router: Router,
     private http: HttpClient,
     private cd: ChangeDetectorRef,
     private ngZone: NgZone,
@@ -87,13 +100,21 @@ export class NewBlogPostComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit(): void {
+    this.initCategories();
     this.editor = new Editor(); // ✅ initialize
   }
-
 
   ngAfterViewInit(): void {
     // ensure initial CD
     this.cd.detectChanges();
+  }
+
+  initCategories() {
+    this.http.get<BlogCategoryItem[]>(`${this.apiUrl}/blog/categories/get`)
+      .subscribe(res => {
+        console.log('categories:', res);
+        this.categories = res;
+      });
   }
 
   // ---------- COVER HANDLERS ----------
@@ -183,7 +204,41 @@ export class NewBlogPostComponent implements OnInit, AfterViewInit {
   // -------- FORM HANDLERS ------------
 
   submitPost() {
+    var dto = {
+      endpointPath: this.endpointPath,
+      categoryId: this.categoryId,
+      title: this.title,
+      description: this.description,
+      author: this.author,
+      imageUrl: this.coverUrl,
+      content: this.content
+    }
 
+    this.http.post(`${this.apiUrl}/blog/posts/create`, dto).subscribe({
+      next: (res: any) => {
+
+        if (res.status == 'success') {
+          this.dialog.open(MessageDialogComponent, { data: { title: 'موفق', message: 'مطلب با موفقیت ثبت شد.' } });
+          // reset
+          this.resetForm();
+          this.router.navigate(['/blog-posts/all']);
+          this.cd.detectChanges();
+        }
+        else if (res.status == 'fail') {
+          if (res.message == 'post path already occupied.') {
+            this.dialog.open(MessageDialogComponent, { data: { title: 'هشدار', message: 'مسیر endpoint که برای مطلب انتخاب شده در حال حاضر به مطلب دیگری اختصاص دارد.' } });
+          }
+          else {
+            this.dialog.open(MessageDialogComponent, { data: { title: 'خطا', message: ':خطایی در ثبت مطلب رخ داده است. \n\n' + res.message } });
+          }
+        }
+
+      },
+      error: (err) => {
+        console.error('Create project error', err);
+        this.dialog.open(MessageDialogComponent, { data: { title: 'خطا', message: 'خطای ناشناخته در ثبت مطلب رخ داده است.' } });
+      }
+    });
   }
 
   resetForm() {

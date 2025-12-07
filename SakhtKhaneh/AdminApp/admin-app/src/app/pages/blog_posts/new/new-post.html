@@ -10,7 +10,34 @@
         <input matInput [(ngModel)]="endpointPath" name="endpointPath" required>
       </mat-form-field>
     </div>
-      
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-icon matPrefix fontSet="material-icons-outlined">folder</mat-icon>
+        <mat-label>دسته بندی</mat-label>
+        <mat-select [(ngModel)]="categoryId" name="categoryId" required>
+          <mat-option *ngFor="let item of categories" [value]="item.id">
+            {{ item.title }}
+          </mat-option>
+          <mat-option value="0" [hidden]="categories?.length">دسته بندی موجود نیست</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div [hidden]="categories?.length">
+        <p class="text-alert text-danger">
+          توجه: برای درج مطلب می بایست یک دسته بندی انتخاب شود در صورتی که دسته بندی در فهرست وجود نداشته باشد می بایست ابتدا اقدام به ایجاد دسته بندی جدید نمائید.
+        </p>
+        <p>
+          به منظور ایجاد دسته بندی جدید می توانید از صفحه مدیریت دسته بندی استفاده نمائید.
+        </p>
+        <a mat-flat-button color="primary" href="/admin/blog-categories/all">
+          <mat-icon fontSet="material-icons-outlined">folders</mat-icon>
+          مدیریت دسته بندی
+        </a>
+      </div>
+
+    </div>
+
     <div class="form-row">
       <mat-form-field appearance="outline" class="w-100">
         <mat-icon matPrefix fontSet="material-icons-outlined">title</mat-icon>

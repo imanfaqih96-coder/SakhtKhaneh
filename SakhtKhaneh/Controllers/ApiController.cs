@@ -563,11 +563,14 @@ namespace SakhtKhaneh.Controllers
             try
             {
 
-                if (await isEndpointPathUniqueForPost(blogPost.endpointPath))
+                bool endpointIsUnique = await isEndpointPathUniqueForPost(blogPost.endpointPath);
+
+                if (endpointIsUnique)
                 {
                     BlogPost dbPost = new BlogPost
                     {
                         Id = await getUniqueIdForBlogPost(),
+                        CategoryId = blogPost.categoryId,
                         EndpointPath = blogPost.endpointPath,
                         Title = blogPost.title,
                         Description = blogPost.description,

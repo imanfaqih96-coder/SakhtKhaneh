@@ -1,0 +1,73 @@
+<div class="category-manager container pt-2">
+
+  <h3 class="color-primary">
+    مدیریت دسته بندی ها
+  </h3>
+  <p>
+    به منظور مدیریت دسته بندی ها می توانید از جدول زیر استفاده نمائید، در صورتی که داده ای در جدول موجود نیست می توانید با دکمه زیر اقدام به درج دسته بندی نمائید.
+  </p>
+
+  <div class="toolbar mb-3">
+    <div class="row">
+      <div class="col-lg-10 col-md-10 col-sm-9 col-8">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>جستجوی دسته بندی</mat-label>
+          <input matInput [(ngModel)]="searchTerm" (input)="search()">
+        </mat-form-field>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-3 col-4">
+        <button mat-flat-button color="primary" (click)="createCategory()" class="add-new-project-button w-100">
+          <mat-icon>add</mat-icon> ایجاد دسته جدید
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <table mat-table [dataSource]="filteredCategories" class="mat-elevation-z8 w-100" [hidden]="!categories?.length">
+
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef> شناسه </th>
+      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="title">
+      <th mat-header-cell *matHeaderCellDef> نام دسته بندی </th>
+      <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef> عملیات </th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button color="primary" (click)="editCategory(element)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="deleteCategory(element)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons [hidden]="!categories?.length"></mat-paginator>
+
+  <div class="row justify-content-center" [hidden]="categories?.length">
+    <div class="col-md-10">
+      <div class="row justify-content-center">
+        <span class="material-symbols-outlined text-muted text-center"
+              style="font-size:235px;">
+          database_search
+        </span>
+      </div>
+
+      <h3 class="text-muted text-center">هیچ دسته بندی ایجاد نشده است</h3>
+      <p class="text-center">
+        برای ایجاد دسته بندی جدید روی دکمه بالا کلیک کنید
+      </p>
+
+    </div>
+  </div>
+
+</div>
