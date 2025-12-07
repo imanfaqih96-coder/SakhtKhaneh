@@ -14,6 +14,7 @@ import { EditProjectComponent } from './pages/projects/edit-project/edit-project
 import { BlogPostsComponent } from './pages/blog_posts/all/posts.component';
 import { NewBlogPostComponent } from './pages/blog_posts/new/new-blog-post.component';
 import { BlogCategoriesComponent } from './pages/blog_categories/blog-categories.component';
+import { EditBlogPostComponent } from './pages/blog_posts/edit/edit-blog-post.component';
 
 
 
@@ -38,7 +39,8 @@ export const routes: Routes = [
       { path: 'projects/edit/:project_guid', component: EditProjectComponent },
       { path: 'blog-posts/all', component: BlogPostsComponent },
       { path: 'blog-posts/new', component: NewBlogPostComponent },
-      { path: 'blog-categories/all', component: BlogCategoriesComponent }
+      { path: 'blog-categories/all', component: BlogCategoriesComponent },
+      { path: 'blog-posts/edit/:post_guid', component: EditBlogPostComponent }
       // صفحه‌های دیگر نیز همینجا
       // { path: 'users', component: UsersComponent },
     ]

@@ -15,11 +15,17 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 export interface BlogPostItem {
-  id: string;
+  id: string | null;
   title: string;
   description: string;
   creationDate: Date;
   lastUpdateDate: Date | null;
+  imageUrl: string;
+  author: string;
+  categoryId: number | null;
+  category: object | null;
+  endpointPath: string;
+  content: string;
 };
 
 @Component({

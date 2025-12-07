@@ -509,6 +509,13 @@ namespace SakhtKhaneh.Controllers
             return posts;
         }
 
+        [HttpGet("blog/posts/get/{post_id}")]
+        public async Task<BlogPost?> GetBlogPost(Guid post_id)
+        {
+            var post = await _context.BlogPosts.Include(p => p.Category).Where(p => p.Id == post_id).FirstOrDefaultAsync();
+            return post;
+        }
+
         private async Task<Guid> getUniqueIdForBlogPost()
         {
             Guid Id = Guid.NewGuid();
