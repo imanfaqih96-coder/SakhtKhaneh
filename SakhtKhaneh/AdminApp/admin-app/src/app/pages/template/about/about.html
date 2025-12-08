@@ -1,0 +1,76 @@
+<div class="new-project container pt-2">
+
+  <mat-card class="form-card">
+
+    <h3 class="color-primary mb-5">بروزرسانی درباره ما</h3>
+
+    <form name="about">
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-icon matPrefix fontSet="material-icons-outlined">title</mat-icon>
+          <mat-label>عنوان درباره ما</mat-label>
+          <input matInput [(ngModel)]="title" name="title" required>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <!-- Ngx Editor -->
+        <div class="editor-wrapper">
+          <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"></ngx-editor-menu>
+          <ngx-editor [editor]="editor"
+                      [(ngModel)]="content"
+                      name="content"
+                      [placeholder]="'متن درباره ما را اینجا بنویسید...'"
+                      class="ngx-editor">
+          </ngx-editor>
+        </div>
+      </div>
+
+      <!-- COVER UPLOADER -->
+      <div class="uploader-section">
+        <label class="section-title">کاور مطلب</label>
+
+        <div class="drop-box"
+             (drop)="onCoverDrop($event)"
+             (dragover)="onDragOver($event)">
+          <input #coverInput type="file" accept="image/*" (change)="onCoverSelect($event, coverInput)" class="file-input">
+          <div class="drop-inner">
+            <mat-icon class="section-icon">photo_camera</mat-icon>
+            <div *ngIf="coverState==='idle'">کاور را Drag & Drop کنید یا انتخاب کنید</div>
+            <div *ngIf="coverState==='selected'">فایل انتخاب شد — آماده آپلود</div>
+            <div *ngIf="coverState==='uploading'">در حال آپلود ...</div>
+            <div *ngIf="coverState==='uploaded'">آپلود شده</div>
+
+            <div class="drop-actions">
+              <button mat-stroked-button color="primary" type="button" (click)="coverInput.click()">انتخاب</button>
+              <button mat-stroked-button type="button" color="warn" (click)="removeCover()" *ngIf="coverState!=='uploading'">پاک کردن</button>
+              <button mat-stroked-button type="button" color="accent" (click)="retryCoverUpload()" *ngIf="coverState==='error'">تلاش مجدد</button>
+              <button mat-stroked-button type="button" (click)="cancelCoverUpload()" *ngIf="coverState==='uploading'">لغو</button>
+            </div>
+          </div>
+        </div>
+
+        <mat-progress-bar *ngIf="coverState==='uploading'" mode="determinate" [value]="coverProgress"></mat-progress-bar>
+
+        <div class="preview-box" [hidden]="!coverPreview && !coverUrl">
+          <img [src]="coverPreview ?? coverUrl" class="preview-img">
+          <div class="preview-actions">
+            <button mat-button (click)="coverInput.click()"><mat-icon>edit</mat-icon> تغییر</button>
+            <button mat-button color="warn" (click)="removeCover()"><mat-icon>delete</mat-icon> حذف</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button mat-flat-button color="primary" (click)="submitForm()" [disabled]="!title || !content || !coverUrl">
+          <mat-icon>save</mat-icon> ذخیره تغییرات
+        </button>
+        <button mat-stroked-button color="warn" (click)="resetForm()">ریست فرم</button>
+      </div>
+
+    </form>
+
+  </mat-card>
+
+</div>

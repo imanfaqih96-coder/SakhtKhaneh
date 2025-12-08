@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using SakhtKhaneh.Data;
 using SakhtKhaneh.Models;
 using SakhtKhaneh.Models.Blog;
@@ -11,6 +12,7 @@ using SakhtKhaneh.Models.Dto.Blog;
 using SakhtKhaneh.Models.Dto.Dashboard;
 using SakhtKhaneh.Models.Dto.Profile;
 using SakhtKhaneh.Models.Projects;
+using SakhtKhaneh.Models.Template;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -668,6 +670,120 @@ namespace SakhtKhaneh.Controllers
             }
         }
 
+        // Template Management
+        private async Task<Guid> GetUniqueIdForTemplateRow()
+        {
+            var id = Guid.NewGuid();
+            var target = await _context.TemplatesProperties.Where(p => p.Id == id).FirstOrDefaultAsync();
+            bool isExisted = target != null;
+            if (!isExisted)
+            {
+                return id;
+            }
+            else
+            {
+                return await GetUniqueIdForTemplateRow();
+            }
+        }
+        [HttpPost("template/get")]
+        public async Task<IActionResult> GetTemplateRow([FromBody] TemplatesPropertyCoreDto row)
+        {
+            try
+            {
+                var data = await _context.TemplatesProperties.Where(p => p.Path == row.path && p.Key == row.key).FirstOrDefaultAsync();
+                return Ok(new messageResponse { status = "success", message = JsonConvert.SerializeObject(data) });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new messageResponse { status = "fail", message = ex.Message });
+            }
+        }
+        [HttpPost("template/set")]
+        public async Task<IActionResult> SetTemplateRow([FromBody] TemplatesPropertyCoreDto row)
+        {
+            try
+            {
+                var data = await _context.TemplatesProperties.Where(p => p.Path == row.path && p.Key == row.key).FirstOrDefaultAsync();
 
+                if (data != null)
+                {
+                    // there is this row existed in the database so we just update
+                    var target = data;
+                    // all the other attributes must remain intact so we just touch the value and update date
+                    target.Value = row.value;
+                    target.LastUpadteDate = DateTime.Now;
+
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    //not such a row was found in the database so we handle the creation process
+                    var dbRow = new TemplatesProperty
+                    {
+                        Id = await GetUniqueIdForTemplateRow(),
+                        Path = row.path,
+                        Key = row.key,
+                        Value = row.value,
+                        CreationDate = DateTime.Now,
+                        LastUpadteDate = null
+                    };
+
+                    _context.TemplatesProperties.Add(dbRow);
+                    await _context.SaveChangesAsync();
+                }
+
+
+                return Ok(new messageResponse { status = "success", message = "template row has been set" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new messageResponse { status = "fail", message = ex.Message });
+            }
+        }
+        [HttpPost("template/set-multiple")]
+        public async Task<IActionResult> SetTemplateRows([FromBody] List<TemplatesPropertyCoreDto> rows)
+        {
+            try
+            {
+                foreach(var row in rows)
+                {
+                    var data = await _context.TemplatesProperties.Where(p => p.Path == row.path && p.Key == row.key).FirstOrDefaultAsync();
+
+                    if (data != null)
+                    {
+                        // there is this row existed in the database so we just update
+                        var target = data;
+                        // all the other attributes must remain intact so we just touch the value and update date
+                        target.Value = row.value;
+                        target.LastUpadteDate = DateTime.Now;
+
+                        await _context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        //not such a row was found in the database so we handle the creation process
+                        var dbRow = new TemplatesProperty
+                        {
+                            Id = await GetUniqueIdForTemplateRow(),
+                            Path = row.path,
+                            Key = row.key,
+                            Value = row.value,
+                            CreationDate = DateTime.Now,
+                            LastUpadteDate = null
+                        };
+
+                        _context.TemplatesProperties.Add(dbRow);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
+
+                return Ok(new messageResponse { status = "success", message = "template row has been set" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new messageResponse { status = "fail", message = ex.Message });
+            }
+        }
     }
 }
