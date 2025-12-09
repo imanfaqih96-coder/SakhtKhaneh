@@ -1,0 +1,37 @@
+.select-icon img{
+    width:45px;
+    float:right;
+    display:block;
+}
+
+.select-icon h6{
+    width:calc(100% - 45px);
+    float:right;
+    display:block;
+    padding:0 5px;
+    height:45px;
+    line-height:35px;
+}
+
+.service-item{
+    border:1px dotted #ddd;
+    padding:15px;
+}
+
+.service-item img{
+    float:right;
+    width:65px;
+}
+
+  .service-item h6 {
+    font-weight: 700;
+    float: right;
+    width: calc(100% - 65px);
+    height: 65px;
+    line-height: 60px;
+    padding: 0 15px;
+  }
+
+.service-item p{
+    font-size:14px;
+}

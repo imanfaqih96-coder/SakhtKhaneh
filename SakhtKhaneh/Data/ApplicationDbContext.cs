@@ -15,6 +15,7 @@ namespace SakhtKhaneh.Data
         public DbSet<SakhtKhaneh.Models.Projects.ProjectGalleryItem> GalleryItems { get; set; }
         public DbSet<SakhtKhaneh.Models.Blog.BlogCategory> BlogCategories { get; set; }
         public DbSet<SakhtKhaneh.Models.Blog.BlogPost> BlogPosts { get; set; }
+        public DbSet<SakhtKhaneh.Models.Services.Service> Services { get; set; }
         public DbSet<SakhtKhaneh.Models.Template.TemplatesProperty> TemplatesProperties { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -35,6 +36,12 @@ namespace SakhtKhaneh.Data
             modelBuilder.Entity<TemplatesProperty>(entity =>
             {
                 entity.ToTable("TemplateProperties");
+                entity.HasKey(p => p.Id);
+            });
+
+            modelBuilder.Entity<SakhtKhaneh.Models.Services.Service>(entity =>
+            {
+                entity.ToTable("Services");
                 entity.HasKey(p => p.Id);
             });
 

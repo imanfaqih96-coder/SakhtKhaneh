@@ -19,4 +19,11 @@
         public DateTime? creationDate { get; set; }
         public DateTime? lastUpadteDate { get; set; }
     }
+
+    public class IconItem
+    {
+        public string title { get; set; }
+        public string iconUrl { get; set; }
+    }
+
 }

@@ -12,7 +12,9 @@ using SakhtKhaneh.Models.Dto.Blog;
 using SakhtKhaneh.Models.Dto.Dashboard;
 using SakhtKhaneh.Models.Dto.Profile;
 using SakhtKhaneh.Models.Projects;
+using SakhtKhaneh.Models.Services;
 using SakhtKhaneh.Models.Template;
+using SQLitePCL;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -26,6 +28,7 @@ namespace SakhtKhaneh.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private IWebHostEnvironment _env;
 
         public class messageResponse
         {
@@ -33,11 +36,12 @@ namespace SakhtKhaneh.Controllers
             public string message { get; set; }
         }
 
-        public ApiController(ApplicationDbContext context, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        public ApiController(ApplicationDbContext context, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IWebHostEnvironment env)
         {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
+            _env = env;
         }
 
         [HttpGet("GetProfile")]
@@ -698,6 +702,21 @@ namespace SakhtKhaneh.Controllers
                 return BadRequest(new messageResponse { status = "fail", message = ex.Message });
             }
         }
+
+        [HttpGet("template/get-multiple")]
+        public async Task<IActionResult> GetTemplateRowMultiple([FromBody] TemplatesPropertyCoreDto row)
+        {
+            try
+            {
+                var data = await _context.TemplatesProperties.Where(p => p.Path == row.path && p.Key == row.key).ToListAsync();
+                return Ok(new messageResponse { status = "success", message = JsonConvert.SerializeObject(data) });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new messageResponse { status = "fail", message = ex.Message });
+            }
+        }
+
         [HttpPost("template/set")]
         public async Task<IActionResult> SetTemplateRow([FromBody] TemplatesPropertyCoreDto row)
         {
@@ -745,7 +764,7 @@ namespace SakhtKhaneh.Controllers
         {
             try
             {
-                foreach(var row in rows)
+                foreach (var row in rows)
                 {
                     var data = await _context.TemplatesProperties.Where(p => p.Path == row.path && p.Key == row.key).FirstOrDefaultAsync();
 
@@ -785,5 +804,133 @@ namespace SakhtKhaneh.Controllers
                 return BadRequest(new messageResponse { status = "fail", message = ex.Message });
             }
         }
+
+        [HttpGet("template/icons/services/get")]
+        public IActionResult GetServiceIcons()
+        {
+            try
+            {
+                string folder = Path.Combine(_env.WebRootPath, "assets", "img", "icons", "services");
+
+                if (!Directory.Exists(folder))
+                    return NotFound("Icons folder not found!");
+
+                var files = Directory.GetFiles(folder, "*.png");
+
+                List<IconItem> icons = files.Select((file, index) => new IconItem
+                {
+                    title = Path.GetFileNameWithoutExtension(file),
+                    iconUrl = $"/assets/img/icons/services/{Path.GetFileName(file)}"
+                }).ToList();
+
+                return Ok(icons);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // Services 
+        [HttpGet("services/get")]
+        public async Task<IActionResult> GetServices()
+        {
+            try
+            {
+                var services = await _context.Services.ToListAsync();
+
+                List<ServiceCoreDto> outputList = new List<ServiceCoreDto>();
+
+                foreach (var item in services)
+                {
+                    ServiceCoreDto dto = new ServiceCoreDto
+                    {
+                        id = item.Id,
+                        title = item.Title,
+                        iconUrl = item.IconUrl,
+                        description = item.Description,
+                        creationDate = item.CreationDate,
+                        lastUpdateDate = item.LastUpdateDate
+                    };
+                    outputList.Add(dto);
+                }
+
+                return Ok(new messageResponse { status = "success", message = JsonConvert.SerializeObject(outputList) });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new messageResponse { status = "fail", message = ex.Message });
+            }
+        }
+        private async Task<Guid> GetUniqueIdForServiceItem()
+        {
+            var id = Guid.NewGuid();
+            var target = await _context.Services.Where(p => p.Id == id).FirstOrDefaultAsync();
+            bool isExisted = target != null;
+            if (!isExisted)
+            {
+                return id;
+            }
+            else
+            {
+                return await GetUniqueIdForServiceItem();
+            }
+        }
+
+        [HttpPost("services/create")]
+        public async Task<IActionResult> CreateService([FromBody] ServiceCoreDto row)
+        {
+            try
+            {
+                Service dbService = new Service
+                {
+                    Id = await GetUniqueIdForServiceItem(),
+                    Title = row.title,
+                    Description = row.description,
+                    IconUrl = row.iconUrl,
+                    CreationDate = DateTime.Now,
+                    LastUpdateDate = null
+                };
+
+                _context.Services.Add(dbService);
+                await _context.SaveChangesAsync();
+
+                return Ok(new messageResponse { status = "success", message = "the service was successfully added." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new messageResponse { status = "fail", message = ex.Message });
+            }
+        }
+
+        [HttpPost("services/edit")]
+        public async Task<IActionResult> UpdateService([FromBody] ServiceCoreDto row)
+        {
+            try
+            {
+                var target = await _context.Services.Where(p => p.Id == row.id).FirstOrDefaultAsync();
+
+                if (target != null)
+                {
+                    target.IconUrl = row.iconUrl;
+                    target.Title = row.title;
+                    target.Description = row.description;
+                    target.LastUpdateDate = DateTime.Now;
+
+                    await _context.SaveChangesAsync();
+
+                    return Ok(new messageResponse { status = "success", message = "the service was successfully edited." });
+                }
+                else
+                {
+                    return BadRequest(new messageResponse { status = "fail", message = "no-service-was-found" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new messageResponse { status = "fail", message = ex.Message });
+            }
+        }
+
     }
 }

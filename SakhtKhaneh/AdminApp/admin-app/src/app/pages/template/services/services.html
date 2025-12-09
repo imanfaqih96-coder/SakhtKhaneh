@@ -1,0 +1,206 @@
+<div class="container pt-5">
+  <div class="row">
+    <div class="col-12">
+      <h3 class="color-primary">بروزرسانی خدمات ما</h3>
+    </div>
+  </div>
+  <div class="row">
+
+    <!-- Preview Box -->
+    <div class="row">
+
+      <div [hidden]="!services?.length || creationServiceFlag || customizingServiceFlag" class="col-12">
+
+        <div class="row my-3">
+          <div class="col-md-3">
+            <button type="button" mat-flat-button color="primary" class="add-new-project-button" (click)="openCreationServiceCard()">
+              <mat-icon>add</mat-icon> خدمات جدید
+            </button>
+          </div>
+        </div>
+
+        <div class="row">
+
+          <div class="col-lg-4 col-md-6 col-sm-12 col-12" *ngFor="let item of services">
+            <div class="service-item mt-2">
+              <img src="{{item.iconUrl}}" />
+              <h6>{{item.title}}</h6>
+              <p>
+                {{item.description}}
+              </p>
+              <button matFab color="primary" type="button" (click)="setServiceForEdit(item.id)" style="width:40px;height:40px;" class="mx-1">
+                <mat-icon fontSet="material-icons-outlined">
+                  settings
+                </mat-icon>
+              </button>
+              <button matFab color="warn" type="button" style="width:40px;height:40px;" class="mx-1">
+                <mat-icon fontSet="material-icons-outlined">
+                  delete
+                </mat-icon>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div [hidden]="services?.length || creationServiceFlag || customizingServiceFlag" class="col-12">
+
+        <div class="row justify-content-center" [hidden]="services?.length">
+          <div class="col-md-10">
+            <div class="row justify-content-center">
+              <span class="material-symbols-outlined text-muted text-center"
+                    style="font-size:235px;">
+                database_search
+              </span>
+            </div>
+
+            <h3 class="text-muted text-center">هیچ خدماتی ایجاد نشده است</h3>
+            <p class="text-center">
+              برای ایجاد خدمات جدید روی دکمه زیر کلیک کنید
+            </p>
+
+            <div class="row justify-content-center">
+              <div class="col-md-3">
+                <button type="button" mat-flat-button color="primary" class="add-new-project-button w-100" (click)="openCreationServiceCard()">
+                  <mat-icon>add</mat-icon> خدمات جدید
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Create New Service Box -->
+    <div [hidden]="!creationServiceFlag">
+
+      <h5 class="color-primary mt-3 mb-0">
+        ایجاد خدمات جدید
+      </h5>
+      <p>
+        برای افزودن خدمات جدید فرم زیر را پر نموده و سپس تایید نمایید.
+      </p>
+
+      <form name="create">
+
+        <!-- Icon -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-icon matPrefix fontSet="material-icons-outlined">photo</mat-icon>
+            <mat-label>آیکون خدمات</mat-label>
+            <mat-select [(ngModel)]="newServiceIcon">
+              <mat-option *ngFor="let item of servicesIcons" [value]="item">
+                <div class="select-icon">
+                  <img src="{{item.iconUrl}}" alt="{{item.title}}" />
+                  <h6>
+                    {{item.title}}
+                  </h6>
+                </div>
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- TITLE -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-icon matPrefix fontSet="material-icons-outlined">title</mat-icon>
+            <mat-label>عنوان خدمات</mat-label>
+            <input matInput [(ngModel)]="newServiceTitle" name="newServiceTitle" required>
+          </mat-form-field>
+        </div>
+
+        <!-- Description -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-icon matPrefix fontSet="material-icons-outlined">text_fields</mat-icon>
+            <mat-label>متن خدمات</mat-label>
+            <textarea rows="4" matInput [(ngModel)]="newServiceDescription" name="newServiceDescription" required></textarea>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <button type="button" color="primary" mat-flat-button (click)="addNewService()">
+            <mat-icon>add</mat-icon>
+            افزودن خدمات
+          </button>
+          <button type="button" color="warn" mat-flat-button (click)="cancelNewService()" class="mx-2">
+            <mat-icon fontSet="material-icons-outlined">cancel</mat-icon>
+            انصراف
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- Edit Service Box -->
+    <div [hidden]="!customizingServiceFlag">
+
+      <form name="create">
+
+        <!-- ID -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-icon matPrefix fontSet="material-icons-outlined">vpn_key</mat-icon>
+            <mat-label>شناسه خدمات</mat-label>
+            <input matInput [(ngModel)]="editServiceId" name="editServiceId" required>
+          </mat-form-field>
+        </div>
+
+        <!-- Icon -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-icon matPrefix fontSet="material-icons-outlined">photo</mat-icon>
+            <mat-label>آیکون خدمات</mat-label>
+            <mat-select [(ngModel)]="editServiceIcon">
+              <mat-option *ngFor="let item of servicesIcons" [value]="item">
+                <div class="select-icon">
+                  <img src="{{item.iconUrl}}" alt="{{item.title}}" />
+                  <h6>
+                    {{item.title}}
+                  </h6>
+                </div>
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- TITLE -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-icon matPrefix fontSet="material-icons-outlined">title</mat-icon>
+            <mat-label>عنوان خدمات</mat-label>
+            <input matInput [(ngModel)]="editServiceTitle" name="editServiceTitle" required>
+          </mat-form-field>
+        </div>
+
+        <!-- Description -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-icon matPrefix fontSet="material-icons-outlined">text_fields</mat-icon>
+            <mat-label>متن خدمات</mat-label>
+            <textarea rows="4" matInput [(ngModel)]="editServiceDescription" name="editServiceDescription" required></textarea>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <button type="button" color="primary" mat-flat-button (click)="saveServiceChanges()">
+            <mat-icon>add</mat-icon>
+            ذخیره تغییرات
+          </button>
+          <button type="button" color="warn" mat-flat-button (click)="cancelEditService()" class="mx-2">
+            <mat-icon fontSet="material-icons-outlined">cancel</mat-icon>
+            انصراف
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+</div>
