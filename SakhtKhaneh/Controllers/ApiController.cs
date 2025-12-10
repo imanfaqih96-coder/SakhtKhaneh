@@ -703,7 +703,7 @@ namespace SakhtKhaneh.Controllers
             }
         }
 
-        [HttpGet("template/get-multiple")]
+        [HttpPost("template/get-multiple")]
         public async Task<IActionResult> GetTemplateRowMultiple([FromBody] TemplatesPropertyCoreDto row)
         {
             try
@@ -828,6 +828,46 @@ namespace SakhtKhaneh.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("template/saveHomeSliderSettings")]
+        public async Task<IActionResult> saveHomeSliderSettings([FromBody] List<string> urls)
+        {
+            try
+            {
+                var current_items = await _context.TemplatesProperties.Where(p => p.Path == "home" && p.Key == "slider-item").ToListAsync();
+
+                if (current_items != null && current_items.Count > 0) { 
+                    foreach(var item in current_items)
+                    {
+                        _context.TemplatesProperties.Remove(item);
+                    }
+                    await _context.SaveChangesAsync();
+                }
+
+                foreach(var item in urls)
+                {
+                    var dbTemplateRow = new TemplatesProperty
+                    {
+                        Id = await GetUniqueIdForTemplateRow(),
+                        Path = "home",
+                        Key = "slider-item",
+                        Value = item,
+                        CreationDate = DateTime.Now,
+                        LastUpadteDate = null
+                    };
+
+                    _context.TemplatesProperties.Add(dbTemplateRow);
+                }
+
+                await _context.SaveChangesAsync();
+
+                return Ok(new messageResponse { status = "success", message = "slider setting has been updated." });
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(new messageResponse { status = "fail", message = ex.Message });
             }
         }
 

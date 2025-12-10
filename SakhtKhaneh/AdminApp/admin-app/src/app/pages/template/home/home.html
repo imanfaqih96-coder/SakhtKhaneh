@@ -1,0 +1,77 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-10 col-md-10 col-sm-12">
+
+      <mat-card class="w-100">
+
+        <h3 class="color-primary mb-4 mt-3">
+          بروزرسانی صفحه اصلی
+        </h3>
+
+        <hr />
+
+        <h6>
+          اسلایدر
+        </h6>
+        <p>
+          در باکس زیر می توانید عکس های استفاده شده در اسلایدر صفحه اصلی سایت را مدیریت نمائید، با حذف و اضافه کردن عکس ها ترکیب مورد نظر خود را ایجاد و ذخیره کنید.
+        </p>
+
+        <hr />
+
+        <form name="gallery">
+
+          <!-- GALLERY UPLOADER -->
+          <div class="uploader-section">
+            <label class="section-title">گالری تصاویر</label>
+
+            <div class="drop-box"
+                 (drop)="onGalleryDrop($event)"
+                 (dragover)="onDragOver($event)">
+              <input #galleryInput type="file" accept="image/*" multiple (change)="onGallerySelect($event)" class="file-input">
+              <div class="drop-inner">
+                <mat-icon class="section-icon">photo_library</mat-icon>
+                <div>تصاویر را Drag & Drop کنید یا انتخاب نمایید</div>
+                <div class="drop-actions">
+                  <button mat-stroked-button color="primary" type="button" (click)="galleryInput.click()">انتخاب تصاویر</button>
+                  <button mat-stroked-button type="button" color="warn" (click)="resetGallery()">پاک کردن همه</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="gallery-grid" *ngIf="gallery.length">
+              <div class="gallery-item" *ngFor="let item of gallery; let i = index">
+                <img class="thumb" [src]="item.src" alt="preview">
+                <mat-progress-bar *ngIf="item.state==='uploading'" mode="determinate" [value]="item.progress"></mat-progress-bar>
+
+                <div class="gallery-actions">
+                  <button mat-icon-button color="primary" (click)="retryGalleryUpload(i)" *ngIf="item.state==='error'"><mat-icon>replay</mat-icon></button>
+                  <button mat-icon-button color="warn" (click)="cancelGalleryUpload(i)" *ngIf="item.state==='uploading'"><mat-icon>cancel</mat-icon></button>
+                  <button mat-icon-button color="accent" (click)="removeGalleryImage(i)"><mat-icon>delete</mat-icon></button>
+                </div>
+
+                <div class="status" [ngClass]="{'error': item.state==='error', 'uploaded': item.state==='uploaded'}">
+                  <span *ngIf="item.state==='uploading'">در حال آپلود {{item.progress}}%</span>
+                  <span *ngIf="item.state==='uploaded'">آپلود شده</span>
+                  <span *ngIf="item.state==='error'">خطا در آپلود</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="form-row">
+            <button type="button" mat-flat-button color="primary" (click)="saveSliderChanges()">
+              <mat-icon>check</mat-icon>
+              ذخیره تغییرات
+            </button>
+          </div>
+
+        </form>
+
+      </mat-card>
+
+
+    </div>
+  </div>
+</div>
