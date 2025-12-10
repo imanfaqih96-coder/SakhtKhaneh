@@ -1,79 +1,192 @@
-﻿@{
-    ViewData["Title"] = "Index";
+﻿@using SakhtKhaneh.Models.Template.ViewModels
+@model HomeDataViewModel;
+
+@{
+    ViewData["Title"] = "Comming Soon";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!-- Comming soon -->
-<section class="comming section-padding">
-    <div class="v-middle">
+<!-- Slider -->
+<header class="header slider-fade">
+    <div class="owl-carousel owl-theme" dir="ltr">
+        <!-- The opacity on the image is made with "data-overlay-dark="number". You can change it using the numbers 0-9. -->
+        @foreach (var item in Model.Slider)
+        {
+            <div class="text-start item bg-img" data-overlay-dark="3" data-background="@item.ImageUrl">
+                <div class="v-middle caption mt-30">
+                    <div class="container">
+                        <div class="row justify-content-start">
+                            <div class="col-lg-7 col-md-12">
+                                @* <h1>Innovate Desing in Toronto</h1>
+                                <p>
+                                    Architecture viverra tellus nec massa dictum the euismoe.
+                                    <br>Curabitur viverra the posuere aukue velit.
+                                </p>
+                                <div class="butn-light mt-30 mb-30"> <a href="https://1.envato.market/mDnXD" target="_blank"><span>Buy Now</span></a> </div> *@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</header>
+
+<!-- Content -->
+<div class="content-wrapper">
+
+    <!-- Lines -->
+    <section class="content-lines-wrapper">
+        <div class="content-lines-inner">
+            <div class="content-lines"></div>
+        </div>
+    </section>
+    <!-- About -->
+    <section class="about section-padding">
         <div class="container">
-            <div class="row text-center mb-45">
+            @if (Model.AboutInfo != null && Model.AboutInfo.title != "" && Model.AboutInfo.content != "")
+            {
+                <div class="row">
+                    <div class="col-lg-6 col-md-12 mb-30 animate-box" data-animate-effect="fadeInUp">
+                        <h2 class="section-title">درباره <span>ما</span></h2>
+                        <h6>
+                            @Model.AboutInfo.title
+                        </h6>
+                        @Html.Raw(Model.AboutInfo.content)
+                    </div>
+                    <div class="col-lg-6 col-md-12 animate-box" data-animate-effect="fadeInUp">
+                        <div class="about-img">
+                            <div class="img"> <img src="@Model.AboutInfo.imageUrl" class="img-fluid" alt=""> </div>
+                            <div class="about-img-2 about-buro">
+                                <!-- Future Development Field -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <h3 class="text-muted text-center">اطلاعات درباره ما وارد نشده است</h3>
+            }
+        </div>
+    </section>
+    <!-- Projects -->
+    <section class="projects section-padding">
+        <div class="container">
+            <div class="row">
                 <div class="col-md-12">
-                    <h6>Our website is under construction</h6>
-                    <h2>Coming Soon!</h2>
+                    <h2 class="section-title">پروژه های <span>ما</span></h2>
                 </div>
             </div>
-            <div class="row text-center mb-45">
-                <div class="col-6 col-md-3">
-                    <div class="item">
-                        <div class="down">
-                            <h3 id="days">00</h3>
+            <div class="row">
+                <div class="col-md-12">
+                    @if (Model.Projects != null && Model.Projects.Count > 0)
+                    {
+                        <div class="owl-carousel owl-theme" dir="ltr">
+                            @foreach (var project in Model.Projects)
+                            {
+                                <div class="item" dir="rtl">
+                                    <div class="position-re o-hidden"> <img src="@project.CoverImageUrl" alt=""> </div>
+                                    <div class="con">
+                                        <h6><a href="cotton-house.html">@project.Title</a></h6>
+                                        <h5><a href="cotton-house.html">@project.Description</a></h5>
+                                        <div class="line"></div> <a href="/Public/Projects/@project.Id"><i class="ti-arrow-right"></i></a>
+                                    </div>
+                                </div>
+                            }
                         </div>
-                        <div class="item-info">
-                            <h6>Days</h6>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="item">
-                        <div class="down">
-                            <h3 id="hours">00</h3>
-                        </div>
-                        <div class="item-info">
-                            <h6>Hours</h6>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="item">
-                        <div class="down">
-                            <h3 id="minutes">00</h3>
-                        </div>
-                        <div class="item-info">
-                            <h6>Minutes</h6>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="item">
-                        <div class="down">
-                            <h3 id="seconds">00</h3>
-                        </div>
-                        <div class="item-info">
-                            <h6>Seconds</h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row justify-content-center">
-                <div class="col-lg-6 col-md-12 text-center">
-                    <p>Sign up for our latest news & articles.</p>
-                    <form>
-                        <input type="email" name="email" placeholder="Email Address">
-                        <button>Subscribe</button>
-                    </form>
-                </div>
-            </div>
-            <div class="row text-center">
-                <div class="go-back col-md-12">
-                    <a href='#'> <span><i class="ti-arrow-left" aria-hidden="true"></i></span>&nbsp; Back To Home </a>
+                    }
+                    else
+                    {
+                        <h3 class="text-muted text-center">هیچ پروژه ای درج نشده است</h3>
+                    }
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+</div>
+
 
 @section Scripts {
-    <script type="text/javascript" src="/assets/js/comming-soon.js"></script>
-}
+    <script src="/assets/js/modernizr-2.6.2.min.js"></script>
+    <script src="/assets/js/imagesloaded.pkgd.min.js"></script>
+    <script src="/assets/js/jquery.isotope.v3.0.2.js"></script>
+    <script src="/assets/js/popper.min.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
+    <script src="/assets/js/scrollIt.min.js"></script>
+    <script src="/assets/js/jquery.waypoints.min.js"></script>
+    <script src="/assets/js/owl.carousel.min.js"></script>
+    <script src="/assets/js/jquery.stellar.min.js"></script>
+    <script src="/assets/js/jquery.magnific-popup.js"></script>
+    <script src="/assets/js/YouTubePopUp.js"></script>
+    <script src="/assets/js/before-after.js"></script>
+    <script src="/assets/js/vegas.slider.min.js"></script>
+    <script src="/assets/js/home.js"></script>
 
+    <script>
+        const geolocation_api_key = '97c62498a168489898a05d474162b7ab';
+
+        function geolocate() {
+        const myHeaders = new Headers();
+
+
+        const requestOptions = {
+            method: "GET",
+            headers: myHeaders,
+            redirect: "follow"
+        };
+
+        fetch("https://api.ipgeolocation.io/v2/ipgeo?apiKey=" + geolocation_api_key + "", requestOptions)
+            .then((response) => response.text())
+            .then((result) => {
+                console.log(result)
+            })
+            .catch((error) => console.error(error));
+        }
+
+        function recordVisit() {
+            var path = window.location.href.replace(window.location.origin, '');
+            const myHeaders = new Headers();
+
+
+            const requestOptions = {
+                method: "GET",
+                headers: myHeaders,
+                redirect: "follow"
+            };
+
+            fetch("https://api.ipgeolocation.io/v2/ipgeo?apiKey=" + geolocation_api_key + "", requestOptions)
+                .then((response) => response.text())
+                .then((result) => {
+                    var geolocation = result;
+                    var data = {
+                        path: path,
+                        pathType: 'static',
+                        pathParam: 'index',
+                        geolocation: JSON.parse(geolocation)
+                    }
+                    var stringified = JSON.stringify(data);
+
+                    fetch('/api/submitVisitRecord', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: stringified
+                    })
+                        .then(async res => {
+                            const result = res;
+                            console.log("✅ visit recorded:", result);
+                        })
+                        .catch(err => {
+                            console.error("❌ Visit record failed:", err);
+                        });
+
+                })
+                .catch((error) => console.error(error));
+        }
+
+        recordVisit();
+    </script>
+
+}

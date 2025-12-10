@@ -1,13 +1,14 @@
-﻿<!DOCTYPE html>
+﻿@using SakhtKhaneh.Models.Template.ViewModels
+<!DOCTYPE html>
 
-<html>
+<html dir="rtl" lang="fa">
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title - ساخت خانه</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <link rel="shortcut icon" href="img/favicon.png" type="image/png">
+    <link rel="shortcut icon" href="/assets/img/favicon.png" type="image/png">
     <meta name="description" content="وب سایت ساخت خانه">
     <meta name="keywords" content="طراحی معماری داخلی بنا سازه دیزاین فرنیش فرنیچر">
     <meta name="author" content="Iman Faghih">
@@ -20,10 +21,41 @@
 </head>
 <body>
     <!-- jQuery -->
-    <script src="js/jquery-3.7.1.min.js"></script>
-    <script src="js/jquery-migrate-3.5.0.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+    <script src="/assets/js/jquery-3.7.1.min.js"></script>
+    <script src="/assets/js/jquery-migrate-3.5.0.min.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
+
+    <!-- Preloader -->
+    <div class="preloader-bg"></div>
+    <div id="preloader">
+        <div id="preloader-status">
+            <div class="preloader-position loader"><span></span></div>
+        </div>
+    </div>
+    <!-- Progress scroll totop -->
+    <div class="progress-wrap cursor-pointer">
+        <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+            <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
+        </svg>
+    </div>
+
+    @{
+        var menu = new List<TemplateMenuItem>();
+
+        menu.Add(new TemplateMenuItem
+        {
+            Path = "/Public/Index",
+            Title = "صفحه اصلی",
+            Children = null
+        });
+    }
+
+    @await Html.PartialAsync("_NavbarPartialView", menu)
+
     @RenderBody()
+
+    @await Html.PartialAsync("_FooterPartialView")
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

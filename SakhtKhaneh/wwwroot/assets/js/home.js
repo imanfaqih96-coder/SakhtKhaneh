@@ -52,10 +52,10 @@ $(function() {
             logo = $(".navbar .logo> img");
         if (bodyScroll > 100) {
             navbar.addClass("nav-scroll");
-            logo.attr('src', 'img/logo.png');
+            logo.attr('src', '/assets/img/logo.png');
         } else {
             navbar.removeClass("nav-scroll");
-            logo.attr('src', 'img/logo.png');
+            logo.attr('src', '/assets/img/logo.png');
         }
     });
     // close navbar-collapse when a  clicked

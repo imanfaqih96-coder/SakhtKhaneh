@@ -1,0 +1,47 @@
+﻿@using SakhtKhaneh.Models.Template.ViewModels
+
+@model List<TemplateMenuItem>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <!-- Logo -->
+        <div class="logo-wrapper">
+            <a class="logo" href="/Public/"> <img src="/assets/img/logo.png" class="logo-img" alt=""> </a>
+            <!-- <a class="logo" href="index.html"> <h2>BAUEN</h2> </a> -->
+        </div>
+        <!-- Button -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"><i class="ti-menu"></i></span> </button>
+        <!-- Menu -->
+        <div class="collapse navbar-collapse" id="navbar">
+            <ul class="navbar-nav ms-auto">
+
+                @foreach (var item in Model)
+                {
+                    if (item.Children == null)
+                    {
+                        <li class="nav-item"><a class="nav-link" href="@item.Path">@item.Title</a></li>
+                    }
+                    else
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">Services <i class="ti-angle-down"></i></a>
+                            <ul class="dropdown-menu">
+                                @foreach(var childItem in item.Children) {
+                                    <li>
+                                        <a href="@childItem.Path" class="dropdown-item">
+                                            <span>
+                                                @childItem.Title
+                                            </span>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                }
+
+            </ul>
+        </div>
+    </div>
+</nav>

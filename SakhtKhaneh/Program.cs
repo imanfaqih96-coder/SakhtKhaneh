@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using SakhtKhaneh.Data;
 using SakhtKhaneh.Models;
+using SakhtKhaneh.Services;
 using System;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +22,8 @@ builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.AddScoped<TemplateDataManagementService>();
+
 var app = builder.Build();
 
 app.UseStaticFiles();
@@ -29,7 +32,7 @@ app.MapControllers();            // /api
 app.MapDefaultControllerRoute();
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Public}/{action=Index}/{id?}");
+    pattern: "{controller=Public}/{action=CommingSoon}/{id?}");
 // /public
 
 // Serve Angular app on /admin

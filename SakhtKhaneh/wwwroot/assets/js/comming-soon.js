@@ -2,7 +2,7 @@
 
 function countdown() {
     var now = new Date();
-    var eventDate = new Date(2025, 11, 6);
+    var eventDate = new Date(2025, 12, 15);
     var currentTiime = now.getTime();
     var eventTime = eventDate.getTime();
     var remTime = eventTime - currentTiime;
