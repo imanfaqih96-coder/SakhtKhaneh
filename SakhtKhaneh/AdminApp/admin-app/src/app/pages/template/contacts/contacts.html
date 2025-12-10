@@ -1,0 +1,65 @@
+<div class="new-project container pt-2">
+
+  <mat-card class="form-card">
+
+    <h3 class="color-primary mb-5">بروزرسانی تماس با ما</h3>
+
+    <form name="about">
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-icon matPrefix fontSet="material-icons-outlined">title</mat-icon>
+          <mat-label>توضیحات تماس با ما</mat-label>
+          <input matInput [(ngModel)]="description" name="description" required>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <!-- Ngx Editor -->
+        <div class="editor-wrapper">
+          <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"></ngx-editor-menu>
+          <ngx-editor [editor]="editor"
+                      [(ngModel)]="content"
+                      name="content"
+                      [placeholder]="'متن تماس با ما را اینجا بنویسید...'"
+                      class="ngx-editor">
+          </ngx-editor>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-icon matPrefix fontSet="material-icons-outlined">call</mat-icon>
+          <mat-label>شماره تماس</mat-label>
+          <input matInput [(ngModel)]="phone" name="phone" required>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-icon matPrefix fontSet="material-icons-outlined">mail</mat-icon>
+          <mat-label>آدرس ایمیل</mat-label>
+          <input matInput [(ngModel)]="email" name="email" required>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-icon matPrefix fontSet="material-icons-outlined">call</mat-icon>
+          <mat-label>آدرس</mat-label>
+          <textarea matInput [(ngModel)]="address" name="address" required rows="3"></textarea>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <button type="button" mat-flat-button color="primary" (click)="saveChanges()">
+          <mat-icon>check</mat-icon>
+          ذخیره تغییرات
+        </button>
+      </div>
+
+    </form>
+
+  </mat-card>
+
+</div>

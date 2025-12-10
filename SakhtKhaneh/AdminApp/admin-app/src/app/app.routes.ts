@@ -17,6 +17,8 @@ import { BlogCategoriesComponent } from './pages/blog_categories/blog-categories
 import { EditBlogPostComponent } from './pages/blog_posts/edit/edit-blog-post.component';
 import { AboutUsComponent } from './pages/template/about/about.component';
 import { ServicesComponent } from './pages/template/services/services.component';
+import { ContactsComponent } from './pages/template/contacts/contacts.component';
+import { HomeManagementComponent } from './pages/template/home/home.component';
 
 
 
@@ -44,7 +46,9 @@ export const routes: Routes = [
       { path: 'blog-categories/all', component: BlogCategoriesComponent },
       { path: 'blog-posts/edit/:post_guid', component: EditBlogPostComponent },
       { path: 'pages/about', component: AboutUsComponent },
-      { path: 'pages/services', component: ServicesComponent }
+      { path: 'pages/services', component: ServicesComponent },
+      { path: 'pages/contacts', component: ContactsComponent },
+      { path: 'pages/home', component: HomeManagementComponent }
       // صفحه‌های دیگر نیز همینجا
       // { path: 'users', component: UsersComponent },
     ]
