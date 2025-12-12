@@ -2,35 +2,38 @@
 @model HomeDataViewModel;
 
 @{
-    ViewData["Title"] = "Comming Soon";
+    ViewData["Title"] = "صفحه اصلی";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <!-- Slider -->
-<header class="header slider-fade">
-    <div class="owl-carousel owl-theme" dir="ltr">
-        <!-- The opacity on the image is made with "data-overlay-dark="number". You can change it using the numbers 0-9. -->
-        @foreach (var item in Model.Slider)
-        {
-            <div class="text-start item bg-img" data-overlay-dark="3" data-background="@item.ImageUrl">
-                <div class="v-middle caption mt-30">
-                    <div class="container">
-                        <div class="row justify-content-start">
-                            <div class="col-lg-7 col-md-12">
-                                @* <h1>Innovate Desing in Toronto</h1>
-                                <p>
-                                    Architecture viverra tellus nec massa dictum the euismoe.
-                                    <br>Curabitur viverra the posuere aukue velit.
-                                </p>
-                                <div class="butn-light mt-30 mb-30"> <a href="https://1.envato.market/mDnXD" target="_blank"><span>Buy Now</span></a> </div> *@
+@if(Model.Slider != null && Model.Slider.Count > 0)
+{
+    <header class="header slider-fade">
+        <div class="owl-carousel owl-theme" dir="ltr">
+            <!-- The opacity on the image is made with "data-overlay-dark="number". You can change it using the numbers 0-9. -->
+            @foreach (var item in Model.Slider)
+            {
+                <div class="text-start item bg-img" data-overlay-dark="3" data-background="@item.ImageUrl">
+                    <div class="v-middle caption mt-30">
+                        <div class="container" dir="rtl">
+                            <div class="row justify-content-start" dir="rtl">
+                                <div class="col-lg-7 col-md-12" dir="rtl">
+                                    <h1 class="text-right">ساخت خانه</h1>
+                                    <p class="text-right">
+                                        برای مشاهده پروژه ها
+                                        <br>روی دکمه زیر کلیک کنید.
+                                    </p>
+                                    <div class="butn-light mt-30 mb-30 float-right"> <a href="/Public/Projects" target="_blank"><span>فهرست پروژه ها</span></a> </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        }
-    </div>
-</header>
+            }
+        </div>
+    </header>
+}
 
 <!-- Content -->
 <div class="content-wrapper">
@@ -88,8 +91,8 @@
                                 <div class="item" dir="rtl">
                                     <div class="position-re o-hidden"> <img src="@project.CoverImageUrl" alt=""> </div>
                                     <div class="con">
-                                        <h6><a href="cotton-house.html">@project.Title</a></h6>
-                                        <h5><a href="cotton-house.html">@project.Description</a></h5>
+                                        <h6><a href="/Projects/@project.Endpoint_Path">@project.Title</a></h6>
+                                        <h5><a href="/Projects/@project.Endpoint_Path">@project.Description</a></h5>
                                         <div class="line"></div> <a href="/Public/Projects/@project.Id"><i class="ti-arrow-right"></i></a>
                                     </div>
                                 </div>
@@ -100,6 +103,63 @@
                     {
                         <h3 class="text-muted text-center">هیچ پروژه ای درج نشده است</h3>
                     }
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Services -->
+    <section class="services section-padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 class="section-title">خدمات <span>ما</span></h2>
+                </div>
+            </div>
+            <div class="row">
+                @for(var i = 0; i < Model.Services.Count; i++)
+                {
+                    var service = Model.Services[i];
+
+                    <div class="col-md-4">
+                        <div class="item">
+                            <a href="architecture.html">
+                                <img src="@service.IconUrl" alt="">
+                                <h5>@service.Title</h5>
+                                <div class="line"></div>
+                                <p>@service.Description</p>
+                                <div class="numb">@(i+1)</div>
+                            </a>
+                        </div>
+                    </div>
+
+                }
+            </div>
+        </div>
+    </section>
+    <!-- Blog -->
+    <section class="bauen-blog section-padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 class="section-title">مطالب <span>ما</span></h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="owl-carousel owl-theme" dir="ltr">
+                        @foreach(var post in Model.Posts)
+                        {
+                            <div class="item" dir="rtl">
+                                <div class="position-re o-hidden"> <img src="@post.ImageUrl" alt=""> </div>
+                                <div class="con">
+                                    <span class="category">
+                                        <a href="/Blog/@post.EndpointPath">@post.Category.Title </a> - @post.CreationDate.ToShortDateString() @post.CreationDate.ToShortTimeString()
+                                    </span>
+                                    <h5><a href="/Blog/@post.EndpointPath">@post.Description</a></h5>
+                                </div>
+                            </div>
+                        }
+                    </div>
                 </div>
             </div>
         </div>

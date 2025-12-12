@@ -1,0 +1,79 @@
+﻿@using SakhtKhaneh.Models.Blog;
+
+@model List<BlogPost>?;
+
+@{
+    ViewData["Title"] = "بلاگ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Content -->
+<div class="content-wrapper">
+
+    <!-- Lines -->
+    <section class="content-lines-wrapper">
+        <div class="content-lines-inner">
+            <div class="content-lines"></div>
+        </div>
+    </section>
+    <!-- Header Banner -->
+    <section class="banner-header banner-img valign bg-img bg-fixed" data-overlay-darkgray="5" data-background="/assets/img/banner.jpg"> </section>
+
+    <!-- Blog  -->
+    <section class="bauen-blog section-padding2">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <h2 class="section-title">بلاگ <span>ما</span></h2>
+                </div>
+            </div>
+            <div class="row">
+                @foreach(var item in Model)
+                {
+                    <div class="col-lg-6 col-md-12">
+                        <div class="item">
+                            <div class="position-re o-hidden"> <img src="@item.ImageUrl" alt=""> </div>
+                            <div class="con">
+                                <span class="category">
+                                    <a href="/Blog/@item.EndpointPath">@item.Category.Title </a> - @item.CreationDate.ToShortDateString() @item.CreationDate.ToShortTimeString()
+                                </span>
+                                <h5><a href="/Blog/@item.EndpointPath">@item.Title</a></h5>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row d-none">
+                <div class="col-md-12 text-center">
+                    <!-- Pagination -->
+                    <ul class="bauen-pagination-wrap align-center mb-30 mt-30">
+                        <li><a href="#"><i class="ti-angle-left"></i></a></li>
+                        <li><a href="#">1</a></li>
+                        <li><a href="#" class="active">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#"><i class="ti-angle-right"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+
+@section Scripts {
+    <script src="/assets/js/modernizr-2.6.2.min.js"></script>
+    <script src="/assets/js/imagesloaded.pkgd.min.js"></script>
+    <script src="/assets/js/jquery.isotope.v3.0.2.js"></script>
+    <script src="/assets/js/popper.min.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
+    <script src="/assets/js/scrollIt.min.js"></script>
+    <script src="/assets/js/jquery.waypoints.min.js"></script>
+    <script src="/assets/js/owl.carousel.min.js"></script>
+    <script src="/assets/js/jquery.stellar.min.js"></script>
+    <script src="/assets/js/jquery.magnific-popup.js"></script>
+    <script src="/assets/js/YouTubePopUp.js"></script>
+    <script src="/assets/js/before-after.js"></script>
+    <script src="/assets/js/vegas.slider.min.js"></script>
+    <script src="/assets/js/home.js"></script>
+}

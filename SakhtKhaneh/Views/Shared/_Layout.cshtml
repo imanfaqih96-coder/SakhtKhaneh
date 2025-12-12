@@ -1,4 +1,8 @@
 ﻿@using SakhtKhaneh.Models.Template.ViewModels
+@using SakhtKhaneh.Services
+
+@inject ITemplateDataManagementService templateDataManagementService;
+
 <!DOCTYPE html>
 
 <html dir="rtl" lang="fa">
@@ -13,9 +17,11 @@
     <meta name="keywords" content="طراحی معماری داخلی بنا سازه دیزاین فرنیش فرنیچر">
     <meta name="author" content="Iman Faghih">
     <meta name="robots" content="index, follow">
+    <!-- Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com/">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Didact+Gothic&amp;family=Oswald:wght@200..700&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Didact+Gothic&amp;family=Oswald:wght@200..700&amp;display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/plugins.css" />
     <link rel="stylesheet" href="/assets/css/style.css" />
 </head>
@@ -40,21 +46,16 @@
     </div>
 
     @{
-        var menu = new List<TemplateMenuItem>();
+        var menu = await templateDataManagementService.GetMainMenuItems();
 
-        menu.Add(new TemplateMenuItem
-        {
-            Path = "/Public/Index",
-            Title = "صفحه اصلی",
-            Children = null
-        });
+        var contacts = await templateDataManagementService.GetContacts();
     }
 
     @await Html.PartialAsync("_NavbarPartialView", menu)
 
     @RenderBody()
 
-    @await Html.PartialAsync("_FooterPartialView")
+    @await Html.PartialAsync("_FooterPartialView", contacts)
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

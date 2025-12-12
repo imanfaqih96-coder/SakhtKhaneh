@@ -1,29 +1,33 @@
-﻿<!-- Footer -->
+﻿@using SakhtKhaneh.Models.Template.ViewModels;
+
+@model ContactDataViewModel;
+
+<!-- Footer -->
 <footer class="main-footer dark">
     <div class="container">
         <div class="row">
             <div class="col-md-4 mb-30">
                 <div class="item fotcont">
                     <div class="fothead">
-                        <h6>Phone</h6>
+                        <h6>شماره تلفن</h6>
                     </div>
-                    <p>+1 203-123-0606</p>
+                    <p>@Model.Phone</p>
                 </div>
             </div>
             <div class="col-md-4 mb-30">
                 <div class="item fotcont">
                     <div class="fothead">
-                        <h6>Email</h6>
+                        <h6>آدرس ایمیل</h6>
                     </div>
-                    <p>architecture@bauen.com</p>
+                    <p>@Model.Email</p>
                 </div>
             </div>
             <div class="col-md-4 mb-30">
                 <div class="item fotcont">
                     <div class="fothead">
-                        <h6>Our Address</h6>
+                        <h6>نشانی</h6>
                     </div>
-                    <p>24 King St, Charleston, SC 29401 USA</p>
+                    <p>@Model.Address</p>
                 </div>
             </div>
         </div>
@@ -31,21 +35,16 @@
     <div class="sub-footer">
         <div class="container">
             <div class="row">
-                <div class="col-md-4">
-                    <div class="text-left">
-                        <p>© 2025 Bauen. All right reserved.</p>
-                    </div>
-                </div>
-                <div class="col-md-4 abot">
+                
+                <div class="col-12 abot">
                     <div class="social-icon">
-                        <a href="index.html"><i class="ti-facebook"></i></a>
-                        <a href="index.html"><i class="fa-brands fa-x-twitter"></i></a>
-                        <a href="index.html"><i class="ti-instagram"></i></a>
-                        <a href="index.html"><i class="fa-brands fa-tiktok"></i></a>
+                        <a href="#"><i class="ti-instagram"></i></a>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <p class="right"><a href="#">Terms &amp; Conditions</a></p>
+                <div class="col-12">
+                    <div class="text-center">
+                        <p>©@DateTime.Now.Year تمامی حقوق مادی و معنوی محفوظ است.</p>
+                    </div>
                 </div>
             </div>
         </div>

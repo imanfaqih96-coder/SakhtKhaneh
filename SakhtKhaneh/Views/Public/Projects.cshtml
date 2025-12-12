@@ -1,0 +1,67 @@
+﻿@using SakhtKhaneh.Models.Projects;
+
+@model List<Project>?;
+
+@{
+    ViewData["Title"] = "پروژه ها";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<!-- Content -->
+<div class="content-wrapper">
+
+    <!-- Lines -->
+    <section class="content-lines-wrapper">
+        <div class="content-lines-inner">
+            <div class="content-lines"></div>
+        </div>
+    </section>
+    <!-- Header Banner -->
+    <section class="banner-header banner-img valign bg-img bg-fixed" data-overlay-darkgray="5" data-background="/assets/img/banner.jpg"> </section>
+
+    <!-- Projects -->
+    <section class="projects section-padding2">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center animate-box" data-animate-effect="fadeInUp">
+                    <h2 class="section-title">پروژه های <span>ما</span></h2>
+                </div>
+            </div>
+            <div class="row">
+                @foreach(var item in Model)
+                {
+                    <div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
+                        <div class="item">
+                            <div class="position-re o-hidden"> <img src="@item.CoverImageUrl" alt=""> </div>
+                            <div class="con">
+                                <h6><a href="/Projects/@item.Endpoint_Path">@item.Title</a></h6>
+                                <h5><a href="/Projects/@item.Endpoint_Path">@item.Description</a></h5>
+                                <div class="line"></div> <a href="/Projects/@item.Endpoint_Path"><i class="ti-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+
+</div>
+
+
+@section Scripts {
+    <script src="/assets/js/modernizr-2.6.2.min.js"></script>
+    <script src="/assets/js/imagesloaded.pkgd.min.js"></script>
+    <script src="/assets/js/jquery.isotope.v3.0.2.js"></script>
+    <script src="/assets/js/popper.min.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
+    <script src="/assets/js/scrollIt.min.js"></script>
+    <script src="/assets/js/jquery.waypoints.min.js"></script>
+    <script src="/assets/js/owl.carousel.min.js"></script>
+    <script src="/assets/js/jquery.stellar.min.js"></script>
+    <script src="/assets/js/jquery.magnific-popup.js"></script>
+    <script src="/assets/js/YouTubePopUp.js"></script>
+    <script src="/assets/js/before-after.js"></script>
+    <script src="/assets/js/vegas.slider.min.js"></script>
+    <script src="/assets/js/home.js"></script>
+}

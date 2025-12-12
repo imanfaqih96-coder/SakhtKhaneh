@@ -8,33 +8,66 @@ namespace SakhtKhaneh.Controllers
 {
     public class PublicController : Controller
     {
-        public TemplateDataManagementService _templateDataManagementService;
-        public PublicController(IServiceScopeFactory scopeFactory)
+        public ITemplateDataManagementService _templateDataManagementService;
+        public PublicController(ITemplateDataManagementService templateDataManagementService)
         {
-            using (var scope = scopeFactory.CreateScope())
-            {
-                var templateDataManagementService = scope.ServiceProvider.GetRequiredService<TemplateDataManagementService>();
-                _templateDataManagementService = templateDataManagementService;
-            }
+            _templateDataManagementService = templateDataManagementService;
         }
         public async Task<IActionResult> Index()
         {
-            var sliderItems = await _templateDataManagementService.GetSliderItems();
-
-            var aboutInfo = await _templateDataManagementService.GetAboutSectionInfo();
-
-            var homeProjects = await _templateDataManagementService.GetHomeViewProjects();
-
-            var model = new HomeDataViewModel
-            {
-                Slider = sliderItems,
-                AboutInfo = aboutInfo,
-                Projects = homeProjects
-            };
-
+            var model = await _templateDataManagementService.GetHomeData();
             return View(model);
         }
-
+        public async Task<IActionResult> About()
+        {
+            var model = await _templateDataManagementService.GetAboutSectionInfo();
+            return View(model);
+        }
+        public async Task<IActionResult> Contacts()
+        {
+            var model = await _templateDataManagementService.GetContacts();
+            return View(model);
+        }
+        [Route("Blog")]
+        public async Task<IActionResult> Blog()
+        {
+            var model = await _templateDataManagementService.GetBlogGridPosts();
+            return View("Blog", model);
+        }
+        [Route("Blog/{pathName}")]
+        public async Task<IActionResult> Blog(string? pathName)
+        {
+            if (pathName != null)
+            {
+                var model = await _templateDataManagementService.GetSingleBlogItem(pathName);
+                return View("_SingleBlogPage", model);
+            }
+            else
+            {
+                var model = await _templateDataManagementService.GetBlogGridPosts();
+                return View("Blog", model);
+            }
+        }
+        [Route("Projects")]
+        public async Task<IActionResult> Projects()
+        {
+            var model = await _templateDataManagementService.GetProjectsGridItems();
+            return View("Projects", model);
+        }
+        [Route("Projects/{pathName}")]
+        public async Task<IActionResult> Projects(string? pathName)
+        {
+            if (pathName != null)
+            {
+                var model = await _templateDataManagementService.GetSingleProjectItem(pathName);
+                return View("_SingleProjectPage", model);
+            }
+            else
+            {
+                var model = await _templateDataManagementService.GetProjectsGridItems();
+                return View("Projects", model);
+            }
+        }
         public IActionResult CommingSoon()
         {
             return View();

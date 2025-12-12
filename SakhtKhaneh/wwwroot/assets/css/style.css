@@ -77,8 +77,17 @@ body {
     list-style: none;
     word-wrap: break-word;
 }
+.vazirmatn {
+    font-family: "Vazirmatn", sans-serif !important;
+}
+.text-right{
+    text-align:right !important;
+}
+.float-right{
+    float:right !important;
+}
 body {
-    font-family: 'Didact Gothic', sans-serif;
+    font-family: 'Vazirmatn', sans-serif;
     font-size: 16px;
     font-weight: 400;
     line-height: 1.75em;
@@ -87,7 +96,7 @@ body {
     background: #272727;
 }
 p {
-    font-family: 'Didact Gothic', sans-serif;
+    font-family: 'Vazirmatn', sans-serif;
     font-size: 16px;
     font-weight: 400;
     line-height: 1.75em;
@@ -100,7 +109,7 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Vazirmatn', sans-serif;
     font-weight: 400;
     line-height: 1.25em;
     margin: 0 0 20px 0;
@@ -132,7 +141,7 @@ input,
 optgroup,
 select,
 textarea {
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Vazirmatn', sans-serif;
 }
 input[type="password"]:focus,
 input[type="email"]:focus,
@@ -143,31 +152,31 @@ input[type="checkbox"]:focus,
 textarea:focus {
     outline: none;
 }
-input[type="password"],
-input[type="email"],
-input[type="text"],
-input[type="file"],
-textarea {
-    max-width: 100%;
-    margin-bottom: 10px;
-    padding: 10px 0;
-    height: auto;
-    background-color: transparent;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-    border-width: 0 0 1px;
-    border-style: solid;
-    display: block;
-    width: 100%;
-    line-height: 1.5em;
-    font-family: 'Didact Gothic', sans-serif;
-    font-size: 16px;
-    font-weight: 400;
-    color: #999;
-    background-image: none;
-    border-bottom: 1px solid #323232;
-    border-color: ease-in-out .15s, box-shadow ease-in-out .15s;
-}
+    input[type="password"],
+    input[type="email"],
+    input[type="text"],
+    input[type="file"],
+    textarea {
+        max-width: 100%;
+        margin-bottom: 10px;
+        padding: 10px 0;
+        height: auto;
+        background-color: transparent;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+        border-width: 0 0 1px;
+        border-style: solid;
+        display: block;
+        width: 100%;
+        line-height: 1.5em;
+        font-family: 'Vazirmatn', sans-serif;
+        font-size: 16px;
+        font-weight: 400;
+        color: #999;
+        background-image: none;
+        border-bottom: 1px solid #323232;
+        border-color: ease-in-out .15s, box-shadow ease-in-out .15s;
+    }
 input:focus,
 textarea:focus {
     border-bottom-width: 1px;
@@ -217,7 +226,7 @@ input[type="checkbox"] {
 /* submit and alert success  */
 input[type="submit"] {
     font-weight: 300;
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Vazirmatn', sans-serif;
     text-transform: uppercase;
     background: #b19777;
     color: #fff;
@@ -350,7 +359,7 @@ blockquote cite:before {
     font-weight: 600;
 }
 .count {
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Vazirmatn', sans-serif;
 }
 .valign {
     display: -webkit-box;
@@ -486,7 +495,7 @@ blockquote cite:before {
 }
 .section-title {
     font-size: 40px;
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Vazirmatn', sans-serif;
     font-weight: 400;
     color: #fff;
     text-transform: uppercase;
@@ -545,7 +554,7 @@ blockquote cite:before {
     transition: all .4s;
     padding-right: 12px;
     padding-left: 12px;
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Vazirmatn', sans-serif;
 }
 .navbar .navbar-nav .nav-link.nav-color {
     color: #fff;
@@ -596,63 +605,63 @@ blockquote cite:before {
 .nav-scroll .logo-img {
     margin-bottom: 0px;
 }
-.nav-scroll .logo-wrapper .logo h2 {
-    font-family: 'Oswald', sans-serif;
-    font-size: 35px;
-    font-weight: 500;
-    display: block;
-    width: 100%;
-    position: relative;
-    color: #b19777;
-    margin-bottom: 0;
-    text-transform: uppercase;
-    letter-spacing: 4px;
-}
-.nav-scroll .logo-wrapper .logo span {
-    display: block;
-    font-family: 'Oswald', sans-serif;
-    font-size: 12px;
-    color: #b19777;
-    font-weight: 400;
-    letter-spacing: 4px;
-    display: block;
-    margin-top: 0px;
-    line-height: 1.2em;
-    text-transform: uppercase;
-}
+    .nav-scroll .logo-wrapper .logo h2 {
+        font-family: 'Vazirmatn', sans-serif;
+        font-size: 35px;
+        font-weight: 500;
+        display: block;
+        width: 100%;
+        position: relative;
+        color: #b19777;
+        margin-bottom: 0;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+    }
+    .nav-scroll .logo-wrapper .logo span {
+        display: block;
+        font-family: 'Vazirmatn', sans-serif;
+        font-size: 12px;
+        color: #b19777;
+        font-weight: 400;
+        letter-spacing: 4px;
+        display: block;
+        margin-top: 0px;
+        line-height: 1.2em;
+        text-transform: uppercase;
+    }
 .nav-scroll .logo-wrapper {}
 .logo-wrapper {
     float: left;
 }
-.logo-wrapper .logo h2 {
-    font-family: 'Oswald', sans-serif;
-    font-size: 40px;
-    font-weight: 500;
-    display: block;
-    width: 100%;
-    position: relative;
-    color: #b19777;
-    margin-bottom: 0;
-    text-transform: uppercase;
-    letter-spacing: 4px;
-}
+    .logo-wrapper .logo h2 {
+        font-family: 'Vazirmatn', sans-serif;
+        font-size: 40px;
+        font-weight: 500;
+        display: block;
+        width: 100%;
+        position: relative;
+        color: #b19777;
+        margin-bottom: 0;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+    }
 .logo-wrapper .logo h2 a i {
     color: #fff;
     font-size: 20px;
     vertical-align: super;
 }
-.logo-wrapper .logo span {
-    display: block;
-    font-family: 'Oswald', sans-serif;
-    font-size: 12px;
-    color: #b19777;
-    font-weight: 400;
-    letter-spacing: 4px;
-    display: block;
-    margin-top: 0px;
-    line-height: 1.2em;
-    text-transform: uppercase;
-}
+    .logo-wrapper .logo span {
+        display: block;
+        font-family: 'Vazirmatn', sans-serif;
+        font-size: 12px;
+        color: #b19777;
+        font-weight: 400;
+        letter-spacing: 4px;
+        display: block;
+        margin-top: 0px;
+        line-height: 1.2em;
+        text-transform: uppercase;
+    }
 .logo {
     padding: 0;
 }
@@ -668,7 +677,7 @@ blockquote cite:before {
 }
 .navbar .dropdown-menu .dropdown-item {
     padding: 6px 0;
-    font-family: 'Didact Gothic', sans-serif;
+    font-family: 'Vazirmatn', sans-serif;
     font-size: 15px;
     font-weight: 400;
     color: #fff;
@@ -859,31 +868,31 @@ blockquote cite:before {
     font-weight: 400;
     font-size: 30px;
 }
-.header .caption h4 {
-    font-family: 'Oswald', sans-serif;
-    font-size: 20px;
-    font-weight: 400;
-    text-transform: uppercase;
-    letter-spacing: 5px;
-    color: #fff;
-    text-align: right;
-    margin-bottom: 30px;
-    -webkit-animation-delay: .2s;
-    animation-delay: .2s;
-}
-.header .caption h1 {
-    position: relative;
-    margin-bottom: 20px;
-    font-family: 'Oswald', sans-serif;
-    font-size: 48px;
-    text-transform: uppercase;
-    line-height: 1.35em;
-    -webkit-animation-delay: .4s;
-    animation-delay: .4s;
-    color: #fff;
-    font-weight: 400;
-    letter-spacing: 15px;
-}
+    .header .caption h4 {
+        font-family: 'Vazirmatn', sans-serif;
+        font-size: 20px;
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 5px;
+        color: #fff;
+        text-align: right;
+        margin-bottom: 30px;
+        -webkit-animation-delay: .2s;
+        animation-delay: .2s;
+    }
+    .header .caption h1 {
+        position: relative;
+        margin-bottom: 20px;
+        font-family: 'Vazirmatn', sans-serif;
+        font-size: 48px;
+        text-transform: uppercase;
+        line-height: 1.35em;
+        -webkit-animation-delay: .4s;
+        animation-delay: .4s;
+        color: #fff;
+        font-weight: 400;
+        letter-spacing: 15px;
+    }
 .header .caption p {
     font-size: 18px;
     line-height: 1.75em;
@@ -969,7 +978,7 @@ hr {
 .simple-content-text-inner h1 {
     position: relative;
     margin-bottom: 20px;
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Vazirmatn', sans-serif;
     font-size: 48px;
     text-transform: uppercase;
     line-height: 1.35em;
@@ -1131,38 +1140,38 @@ hr {
     background: #272727;
     border: 1px solid #272727
 }
-.slider-grid-bg .year {
-    font-family: 'Oswald', sans-serif;
-    font-size: 12px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    line-height: 1;
-    position: absolute;
-    right: 30px;
-    top: 30px
-}
-.slider-grid-bg .subtitle {
-    display: block;
-    font-family: 'Oswald', sans-serif;
-    font-size: 12px;
-    font-weight: 400;
-    color: #fff;
-    margin-bottom: 5px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-}
+    .slider-grid-bg .year {
+        font-family: 'Vazirmatn', sans-serif;
+        font-size: 12px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        line-height: 1;
+        position: absolute;
+        right: 30px;
+        top: 30px
+    }
+    .slider-grid-bg .subtitle {
+        display: block;
+        font-family: 'Vazirmatn', sans-serif;
+        font-size: 12px;
+        font-weight: 400;
+        color: #fff;
+        margin-bottom: 5px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+    }
 .slider-grid-bg .grid-con:hover .subtitle {
     color: #b19777;
 }
-.slider-grid-bg .title {
-    display: block;
-    font-family: 'Oswald', sans-serif;
-    font-size: 24px;
-    font-weight: 300;
-    line-height: 1.2em;
-    letter-spacing: 5px;
-    text-transform: uppercase;
-}
+    .slider-grid-bg .title {
+        display: block;
+        font-family: 'Vazirmatn', sans-serif;
+        font-size: 24px;
+        font-weight: 300;
+        line-height: 1.2em;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+    }
 .slider-grid-bg .owl-theme .owl-dots .owl-dot span {
     width: 10px;
     height: 10px;
@@ -1227,29 +1236,28 @@ hr {
   position: relative;
   z-index: 15;
 }
-.kenburns-inner .caption h4 {
-    font-family: 'Oswald', sans-serif;
-    font-size: 12px;
-    font-weight: 300;
-    text-transform: uppercase;
-    letter-spacing: 10px;
-    color: #fff;
-    text-align: center;
-    margin-bottom: 20px;
-    margin-top: 20px;
-    
-}
-.kenburns-inner .caption h1 {
-    position: relative;
-    margin-bottom: 20px;
-    font-family: 'Oswald', sans-serif;
-    font-size: 52px;
-    text-transform: uppercase;
-    line-height: 1.35em;
-    color: #fff;
-    font-weight: 400;
-    letter-spacing: 10px;
-}
+    .kenburns-inner .caption h4 {
+        font-family: 'Vazirmatn', sans-serif;
+        font-size: 12px;
+        font-weight: 300;
+        text-transform: uppercase;
+        letter-spacing: 10px;
+        color: #fff;
+        text-align: center;
+        margin-bottom: 20px;
+        margin-top: 20px;
+    }
+    .kenburns-inner .caption h1 {
+        position: relative;
+        margin-bottom: 20px;
+        font-family: 'Vazirmatn', sans-serif;
+        font-size: 52px;
+        text-transform: uppercase;
+        line-height: 1.35em;
+        color: #fff;
+        font-weight: 400;
+        letter-spacing: 10px;
+    }
 #kenburnsSliderContainer .vegas-overlay {}
 @media screen and (max-width: 767px) {
 .kenburns-inner .caption h4 {
@@ -1281,22 +1289,22 @@ hr {
     margin: 0 15px;
     font-size: 10px;
 }
-.banner-header h5 {
-    color: #b19777;
-    font-size: 17px;
-    font-family: 'Oswald', sans-serif;
-    font-weight: 400;
-    margin-bottom: 5px;
-}
-.banner-header h1 {
-    font-size: 40px;
-    font-family: 'Oswald', sans-serif;
-    font-weight: 400;
-    color: #b19777;
-    position: relative;
-    margin-bottom: 10px;
-    line-height: 1.2em;
-}
+    .banner-header h5 {
+        color: #b19777;
+        font-size: 17px;
+        font-family: 'Vazirmatn', sans-serif;
+        font-weight: 400;
+        margin-bottom: 5px;
+    }
+    .banner-header h1 {
+        font-size: 40px;
+        font-family: 'Vazirmatn', sans-serif;
+        font-weight: 400;
+        color: #b19777;
+        position: relative;
+        margin-bottom: 10px;
+        line-height: 1.2em;
+    }
 .banner-header p {
     font-size: 20px;
     font-weight: 400;
@@ -1411,7 +1419,7 @@ hr {
 .video-fullscreen-wrap .video-fullscreen-inner h1 {
     position: relative;
     margin-bottom: 20px;
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Vazirmatn', sans-serif;
     font-size: 48px;
     text-transform: uppercase;
     line-height: 1.35em;
@@ -1494,7 +1502,7 @@ hr {
     padding: 20px 15px;
     color: #fff;
     text-transform: uppercase;
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Vazirmatn', sans-serif;
     font-weight: 300;
     letter-spacing: 5px;
     font-size: 13px;
@@ -1593,19 +1601,18 @@ hr {
     display: inline-block;
     width: calc(48% - 1px)
 }
-.team-details .content .info-list .list-title {
-     font-family: 'Didact Gothic', sans-serif;
-    text-indent: 0;
-    width: auto;
-    display: inline;
-    margin-right: 3px;
-    position: relative;
-    color: #b19777;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 26px
-    
-}
+    .team-details .content .info-list .list-title {
+        font-family: 'Vazirmatn', sans-serif;
+        text-indent: 0;
+        width: auto;
+        display: inline;
+        margin-right: 3px;
+        position: relative;
+        color: #b19777;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 26px
+    }
 .team-details .content .info-list .list-description {
     display: inline
 }
@@ -1702,7 +1709,7 @@ hr {
     height: 100%
 }
 .position-title {
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Vazirmatn', sans-serif;
     font-size: 16px;
     font-weight: 300;
     letter-spacing: 3px;
@@ -1715,15 +1722,15 @@ hr {
     flex-basis: 30%;
     color: #FFF;
 }
-.position-title span {
-    font-family: 'Didact Gothic', sans-serif;
-    color: #999;
-    display: block;
-    text-transform: none;
-    letter-spacing: 0px;
-}
+    .position-title span {
+        font-family: 'Vazirmatn', sans-serif;
+        color: #999;
+        display: block;
+        text-transform: none;
+        letter-spacing: 0px;
+    }
 .position-location {
-    font-family: 'Didact Gothic', sans-serif;
+    font-family: 'Vazirmatn', sans-serif;
     font-size: 16px;
     -webkit-transition: color .3s;
     transition: color .3s;
@@ -1732,26 +1739,26 @@ hr {
     flex-basis: 40%;
     color: #FFF;
 }
-.position-location span {
-    font-family: 'Didact Gothic', sans-serif;
-    color: #999;
-    display: block;
-    text-transform: none;
-    letter-spacing: 0px;
-}
+    .position-location span {
+        font-family: 'Vazirmatn', sans-serif;
+        color: #999;
+        display: block;
+        text-transform: none;
+        letter-spacing: 0px;
+    }
 .position-time {
     font-weight: 400;
     -webkit-transition: color .3s;
     transition: color .3s;
     color: #999;
 }
-.position-time span {
-    font-family: 'Didact Gothic', sans-serif;
-    color: #fff;
-    display: block;
-    text-transform: none;
-    letter-spacing: 0px;
-}
+    .position-time span {
+        font-family: 'Vazirmatn', sans-serif;
+        color: #fff;
+        display: block;
+        text-transform: none;
+        letter-spacing: 0px;
+    }
 .position-icon {
     font-size: 16px;
     line-height: 1;
@@ -1842,17 +1849,17 @@ hr {
     width: 60px;
     margin-bottom: 20px;
 }
-.services .item .numb {
-    font-size: 40px;
-    font-weight: 600;
-    font-family: 'Oswald', sans-serif;
-    position: absolute;
-    bottom: 30px;
-    right: 30px;
-    color: transparent;
-    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
-    line-height: 1em;
-}
+    .services .item .numb {
+        font-size: 40px;
+        font-weight: 600;
+        font-family: 'Vazirmatn', sans-serif;
+        position: absolute;
+        bottom: 30px;
+        left: 30px;
+        color: transparent;
+        -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
+        line-height: 1em;
+    }
 /* line animation */
 .services .item .line {
     width: 100%;
@@ -1949,15 +1956,15 @@ hr {
     text-transform: uppercase;
     letter-spacing: 5px;
 }
-.services2 .services2-subtitle {
-    color: #b19777;
-    font-family: 'Oswald', sans-serif;
-    font-size: 13px;
-    font-weight: 300;
-    letter-spacing: 5px;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-}
+    .services2 .services2-subtitle {
+        color: #b19777;
+        font-family: 'Vazirmatn', sans-serif;
+        font-size: 13px;
+        font-weight: 300;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+    }
 .services2 .services2-text {
     color: #fff;
     margin-left: auto;
@@ -2035,7 +2042,7 @@ hr {
     transition: transform .2s ease-in-out
 }
 .services3-heading {
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Vazirmatn', sans-serif;
     font-size: 16px;
     color: #fff;
     text-transform: uppercase;
@@ -2289,18 +2296,18 @@ hr {
     border-bottom: 1px solid #373737;
     padding-bottom: 15px;
 }
-.sidebar-title h4 {
-    position: relative;
-    display: inline-block;
-    font-family: 'Oswald', sans-serif;
-    font-size: 20px;
-    line-height: 1.1em;
-    color: #fff;
-    font-weight: 300;
-    text-transform: uppercase;
-    letter-spacing: 5px;
-    margin-bottom: 0px;
-}
+    .sidebar-title h4 {
+        position: relative;
+        display: inline-block;
+        font-family: 'Vazirmatn', sans-serif;
+        font-size: 20px;
+        line-height: 1.1em;
+        color: #fff;
+        font-weight: 300;
+        text-transform: uppercase;
+        letter-spacing: 5px;
+        margin-bottom: 0px;
+    }
 .sidebar .services ul {
     position: relative;
     padding: 0;
@@ -2602,7 +2609,7 @@ hr {
     font-weight: 300;
     letter-spacing: 5px;
     text-transform: uppercase;
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Vazirmatn', sans-serif;
 }
 @media only screen and (max-width: 991px) {
   .project-masonry-wrapper .project-masonry-item-content {
@@ -2646,15 +2653,15 @@ hr {
     padding-left: 0px;
     position: relative;
 }
-.bauen-project-filter li {
-    margin-right: 15px;
-    display: inline-block;
-    font-size: 16px;
-    cursor: pointer;
-    color: #999;
-    font-family: 'Didact Gothic', sans-serif;
-    font-weight: 400;
-}
+    .bauen-project-filter li {
+        margin-right: 15px;
+        display: inline-block;
+        font-size: 16px;
+        cursor: pointer;
+        color: #999;
+        font-family: 'Vazirmatn', sans-serif;
+        font-weight: 400;
+    }
 .bauen-project-filter li:last-child {
     margin-right: 0;
 }
@@ -2684,27 +2691,27 @@ hr {
     /* Safari */
     transform: scale(0.95, 0.95);
 }
-.bauen-project-wrap h3 {
-    font-family: 'Oswald', sans-serif;
-    font-size: 20px;
-    line-height: 1.25em;
-    font-weight: 300;
-    letter-spacing: 5px;
-    text-transform: uppercase;
-    color: #fff;
-    margin-bottom: 0px;
-}
-.bauen-project-wrap p {
-    color: #b19777;
-    font-family: 'Oswald', sans-serif;
-    font-size: 13px;
-    font-weight: 300;
-    letter-spacing: 5px;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-    align-items: center;
-    display: inline-flex;
-}
+    .bauen-project-wrap h3 {
+        font-family: 'Vazirmatn', sans-serif;
+        font-size: 20px;
+        line-height: 1.25em;
+        font-weight: 300;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        color: #fff;
+        margin-bottom: 0px;
+    }
+    .bauen-project-wrap p {
+        color: #b19777;
+        font-family: 'Vazirmatn', sans-serif;
+        font-size: 13px;
+        font-weight: 300;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+        align-items: center;
+        display: inline-flex;
+    }
 .bauen-project-content {
     position: absolute;
     left: 50px;
@@ -2837,15 +2844,15 @@ hr {
     line-height: 1.25em;
     text-transform: uppercase;
 }
-.projects4 .caption h6 {
-    color: #b19777;
-    font-family: 'Oswald', sans-serif;
-    font-size: 13px;
-    font-weight: 300;
-    letter-spacing: 5px;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-}
+    .projects4 .caption h6 {
+        color: #b19777;
+        font-family: 'Vazirmatn', sans-serif;
+        font-size: 13px;
+        font-weight: 300;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+    }
 @media (max-width: 991.98px) {
     .projects4 figure {
         width: auto;
@@ -2879,15 +2886,15 @@ hr {
     padding-left: 0px;
     position: relative;
 }
-.bauen-gallery-filter li {
-    margin-right: 15px;
-    display: inline-block;
-    font-size: 16px;
-    cursor: pointer;
-    color: #999;
-    font-family: 'Didact Gothic', sans-serif;
-    font-weight: 400;
-}
+    .bauen-gallery-filter li {
+        margin-right: 15px;
+        display: inline-block;
+        font-size: 16px;
+        cursor: pointer;
+        color: #999;
+        font-family: 'Vazirmatn', sans-serif;
+        font-weight: 400;
+    }
 .bauen-gallery-filter li:last-child {
     margin-right: 0;
 }
@@ -2965,7 +2972,7 @@ hr {
     font-weight: 300;
     letter-spacing: 5px;
     text-transform: uppercase;
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Vazirmatn', sans-serif;
 }
 @media only screen and (max-width: 991px) {
   .gallery-masonry-wrapper .gallery-masonry-item-content {
@@ -3012,7 +3019,7 @@ hr {
 .project-page h6 {
     margin-bottom: 0px;
     position: relative;
-    font-family: 'Didact Gothic', sans-serif;
+    font-family: 'Vazirmatn', sans-serif;
     font-size: 16px;
     color: #999;
 }
@@ -3024,13 +3031,13 @@ hr {
     position: relative;
     z-index: 2;
 }
-.project-bar h5  {
-    color: #b19777;
-    font-size: 16px;
-    font-family: 'Didact Gothic', sans-serif;
-    font-weight: 400;
-    margin-bottom: 5px;
-}
+    .project-bar h5 {
+        color: #b19777;
+        font-size: 16px;
+        font-family: 'Vazirmatn', sans-serif;
+        font-weight: 400;
+        margin-bottom: 5px;
+    }
 @media (max-width: 576px) {
     .project-bar {
      margin-top: 0px; 
@@ -3338,7 +3345,7 @@ button.mfp-arrow {
     margin-bottom: 0px;
     padding-top: 7px;
     font-weight: 400;
-    font-family: 'Didact Gothic', sans-serif;
+    font-family: 'Vazirmatn', sans-serif;
     color: #b19777;
 }
 .testimonials .item .info span {
@@ -3414,15 +3421,15 @@ button.mfp-arrow {
 .bauen-blog .item .con .category a:last-child:after {
     display: none;
 }
-.bauen-blog .item .con h5,
-.bauen-blog .item .con h5 a {
-    color: #b19777;
-    font-size: 25px;
-    font-family: 'Oswald', sans-serif;
-    font-weight: 300;
-    margin-bottom: 0px;
-    letter-spacing: 1px;
-}
+    .bauen-blog .item .con h5,
+    .bauen-blog .item .con h5 a {
+        color: #b19777;
+        font-size: 25px;
+        font-family: 'Vazirmatn', sans-serif;
+        font-weight: 300;
+        margin-bottom: 0px;
+        letter-spacing: 1px;
+    }
 .bauen-blog .item .con h5:hover,
 .bauen-blog .item .con h5 a:hover {
     color: #b19777;
@@ -3473,14 +3480,14 @@ button.mfp-arrow {
     color: #b19777;
     margin-bottom: 0px;
 }
-.bauen-blog2 .content .date h6 {
-    color: #999;
-    letter-spacing: 2px;
-    font-size: 10px;
-    font-family: 'Didact Gothic', sans-serif;
-    text-transform: uppercase;
-    font-weight: 300;
-}
+    .bauen-blog2 .content .date h6 {
+        color: #999;
+        letter-spacing: 2px;
+        font-size: 10px;
+        font-family: 'Vazirmatn', sans-serif;
+        text-transform: uppercase;
+        font-weight: 300;
+    }
 .bauen-blog2 .content .cont {
   display: table-cell;
   vertical-align: middle;
@@ -3516,13 +3523,13 @@ button.mfp-arrow {
 .bauen-blog2 .content .cont .more:hover {
    color: #fff; 
 }
-.bauen-blog2 .content .info h6 {
-    font-size: 11px;
-    letter-spacing: 2px;
-    color: #999;
-    font-family: 'Didact Gothic', sans-serif;
-    text-transform: uppercase;
-}
+    .bauen-blog2 .content .info h6 {
+        font-size: 11px;
+        letter-spacing: 2px;
+        color: #999;
+        font-family: 'Vazirmatn', sans-serif;
+        text-transform: uppercase;
+    }
 .bauen-blog2 .content .info .tags {
   color: #b19777;
 }
@@ -3589,16 +3596,16 @@ button.mfp-arrow {
 .bauen-blog3 .post-cont {
     padding: 30px 0;
 }
-.bauen-blog3 .post-cont .tag {
-    display: block;
-    font-weight: 400;
-	font-size: 12px;
-    letter-spacing: 2px;
-    color: #b19777;
-    font-family: 'Didact Gothic', sans-serif;
-    text-transform: uppercase;
-	margin-bottom: 5px;
-}
+    .bauen-blog3 .post-cont .tag {
+        display: block;
+        font-weight: 400;
+        font-size: 12px;
+        letter-spacing: 2px;
+        color: #b19777;
+        font-family: 'Vazirmatn', sans-serif;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+    }
 .bauen-blog3 .post-cont h5 {
 	color: #fff;
     font-size: 25px;
@@ -3740,20 +3747,20 @@ button.mfp-arrow {
     display: inline-block;
     margin: 0 5px;
 }
-.bauen-pagination-wrap li a {
-    background: transparent;
-    display: inline-block;
-    width: 40px;
-    height: 40px;
-    line-height: 38px;
-    text-align: center;
-    color: #999;
-    font-weight: 300;
-    border: 1px solid #323232;
-    font-family: 'Oswald', sans-serif;
-    font-size: 13px;
-    border-radius: 100%;
-}
+    .bauen-pagination-wrap li a {
+        background: transparent;
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        line-height: 38px;
+        text-align: center;
+        color: #999;
+        font-weight: 300;
+        border: 1px solid #323232;
+        font-family: 'Vazirmatn', sans-serif;
+        font-size: 13px;
+        border-radius: 100%;
+    }
 .bauen-pagination-wrap li a i {
     font-size: 11px;
 }
@@ -3903,7 +3910,7 @@ hr.border-2 {
     position: relative;
     padding-bottom: 2px;
     margin-bottom: -2px;
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Vazirmatn', sans-serif;
     text-transform: uppercase;
     font-size: 13px;
     font-weight: 300;
@@ -3939,12 +3946,12 @@ hr.border-2 {
     padding-top: 60px;
     margin-bottom: 60px;
 }
-.bauen-comment-section h3 {
-    font-size: 16px;
-    color: #b19777;
-    font-family: 'Didact Gothic', sans-serif;
-    font-weight: 400;
-}
+    .bauen-comment-section h3 {
+        font-size: 16px;
+        color: #b19777;
+        font-family: 'Vazirmatn', sans-serif;
+        font-weight: 400;
+    }
 .bauen-comment-section h3 span {
     font-size: 12px;
     color: #999;
@@ -3992,18 +3999,18 @@ hr.border-2 {
     position: relative;
     line-height: 1.2em;
 }
-.butn-dark a {
-    font-weight: 300;
-    font-family: 'Oswald', sans-serif;
-    text-transform: uppercase;
-    background: #b19777;
-    color: #fff;
-    padding: 13px 30px;
-    margin: 0;
-    position: relative;
-    font-size: 16px;
-    letter-spacing: 3px;
-}
+    .butn-dark a {
+        font-weight: 300;
+        font-family: 'Vazirmatn', sans-serif;
+        text-transform: uppercase;
+        background: #b19777;
+        color: #fff;
+        padding: 13px 30px;
+        margin: 0;
+        position: relative;
+        font-size: 16px;
+        letter-spacing: 3px;
+    }
 .butn-dark a:after {
     content: '';
     width: 0;
@@ -4035,19 +4042,19 @@ hr.border-2 {
     position: relative;
     line-height: 1.2em;
 }
-.butn-light a {
-    font-weight: 300;
-    font-family: 'Oswald', sans-serif;
-    text-transform: uppercase;
-    background: transparent;
-    color: #fff;
-    padding: 12px 24px;
-    margin: 0;
-    position: relative;
-    font-size: 16px;
-    letter-spacing: 3px;
-    border: 1px solid rgba(255,255,255,0.3);
-}
+    .butn-light a {
+        font-weight: 300;
+        font-family: 'Vazirmatn', sans-serif;
+        text-transform: uppercase;
+        background: transparent;
+        color: #fff;
+        padding: 12px 24px;
+        margin: 0;
+        position: relative;
+        font-size: 16px;
+        letter-spacing: 3px;
+        border: 1px solid rgba(255,255,255,0.3);
+    }
 .butn-light a:after {
     content: '';
     width: 0;
@@ -4111,19 +4118,19 @@ hr.border-2 {
     background: transparent;
     color: #b19777;
 }
-.main-footer .fothead h6 {
-    margin-bottom: 0px;
-    font-family: 'Oswald', sans-serif;
-    color: #b19777;
-    font-size: 17px;
-}
-.main-footer .fotcont .fothead h6 {
-    font-family: 'Didact Gothic', sans-serif;
-    font-weight: 400;
-    position: relative;
-    padding-bottom: 5px;
-    font-size: 16px;
-}
+    .main-footer .fothead h6 {
+        margin-bottom: 0px;
+        font-family: 'Vazirmatn', sans-serif;
+        color: #b19777;
+        font-size: 17px;
+    }
+    .main-footer .fotcont .fothead h6 {
+        font-family: 'Vazirmatn', sans-serif;
+        font-weight: 400;
+        position: relative;
+        padding-bottom: 5px;
+        font-size: 16px;
+    }
 .main-footer .fotcont .fothead h6:after {
     content: '';
     position: absolute;
@@ -4376,7 +4383,7 @@ hr.border-2 {
     padding-right: 60px;
     color: #999;
     transition: all 500ms ease;
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Vazirmatn', sans-serif;
 }
 .accordion-box .block .acc-btn .count {
   color: #b19777;
@@ -4471,7 +4478,7 @@ hr.border-2 {
     margin: 0;
     font-size: 16px;
     text-transform: uppercase;
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Vazirmatn', sans-serif;
     color: #b19777;
     margin-bottom: 20px;
     letter-spacing: 5px;
@@ -4491,7 +4498,7 @@ hr.border-2 {
 }
 .butn-pricing a {
     font-weight: 300;
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Vazirmatn', sans-serif;
     text-transform: uppercase;
     background: #b19777;
     color: #fff;
@@ -4552,7 +4559,7 @@ hr.border-2 {
   padding: 20px 60px 20px 30px;
   height: 70px;
   display: block;
- font-family: 'Didact Gothic', sans-serif;
+ font-family: 'Vazirmatn', sans-serif;
   font-size: 16px;
   background: #323232;
   color: #999;
@@ -4650,7 +4657,7 @@ hr.border-2 {
     right: 20px;
 }
 .process .item h6 {
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Vazirmatn', sans-serif;
     color: #fff;
     font-size: 16px;
     margin-bottom: 5px;
@@ -4720,7 +4727,7 @@ hr.border-2 {
     text-align: center;
     left: 22px;
     font-style: normal;
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Vazirmatn', sans-serif;
     font-size: 14px;
     font-weight: 300;
     letter-spacing: 1px;
@@ -4730,7 +4737,7 @@ hr.border-2 {
     transition: all .3s ease-in-out;
 }
 .process2.item h3 {
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Vazirmatn', sans-serif;
     font-size: 16px;
     font-weight: 300;
     color: #fff;
@@ -4828,7 +4835,7 @@ hr.border-2 {
 .comming h6 {
     color: #b19777;
     font-size: 13px;
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Vazirmatn', sans-serif;
     font-weight: 300;
     text-transform: uppercase;
     margin-bottom: 5px;
@@ -4838,7 +4845,7 @@ hr.border-2 {
 .comming h3 {
     font-size: 48px;
     line-height: 1.25em;
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Vazirmatn', sans-serif;
     font-weight: 400;
     color: #fff;
     position: relative;
@@ -4849,7 +4856,7 @@ hr.border-2 {
 .comming h2 {
     font-size: 48px;
     line-height: 1.25em;
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Vazirmatn', sans-serif;
     font-weight: 400;
     color: #fff;
     position: relative;
@@ -4910,7 +4917,7 @@ hr.border-2 {
 	color: #fff;
 	display: inline-block;
 	font-size: 13px;
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Vazirmatn', sans-serif;
     font-weight: 300;
     text-transform: uppercase;
 	letter-spacing: 5px;

@@ -1,0 +1,98 @@
+﻿@using SakhtKhaneh.Models.Projects
+
+@model Project;
+
+@{
+    ViewData["Title"] = Model?.Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<!-- Content -->
+<div class="content-wrapper">
+
+    <!-- Lines -->
+    <section class="content-lines-wrapper">
+        <div class="content-lines-inner">
+            <div class="content-lines"></div>
+        </div>
+    </section>
+    <!-- Header Banner -->
+    <section class="banner-header banner-img valign bg-img bg-fixed" data-overlay-darkgray="5" data-background="/assets/img/banner.jpg"> </section>
+
+    <!-- Project Page -->
+    <section class="project-page section-padding2">
+        <div class="container">
+            <!-- project slider -->
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+                    <div class="owl-carousel owl-theme" dir="ltr">
+                        <div class="portfolio-item"> <img class="img-fluid" src="@Model.CoverImageUrl" alt=""> </div>
+                        @if (Model.Gallery != null && Model.Gallery.Count > 0)
+                        {
+                            @foreach (var item in Model.Gallery)
+                            {
+                                <div class="portfolio-item"> <img class="img-fluid" src="@item.ImageUrl" alt=""> </div>
+                            }
+                        }
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="project-bar">
+                                <div class="row justify-content-between align-items-center text-left text-lg-start">
+                                    <div class="col-md-3 mb-15">
+                                        <h5>تاریخ پروژه</h5>
+                                        <h6>@Model.StartDate?.Year/@Model.StartDate?.Month - @Model.EndDate?.Year/@Model.EndDate?.Month</h6>
+                                    </div>
+                                    <div class="col-md-3 mb-15">
+                                        <h5>مالک پروژه</h5>
+                                        <h6>@Model.Owner</h6>
+                                    </div>
+                                    <div class="col-md-3 mb-15">
+                                        <h5>نام پروژه</h5>
+                                        <h6>@Model.Title</h6>
+                                    </div>
+                                    <div class="col-md-3 mb-15">
+                                        <h5>موقعیت پروژه</h5>
+                                        <h6>@Model.Location</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- project content -->
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 class="section-title2">@Model.Title</h2>
+                    <p class="mb-30">
+                        @Model.Description
+                    </p>
+
+                    @Html.Raw(Model.Content)
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+
+@section Scripts {
+    <script src="/assets/js/modernizr-2.6.2.min.js"></script>
+    <script src="/assets/js/imagesloaded.pkgd.min.js"></script>
+    <script src="/assets/js/jquery.isotope.v3.0.2.js"></script>
+    <script src="/assets/js/popper.min.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
+    <script src="/assets/js/scrollIt.min.js"></script>
+    <script src="/assets/js/jquery.waypoints.min.js"></script>
+    <script src="/assets/js/owl.carousel.min.js"></script>
+    <script src="/assets/js/jquery.stellar.min.js"></script>
+    <script src="/assets/js/jquery.magnific-popup.js"></script>
+    <script src="/assets/js/YouTubePopUp.js"></script>
+    <script src="/assets/js/before-after.js"></script>
+    <script src="/assets/js/vegas.slider.min.js"></script>
+    <script src="/assets/js/home.js"></script>
+}

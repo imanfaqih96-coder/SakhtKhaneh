@@ -1,4 +1,6 @@
-﻿using SakhtKhaneh.Models.Projects;
+﻿using SakhtKhaneh.Models.Blog;
+using SakhtKhaneh.Models.Projects;
+using SakhtKhaneh.Models.Services;
 
 namespace SakhtKhaneh.Models.Template.ViewModels
 {
@@ -23,8 +25,19 @@ namespace SakhtKhaneh.Models.Template.ViewModels
 
     public class HomeDataViewModel
     {
-        public List<SliderItem> Slider { get; set; }
+        public List<SliderItem>? Slider { get; set; }
         public AboutSectionInfoViewModel? AboutInfo { get; set; }
         public List<Project>? Projects { get; set; }
+        public List<Service> Services { get; set; }
+        public List<BlogPost> Posts { get; set; }
+    }
+
+    public class ContactDataViewModel
+    {
+        public string Description { get; set; }
+        public string Content { get; set; }
+        public string Phone { get; set; }
+        public string Email { get; set; }
+        public string Address { get; set; }
     }
 }

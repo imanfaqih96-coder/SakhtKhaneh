@@ -1,0 +1,92 @@
+﻿@using SakhtKhaneh.Models.Blog
+
+@model BlogPost?;
+
+@{
+    ViewData["Title"] = Model?.Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<!-- Content -->
+<div class="content-wrapper">
+
+    <!-- Lines -->
+    <section class="content-lines-wrapper">
+        <div class="content-lines-inner">
+            <div class="content-lines"></div>
+        </div>
+    </section>
+    <!-- Header Banner -->
+    <section class="banner-header banner-img valign bg-img bg-fixed" data-overlay-darkgray="5" data-background="/assets/img/banner.jpg"> </section>
+
+    <!-- Post -->
+    <section class="section-padding2">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <img src="@Model.ImageUrl" class="mb-30" alt="">
+                    <h2 class="section-title2">
+                        @Model.Title
+                    </h2>
+                    <p>
+                        @Model.Description
+                    </p>
+                
+                    @Html.Raw(Model.Content)
+                    
+                </div>
+            </div>
+            <div class="bauen-comment-section">
+                <div class="row">
+                    <!-- Comment -->
+                    <div class="col-lg-7 col-md-12">
+                        <div class="bauen-post-comment-wrap">
+                            <div class="bauen-user-comment"> <img src="/assets/img/team/1.jpg" alt=""> </div>
+                            <div class="bauen-user-content">
+                                <h3>@Model.Author<span class="px-3"> @Model.CreationDate.ToShortDateString()</span></h3>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Contact Form -->
+                    <div class="col-lg-4 offset-lg-1 col-md-12 d-none">
+                        <h3>Leave a Reply</h3>
+                        <form method="post" class="row">
+                            <div class="col-md-12">
+                                <input type="text" name="name" id="name" placeholder="Full Name *" required="">
+                            </div>
+                            <div class="col-md-12">
+                                <input type="email" name="email" id="email" placeholder="Email Address *" required="">
+                            </div>
+                            <div class="col-md-12">
+                                <textarea name="message" id="message" cols="40" rows="4" placeholder="Your Comment *" required=""></textarea>
+                            </div>
+                            <div class="col-md-12">
+                                <button class="butn-dark mt-15"><a href="#0"><span>Send</span></a></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+
+@section Scripts {
+    <script src="/assets/js/modernizr-2.6.2.min.js"></script>
+    <script src="/assets/js/imagesloaded.pkgd.min.js"></script>
+    <script src="/assets/js/jquery.isotope.v3.0.2.js"></script>
+    <script src="/assets/js/popper.min.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
+    <script src="/assets/js/scrollIt.min.js"></script>
+    <script src="/assets/js/jquery.waypoints.min.js"></script>
+    <script src="/assets/js/owl.carousel.min.js"></script>
+    <script src="/assets/js/jquery.stellar.min.js"></script>
+    <script src="/assets/js/jquery.magnific-popup.js"></script>
+    <script src="/assets/js/YouTubePopUp.js"></script>
+    <script src="/assets/js/before-after.js"></script>
+    <script src="/assets/js/vegas.slider.min.js"></script>
+    <script src="/assets/js/home.js"></script>
+}

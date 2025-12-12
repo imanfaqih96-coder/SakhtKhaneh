@@ -22,7 +22,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.AddScoped<TemplateDataManagementService>();
+builder.Services.AddScoped<ITemplateDataManagementService, TemplateDataManagementService>();
 
 var app = builder.Build();
 
