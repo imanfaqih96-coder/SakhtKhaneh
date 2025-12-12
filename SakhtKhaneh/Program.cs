@@ -32,7 +32,7 @@ app.MapControllers();            // /api
 app.MapDefaultControllerRoute();
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Public}/{action=CommingSoon}/{id?}");
+    pattern: "{controller=Public}/{action=Index}/{id?}");
 // /public
 
 // Serve Angular app on /admin
