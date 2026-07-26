@@ -234,7 +234,7 @@ input[type="submit"] {
     margin: 0;
     position: relative;
     font-size: 16px;
-    letter-spacing: 3px;
+    letter-spacing: initial !important;
 }
 .alert-success {
     background: transparent;
@@ -289,7 +289,7 @@ blockquote:before {
     content: '\e645';
     font-family: 'Themify';
     position: absolute;
-    right: 40px;
+    left: 40px;
     bottom: 40px;
     font-size: 110px;
     opacity: 0.07;
@@ -500,7 +500,7 @@ blockquote cite:before {
     color: #fff;
     text-transform: uppercase;
     position: relative;
-    letter-spacing: 10px;
+    letter-spacing: initial !important;
     word-spacing: 5px;
     margin-bottom: 30px;
 }
@@ -514,7 +514,7 @@ blockquote cite:before {
     position: relative;
     line-height: 1.25em;
     margin-bottom: 30px;
-    letter-spacing: 3px;
+    letter-spacing: initial !important;
     text-transform: uppercase;
 }
 
@@ -546,7 +546,7 @@ blockquote cite:before {
 .navbar .navbar-nav .nav-link {
     font-size: 15px;
     font-weight: 300;
-    letter-spacing: 4px;
+    letter-spacing: initial !important;
     text-transform: uppercase;
     color: #fff;
     margin: 1px;
@@ -615,7 +615,7 @@ blockquote cite:before {
         color: #b19777;
         margin-bottom: 0;
         text-transform: uppercase;
-        letter-spacing: 4px;
+        letter-spacing: initial !important;
     }
     .nav-scroll .logo-wrapper .logo span {
         display: block;
@@ -623,7 +623,7 @@ blockquote cite:before {
         font-size: 12px;
         color: #b19777;
         font-weight: 400;
-        letter-spacing: 4px;
+        letter-spacing: initial !important;
         display: block;
         margin-top: 0px;
         line-height: 1.2em;
@@ -643,7 +643,7 @@ blockquote cite:before {
         color: #b19777;
         margin-bottom: 0;
         text-transform: uppercase;
-        letter-spacing: 4px;
+        letter-spacing: initial !important;
     }
 .logo-wrapper .logo h2 a i {
     color: #fff;
@@ -656,7 +656,7 @@ blockquote cite:before {
         font-size: 12px;
         color: #b19777;
         font-weight: 400;
-        letter-spacing: 4px;
+        letter-spacing: initial !important;
         display: block;
         margin-top: 0px;
         line-height: 1.2em;
@@ -756,7 +756,7 @@ blockquote cite:before {
     }
     .logo-wrapper {
         float: left;
-        padding: 26px 0 26px 15px;
+        padding: 0px;
     }
     .nav-scroll .logo-wrapper {
         padding: 22px 15px;
@@ -873,7 +873,7 @@ blockquote cite:before {
         font-size: 20px;
         font-weight: 400;
         text-transform: uppercase;
-        letter-spacing: 5px;
+        letter-spacing: initial !important;
         color: #fff;
         text-align: right;
         margin-bottom: 30px;
@@ -891,7 +891,7 @@ blockquote cite:before {
         animation-delay: .4s;
         color: #fff;
         font-weight: 400;
-        letter-spacing: 15px;
+        letter-spacing: initial !important;
     }
 .header .caption p {
     font-size: 18px;
@@ -903,7 +903,7 @@ blockquote cite:before {
     margin-right: 15px;
 }
 .header .caption p span {
-    letter-spacing: 5px;
+    letter-spacing: initial !important;
     text-transform: uppercase;
     margin: 0 5px;
     padding-right: 14px;
@@ -986,7 +986,7 @@ hr {
     animation-delay: .4s;
     color: #fff;
     font-weight: 400;
-    letter-spacing: 15px;
+    letter-spacing: initial !important;
 }
 .simple-content-text-inner p {
     font-size: 18px;
@@ -1143,7 +1143,7 @@ hr {
     .slider-grid-bg .year {
         font-family: 'Vazirmatn', sans-serif;
         font-size: 12px;
-        letter-spacing: 3px;
+        letter-spacing: initial !important;
         text-transform: uppercase;
         line-height: 1;
         position: absolute;
@@ -1157,7 +1157,7 @@ hr {
         font-weight: 400;
         color: #fff;
         margin-bottom: 5px;
-        letter-spacing: 3px;
+        letter-spacing: initial !important;
         text-transform: uppercase;
     }
 .slider-grid-bg .grid-con:hover .subtitle {
@@ -1169,7 +1169,7 @@ hr {
         font-size: 24px;
         font-weight: 300;
         line-height: 1.2em;
-        letter-spacing: 5px;
+        letter-spacing: initial !important;
         text-transform: uppercase;
     }
 .slider-grid-bg .owl-theme .owl-dots .owl-dot span {
@@ -1241,7 +1241,7 @@ hr {
         font-size: 12px;
         font-weight: 300;
         text-transform: uppercase;
-        letter-spacing: 10px;
+        letter-spacing: initial !important;
         color: #fff;
         text-align: center;
         margin-bottom: 20px;
@@ -1256,25 +1256,25 @@ hr {
         line-height: 1.35em;
         color: #fff;
         font-weight: 400;
-        letter-spacing: 10px;
+        letter-spacing: initial !important;
     }
 #kenburnsSliderContainer .vegas-overlay {}
 @media screen and (max-width: 767px) {
 .kenburns-inner .caption h4 {
     font-size: 12px;
-}   
-.kenburns-inner .caption h1 {
-     font-size: 26px;
-    margin-bottom: 15px;
-    letter-spacing: 5px;
-    line-height: 1.5em;
 }
+    .kenburns-inner .caption h1 {
+        font-size: 26px;
+        margin-bottom: 15px;
+        letter-spacing: initial !important;
+        line-height: 1.5em;
+    }
 }
 
 
 /* ======= Page Banner Header style ======= */
 .banner-header {
-    height: 50vh;
+    height: 25vh;
     z-index: -2;
 }
 .banner-header h6 {
@@ -1427,7 +1427,7 @@ hr {
     animation-delay: .4s;
     color: #fff;
     font-weight: 400;
-    letter-spacing: 15px;
+    letter-spacing: initial !important;
 }
 .video-fullscreen-wrap .video-fullscreen-inner p {
     font-size: 18px;
@@ -1450,7 +1450,7 @@ hr {
     .video-fullscreen-wrap .video-fullscreen-inner h1 {
         font-size: 30px;
         margin-bottom: 15px;
-        letter-spacing: 10px;
+        letter-spacing: initial !important;
         line-height: 1.35em;
     }
     .video-fullscreen-wrap .video-fullscreen-inner p {
@@ -1504,7 +1504,7 @@ hr {
     text-transform: uppercase;
     font-family: 'Vazirmatn', sans-serif;
     font-weight: 300;
-    letter-spacing: 5px;
+    letter-spacing: initial !important;
     font-size: 13px;
     line-height: 1.5em;
     text-align: center;
@@ -1531,14 +1531,14 @@ hr {
     position: relative;
     overflow: hidden;
 }
-.team .info h6 {
-    font-size: 17px;
-    margin-bottom: 5px;
-    text-transform: uppercase;
-    font-weight: 300;
-    letter-spacing: 3px;
-    color: #fff;
-}
+    .team .info h6 {
+        font-size: 17px;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        font-weight: 300;
+        letter-spacing: initial !important;
+        color: #fff;
+    }
 .team .info p {
     margin-bottom: 5px;
     color: #999;
@@ -1567,14 +1567,14 @@ hr {
 .team-details {
     color: #999;
 }
-.team-details h3 {
-    font-size: 25px;
-    margin-bottom: 0px;
-    color: #fff;
-    letter-spacing: 3px;
-    font-weight: 300;
-    text-transform: uppercase;
-}
+    .team-details h3 {
+        font-size: 25px;
+        margin-bottom: 0px;
+        color: #fff;
+        letter-spacing: initial !important;
+        font-weight: 300;
+        text-transform: uppercase;
+    }
 .team-details .content {
     background-color: #323232;
 }
@@ -1712,7 +1712,7 @@ hr {
     font-family: 'Vazirmatn', sans-serif;
     font-size: 16px;
     font-weight: 300;
-    letter-spacing: 3px;
+    letter-spacing: initial !important;
     text-transform: uppercase;
     position: relative;
     -webkit-transition: color .3s;
@@ -1727,7 +1727,7 @@ hr {
         color: #999;
         display: block;
         text-transform: none;
-        letter-spacing: 0px;
+        letter-spacing: initial !important;
     }
 .position-location {
     font-family: 'Vazirmatn', sans-serif;
@@ -1744,7 +1744,7 @@ hr {
         color: #999;
         display: block;
         text-transform: none;
-        letter-spacing: 0px;
+        letter-spacing: initial !important;
     }
 .position-time {
     font-weight: 400;
@@ -1757,7 +1757,7 @@ hr {
         color: #fff;
         display: block;
         text-transform: none;
-        letter-spacing: 0px;
+        letter-spacing: initial !important;
     }
 .position-icon {
     font-size: 16px;
@@ -1834,14 +1834,14 @@ hr {
     color: transparent;
     -webkit-text-stroke: 1px rgba(177, 151, 119, 0.5);
 }
-.services .item h5 {
-    font-size: 16px;
-    font-weight: 300;
-    margin-bottom: 15px;
-    color: #fff;
-    text-transform: uppercase;
-    letter-spacing: 5px;
-}
+    .services .item h5 {
+        font-size: 16px;
+        font-weight: 300;
+        margin-bottom: 15px;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: initial !important;
+    }
 .services .item p {
     margin-bottom: 0;
 }
@@ -1908,14 +1908,14 @@ hr {
     margin-bottom: 0;
     color: #fff;
 }
-.services2 .title-box h3 {
-    font-size: 16px;
-    font-weight: 300;
-    margin-bottom: 15px;
-    color: #fff;
-    text-transform: uppercase;
-    letter-spacing: 5px;
-}
+    .services2 .title-box h3 {
+        font-size: 16px;
+        font-weight: 300;
+        margin-bottom: 15px;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: initial !important;
+    }
 .services2 .services2-img {
     position: relative
 }
@@ -1948,20 +1948,20 @@ hr {
     color: #fff;
     margin-bottom: 20px;
 }
-.services2 .services2-title {
-    font-size: 20px;
-    font-weight: 300;
-    margin-bottom: 15px;
-    color: #fff;
-    text-transform: uppercase;
-    letter-spacing: 5px;
-}
+    .services2 .services2-title {
+        font-size: 20px;
+        font-weight: 300;
+        margin-bottom: 15px;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: initial !important;
+    }
     .services2 .services2-subtitle {
         color: #b19777;
         font-family: 'Vazirmatn', sans-serif;
         font-size: 13px;
         font-weight: 300;
-        letter-spacing: 5px;
+        letter-spacing: initial !important;
         text-transform: uppercase;
         margin-bottom: 10px;
     }
@@ -2046,7 +2046,7 @@ hr {
     font-size: 16px;
     color: #fff;
     text-transform: uppercase;
-    letter-spacing: 5px;
+    letter-spacing: initial !important;
     font-weight: 300;
 }
 .services3-img-area {
@@ -2122,16 +2122,16 @@ hr {
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
 }
-.services4 .square h4 {
-    font-weight: 300;
-    text-transform: uppercase;
-    letter-spacing: 5px;
-    color: #fff;
-    font-size: 18px;
-    text-align: left;
-    margin-bottom: 0;
-    display: inline-flex;
-}
+    .services4 .square h4 {
+        font-weight: 300;
+        text-transform: uppercase;
+        letter-spacing: initial !important;
+        color: #fff;
+        font-size: 18px;
+        text-align: left;
+        margin-bottom: 0;
+        display: inline-flex;
+    }
 .services4 .square-flip .square {
     -webkit-transform: rotateY(0deg);
     transform: rotateY(0deg);
@@ -2166,13 +2166,13 @@ hr {
     right: 15px;
     bottom: 25px;
 }
-.services4 .square2 h4 {
-    font-size: 20px;
-    color: #fff;
-    text-transform: uppercase;
-    letter-spacing: 5px;
-    font-weight: 300;
-}
+    .services4 .square2 h4 {
+        font-size: 20px;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: initial !important;
+        font-weight: 300;
+    }
 .services4 .square2 p {
     font-size: 16px;
     color: rgba(255, 255, 255, 0.7);
@@ -2305,7 +2305,7 @@ hr {
         color: #fff;
         font-weight: 300;
         text-transform: uppercase;
-        letter-spacing: 5px;
+        letter-spacing: initial !important;
         margin-bottom: 0px;
     }
 .sidebar .services ul {
@@ -2425,28 +2425,28 @@ hr {
     background: -webkit-linear-gradient(top, transparent 0, rgba(0, 0, 0, .01) 2%, rgba(0, 0, 0, .75) 90%);
     background: linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, .01) 2%, rgba(0, 0, 0, .75) 90%);
 }
-.projects .item .con h6,
-.projects .item .con h6 a {
-    position: relative;
-    color: #b19777;
-    font-size: 13px;
-    font-weight: 400;
-    margin-top: 0px;
-    margin-bottom: 10px;
-    letter-spacing: 5px;
-    text-transform: uppercase;
-}
-.projects .item .con h5,
-.projects .item .con h5 a {
-    position: relative;
-    color: #fff;
-    font-size: 20px;
-    font-weight: 300;
-    margin-top: 0px;
-    margin-bottom: 10px;
-    letter-spacing: 5px;
-    text-transform: uppercase;
-}
+    .projects .item .con h6,
+    .projects .item .con h6 a {
+        position: relative;
+        color: #b19777;
+        font-size: 13px;
+        font-weight: 400;
+        margin-top: 0px;
+        margin-bottom: 10px;
+        letter-spacing: initial !important;
+        text-transform: uppercase;
+    }
+    .projects .item .con h5,
+    .projects .item .con h5 a {
+        position: relative;
+        color: #fff;
+        font-size: 20px;
+        font-weight: 300;
+        margin-top: 0px;
+        margin-bottom: 10px;
+        letter-spacing: initial !important;
+        text-transform: uppercase;
+    }
 .projects .item .con p {
     color: #fff;
     font-size: 20px;
@@ -2599,7 +2599,7 @@ hr {
     font-size: 20px;
     color: #fff;
     font-weight: 300;
-    letter-spacing: 5px;
+    letter-spacing: initial !important;
     text-transform: uppercase;
 }
 .project-masonry-wrapper .project-masonry-item-category {
@@ -2607,7 +2607,7 @@ hr {
     line-height: 1.5em;
     color: #b19777;
     font-weight: 300;
-    letter-spacing: 5px;
+    letter-spacing: initial !important;
     text-transform: uppercase;
     font-family: 'Vazirmatn', sans-serif;
 }
@@ -2696,7 +2696,7 @@ hr {
         font-size: 20px;
         line-height: 1.25em;
         font-weight: 300;
-        letter-spacing: 5px;
+        letter-spacing: initial !important;
         text-transform: uppercase;
         color: #fff;
         margin-bottom: 0px;
@@ -2706,7 +2706,7 @@ hr {
         font-family: 'Vazirmatn', sans-serif;
         font-size: 13px;
         font-weight: 300;
-        letter-spacing: 5px;
+        letter-spacing: initial !important;
         text-transform: uppercase;
         margin-bottom: 10px;
         align-items: center;
@@ -2836,20 +2836,20 @@ hr {
     background: #272727;
     padding: 5% 0% 5% 4%;
 }
-.projects4 .caption h4 {
-    font-size: 30px;
-    color: #fff;
-    letter-spacing: 5px;
-    font-weight: 300;
-    line-height: 1.25em;
-    text-transform: uppercase;
-}
+    .projects4 .caption h4 {
+        font-size: 30px;
+        color: #fff;
+        letter-spacing: initial !important;
+        font-weight: 300;
+        line-height: 1.25em;
+        text-transform: uppercase;
+    }
     .projects4 .caption h6 {
         color: #b19777;
         font-family: 'Vazirmatn', sans-serif;
         font-size: 13px;
         font-weight: 300;
-        letter-spacing: 5px;
+        letter-spacing: initial !important;
         text-transform: uppercase;
         margin-bottom: 10px;
     }
@@ -2957,12 +2957,12 @@ hr {
   -webkit-transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .gallery-masonry-wrapper .gallery-masonry-item-title {
-  margin-top: 0;
+    margin-top: 0;
     margin-bottom: 5px;
     font-size: 20px;
     color: #fff;
     font-weight: 300;
-    letter-spacing: 5px;
+    letter-spacing: initial !important;
     text-transform: uppercase;
 }
 .gallery-masonry-wrapper .gallery-masonry-item-category {
@@ -2970,7 +2970,7 @@ hr {
     line-height: 1.5em;
     color: #b19777;
     font-weight: 300;
-    letter-spacing: 5px;
+    letter-spacing: initial !important;
     text-transform: uppercase;
     font-family: 'Vazirmatn', sans-serif;
 }
@@ -3187,7 +3187,7 @@ button.mfp-arrow {
     font-size: 20px;
     font-weight: 300;
     color: #fff;
-    letter-spacing: 5px;
+    letter-spacing: initial !important;
     margin-bottom: 30px;
     text-transform: uppercase;
 }
@@ -3285,23 +3285,23 @@ button.mfp-arrow {
     padding: 60px 45px;
     margin-bottom: -90px;
 }
-.testimonials-box .head-box h6 {
-    font-weight: 400;
-    color: #999;
-    font-size: 17px;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    margin-bottom: 10px;
-}
-.testimonials-box .head-box h4 {
-    font-size: 20px;
-    font-weight: 300;
-    color: #fff;
-    letter-spacing: 5px;
-    border-bottom: 1px solid #373737;
-    padding-bottom: 15px;
-    text-transform: uppercase;
-}
+    .testimonials-box .head-box h6 {
+        font-weight: 400;
+        color: #999;
+        font-size: 17px;
+        text-transform: uppercase;
+        letter-spacing: initial !important;
+        margin-bottom: 10px;
+    }
+    .testimonials-box .head-box h4 {
+        font-size: 20px;
+        font-weight: 300;
+        color: #fff;
+        letter-spacing: initial !important;
+        border-bottom: 1px solid #373737;
+        padding-bottom: 15px;
+        text-transform: uppercase;
+    }
 .testimonials-box .head-box h4 span {
     color: #fff;
 }
@@ -3402,12 +3402,12 @@ button.mfp-arrow {
     bottom: -55px;
     position: relative;
 }
-.bauen-blog .item .con .category {
-    font-size: 12px;
-    font-weight: 400;
-    margin-bottom: 0;
-    letter-spacing: 1px;
-}
+    .bauen-blog .item .con .category {
+        font-size: 12px;
+        font-weight: 400;
+        margin-bottom: 0;
+        letter-spacing: initial !important;
+    }
 .bauen-blog .item .con .category a {
     margin-right: 5px;
     position: relative;
@@ -3424,11 +3424,11 @@ button.mfp-arrow {
     .bauen-blog .item .con h5,
     .bauen-blog .item .con h5 a {
         color: #b19777;
-        font-size: 25px;
+        font-size: 20px;
         font-family: 'Vazirmatn', sans-serif;
         font-weight: 300;
         margin-bottom: 0px;
-        letter-spacing: 1px;
+        letter-spacing: initial !important;
     }
 .bauen-blog .item .con h5:hover,
 .bauen-blog .item .con h5 a:hover {
@@ -3482,7 +3482,7 @@ button.mfp-arrow {
 }
     .bauen-blog2 .content .date h6 {
         color: #999;
-        letter-spacing: 2px;
+        letter-spacing: initial !important;
         font-size: 10px;
         font-family: 'Vazirmatn', sans-serif;
         text-transform: uppercase;
@@ -3493,24 +3493,24 @@ button.mfp-arrow {
   vertical-align: middle;
   padding-left: 15px;
 }
-.bauen-blog2 .content .cont h4 {
-    margin: 15px 0;
-    font-size: 20px;
-    color: #fff;
-    letter-spacing: 5px;
-    font-weight: 300;
-    text-transform: uppercase;
-    line-height: 1.5em;
-}
-.bauen-blog2 .content .cont .more {
-  font-size: 13px;
-  font-weight: 300;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: #b19777;
-  padding-left: 40px;
-  position: relative;
-}
+    .bauen-blog2 .content .cont h4 {
+        margin: 15px 0;
+        font-size: 20px;
+        color: #fff;
+        letter-spacing: initial !important;
+        font-weight: 300;
+        text-transform: uppercase;
+        line-height: 1.5em;
+    }
+    .bauen-blog2 .content .cont .more {
+        font-size: 13px;
+        font-weight: 300;
+        letter-spacing: initial !important;
+        text-transform: uppercase;
+        color: #b19777;
+        padding-left: 40px;
+        position: relative;
+    }
 .bauen-blog2 .content .cont .more:after {
   content: '';
   width: 30px;
@@ -3525,7 +3525,7 @@ button.mfp-arrow {
 }
     .bauen-blog2 .content .info h6 {
         font-size: 11px;
-        letter-spacing: 2px;
+        letter-spacing: initial !important;
         color: #999;
         font-family: 'Vazirmatn', sans-serif;
         text-transform: uppercase;
@@ -3600,34 +3600,34 @@ button.mfp-arrow {
         display: block;
         font-weight: 400;
         font-size: 12px;
-        letter-spacing: 2px;
+        letter-spacing: initial !important;
         color: #b19777;
         font-family: 'Vazirmatn', sans-serif;
         text-transform: uppercase;
         margin-bottom: 5px;
     }
-.bauen-blog3 .post-cont h5 {
-	color: #fff;
-    font-size: 25px;
-    margin-bottom: 15px;
-    font-weight: 300;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-}
+    .bauen-blog3 .post-cont h5 {
+        color: #fff;
+        font-size: 25px;
+        margin-bottom: 15px;
+        font-weight: 300;
+        letter-spacing: initial !important;
+        text-transform: uppercase;
+    }
 .bauen-blog3 .post-cont h5 a {
     color: #fff;
 }
 .bauen-blog3 .post-cont h5 a:hover {
     color: #b19777;
 }
-.bauen-blog3 .post-cont .date {
-    margin-top: 0px;
-    font-size: 12px;
-    text-align: right;
-	letter-spacing: 2px;
-	text-transform: uppercase;
-	margin-bottom: 5px;
-}
+    .bauen-blog3 .post-cont .date {
+        margin-top: 0px;
+        font-size: 12px;
+        text-align: right;
+        letter-spacing: initial !important;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+    }
 .bauen-blog3 .post-cont .date a {
     color: #b19777;
 }
@@ -3685,17 +3685,17 @@ button.mfp-arrow {
 .blog-sidebar .widget-title {
     margin-bottom: 20px;
 }
-.blog-sidebar .widget-title h6 {
-    padding-bottom: 5px;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    font-size: 20px;
-    line-height: 1.75em;
-    margin-bottom: 15px;
-    font-weight: 300;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    color: #fff;
-}
+    .blog-sidebar .widget-title h6 {
+        padding-bottom: 5px;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        font-size: 20px;
+        line-height: 1.75em;
+        margin-bottom: 15px;
+        font-weight: 300;
+        text-transform: uppercase;
+        letter-spacing: initial !important;
+        color: #fff;
+    }
 .blog-sidebar .search form {
     position: relative;
 }
@@ -3825,27 +3825,27 @@ button.mfp-arrow {
     background: #323232;
     padding: 4%;
 }
-.bauen-blog4 .caption h4,
-.bauen-blog4 .caption h4 a {
-    font-size: 27px;
-    color: #fff;
-    letter-spacing: 5px;
-    font-weight: 300;
-    text-transform: uppercase;
-}
-.bauen-blog4 .caption h6 {
-    display: inline-block;
-    padding: 8px 20px;
-    background-color: #b19777;
-    color: #fff;
-    font-weight: 300;
-    font-size: 12px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    -webkit-align-self: flex-start;
-    -ms-flex-item-align: start;
-    align-self: flex-start;
-}
+    .bauen-blog4 .caption h4,
+    .bauen-blog4 .caption h4 a {
+        font-size: 27px;
+        color: #fff;
+        letter-spacing: initial !important;
+        font-weight: 300;
+        text-transform: uppercase;
+    }
+    .bauen-blog4 .caption h6 {
+        display: inline-block;
+        padding: 8px 20px;
+        background-color: #b19777;
+        color: #fff;
+        font-weight: 300;
+        font-size: 12px;
+        letter-spacing: initial !important;
+        text-transform: uppercase;
+        -webkit-align-self: flex-start;
+        -ms-flex-item-align: start;
+        align-self: flex-start;
+    }
 .bauen-blog4 .caption .info-wrapper {
     display: -webkit-box;
     display: -webkit-flex;
@@ -3914,7 +3914,7 @@ hr.border-2 {
     text-transform: uppercase;
     font-size: 13px;
     font-weight: 300;
-    letter-spacing: 3px;
+    letter-spacing: initial !important;
 }
 .link-btn i {
     margin-left: 3px;
@@ -4009,7 +4009,7 @@ hr.border-2 {
         margin: 0;
         position: relative;
         font-size: 16px;
-        letter-spacing: 3px;
+        letter-spacing: initial !important;
     }
 .butn-dark a:after {
     content: '';
@@ -4052,7 +4052,7 @@ hr.border-2 {
         margin: 0;
         position: relative;
         font-size: 16px;
-        letter-spacing: 3px;
+        letter-spacing: initial !important;
         border: 1px solid rgba(255,255,255,0.3);
     }
 .butn-light a:after {
@@ -4372,19 +4372,19 @@ hr.border-2 {
 .accordion-box .block:last-child {
   margin-bottom: 0;
 }
-.accordion-box .block .acc-btn {
-    position: relative;
-    font-size: 20px;
-    line-height: 27px;
-    font-weight: 300;
-    letter-spacing: 1px;
-    cursor: pointer;
-    padding: 20px 40px;
-    padding-right: 60px;
-    color: #999;
-    transition: all 500ms ease;
-    font-family: 'Vazirmatn', sans-serif;
-}
+    .accordion-box .block .acc-btn {
+        position: relative;
+        font-size: 20px;
+        line-height: 27px;
+        font-weight: 300;
+        letter-spacing: initial !important;
+        cursor: pointer;
+        padding: 20px 40px;
+        padding-right: 60px;
+        color: #999;
+        transition: all 500ms ease;
+        font-family: 'Vazirmatn', sans-serif;
+    }
 .accordion-box .block .acc-btn .count {
   color: #b19777;
   padding-right: 3px;
@@ -4474,14 +4474,14 @@ hr.border-2 {
   color: #b19777;
 }
 .pricing-card-name {
-      line-height: 1;
+    line-height: 1;
     margin: 0;
     font-size: 16px;
     text-transform: uppercase;
     font-family: 'Vazirmatn', sans-serif;
     color: #b19777;
     margin-bottom: 20px;
-    letter-spacing: 5px;
+    letter-spacing: initial !important;
     font-weight: 300;
 }
 .pricing-card-amount {
@@ -4496,18 +4496,18 @@ hr.border-2 {
     position: relative;
     line-height: 1.2em;
 }
-.butn-pricing a {
-    font-weight: 300;
-    font-family: 'Vazirmatn', sans-serif;
-    text-transform: uppercase;
-    background: #b19777;
-    color: #fff;
-    padding: 13px 30px;
-    margin: 0;
-    position: relative;
-    font-size: 16px;
-    letter-spacing: 3px;
-}
+    .butn-pricing a {
+        font-weight: 300;
+        font-family: 'Vazirmatn', sans-serif;
+        text-transform: uppercase;
+        background: #b19777;
+        color: #fff;
+        padding: 13px 30px;
+        margin: 0;
+        position: relative;
+        font-size: 16px;
+        letter-spacing: initial !important;
+    }
 .butn-pricing a:after {
     content: '';
     width: 0;
@@ -4656,15 +4656,15 @@ hr.border-2 {
     -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
     right: 20px;
 }
-.process .item h6 {
-    font-family: 'Vazirmatn', sans-serif;
-    color: #fff;
-    font-size: 16px;
-    margin-bottom: 5px;
-    text-transform: uppercase;
-    letter-spacing: 5px;
-    font-weight: 300;
-}
+    .process .item h6 {
+        font-family: 'Vazirmatn', sans-serif;
+        color: #fff;
+        font-size: 16px;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        letter-spacing: initial !important;
+        font-weight: 300;
+    }
 @media screen and (max-width: 991px) {
  .process .item img {
     display: none;
@@ -4715,36 +4715,36 @@ hr.border-2 {
     font-size: 40px; 
     color: #b19777;
 }
-.process2.item i.number {
-    position: absolute;
-    top: 110%;
-    height: 40px;
-    width: 40px;
-    border-radius: 50%;
-    background-color: transparent;
-    border: 1px solid #323232;
-    line-height: 39px;
-    text-align: center;
-    left: 22px;
-    font-style: normal;
-    font-family: 'Vazirmatn', sans-serif;
-    font-size: 14px;
-    font-weight: 300;
-    letter-spacing: 1px;
-    color: #999;
-    -webkit-transition: all .3s ease-in-out;
-    -o-transition: all .3s ease-in-out;
-    transition: all .3s ease-in-out;
-}
-.process2.item h3 {
-    font-family: 'Vazirmatn', sans-serif;
-    font-size: 16px;
-    font-weight: 300;
-    color: #fff;
-    text-transform: uppercase;
-    margin-bottom: 5px;
-    letter-spacing: 5px;
-}
+    .process2.item i.number {
+        position: absolute;
+        top: 110%;
+        height: 40px;
+        width: 40px;
+        border-radius: 50%;
+        background-color: transparent;
+        border: 1px solid #323232;
+        line-height: 39px;
+        text-align: center;
+        left: 22px;
+        font-style: normal;
+        font-family: 'Vazirmatn', sans-serif;
+        font-size: 14px;
+        font-weight: 300;
+        letter-spacing: initial !important;
+        color: #999;
+        -webkit-transition: all .3s ease-in-out;
+        -o-transition: all .3s ease-in-out;
+        transition: all .3s ease-in-out;
+    }
+    .process2.item h3 {
+        font-family: 'Vazirmatn', sans-serif;
+        font-size: 16px;
+        font-weight: 300;
+        color: #fff;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+        letter-spacing: initial !important;
+    }
 .row > [class*='col-']:nth-child(even) .process2.item { margin-top: 65px; }
 .row > [class*='col-']:nth-child(even) .process2.item i.number { top: -60px;}
 .row > [class*='col-']:nth-of-type(odd) .process2.item:before {
@@ -4839,8 +4839,8 @@ hr.border-2 {
     font-weight: 300;
     text-transform: uppercase;
     margin-bottom: 5px;
-    letter-spacing: 5px;
-	line-height: 1.5em;
+    letter-spacing: initial !important;
+    line-height: 1.5em;
 }
 .comming h3 {
     font-size: 48px;
@@ -4850,7 +4850,7 @@ hr.border-2 {
     color: #fff;
     position: relative;
     text-transform: uppercase;
-    letter-spacing: 3px;
+    letter-spacing: initial !important;
     margin-bottom: 15px;
 }
 .comming h2 {
@@ -4861,9 +4861,9 @@ hr.border-2 {
     color: #fff;
     position: relative;
     text-transform: uppercase;
-    letter-spacing: 15px;
+    letter-spacing: initial !important;
     margin-bottom: 20px;
-	margin-top: 20px;
+    margin-top: 20px;
 }
 .comming p {
 	color: #fff;
@@ -4888,22 +4888,22 @@ hr.border-2 {
 .comming form input::placeholder {
     color: #fff;
 }
-.comming form button {
-    background-color: #b19777;
-    padding: 8px 20px;
-    border-radius: 0px;
-    color: #fff;
-    border: 0;
-    position: absolute;
-    top: 4px;
-    right: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    font-weight: 300;
-    outline: none;
-}
+    .comming form button {
+        background-color: #b19777;
+        padding: 8px 20px;
+        border-radius: 0px;
+        color: #fff;
+        border: 0;
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        letter-spacing: initial !important;
+        text-transform: uppercase;
+        font-weight: 300;
+        outline: none;
+    }
 .comming form button:hover {
   background-color: #323232;
   color: #fff;
@@ -4913,15 +4913,15 @@ hr.border-2 {
 .go-back{
 	margin-top: 45px;
 }
-.go-back a {
-	color: #fff;
-	display: inline-block;
-	font-size: 13px;
-    font-family: 'Vazirmatn', sans-serif;
-    font-weight: 300;
-    text-transform: uppercase;
-	letter-spacing: 5px;
-}
+    .go-back a {
+        color: #fff;
+        display: inline-block;
+        font-size: 13px;
+        font-family: 'Vazirmatn', sans-serif;
+        font-weight: 300;
+        text-transform: uppercase;
+        letter-spacing: initial !important;
+    }
 .go-back a:hover {
 	color: #b19777;
 }
@@ -5087,6 +5087,9 @@ hr.border-2 {
     .header .caption h1 {
         font-size: 40px;
     }
+    div.project-bar{
+        margin-top:0 !important;
+    }
 }
 @media screen and (max-width: 767px) {
     .hero .intro h3 {
@@ -5098,7 +5101,7 @@ hr.border-2 {
     .header .caption h1 {
         font-size: 30px;
         margin-bottom: 15px;
-        letter-spacing: 10px;
+        letter-spacing: initial !important;
         line-height: 1.35em;
     }
     .header .caption p {
@@ -5108,10 +5111,10 @@ hr.border-2 {
     .header .caption .butn-light {
         margin-right: 10px;
     }
-	.simple-content-text-inner h1 {
+    .simple-content-text-inner h1 {
         font-size: 30px;
         margin-bottom: 15px;
-        letter-spacing: 10px;
+        letter-spacing: initial !important;
         line-height: 1.35em;
     }
 	.simple-content-text-inner p {

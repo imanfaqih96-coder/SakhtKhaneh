@@ -79,8 +79,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
   title = '';
   description = '';
   content = '';
-  startDate: Date | null = null;
-  endDate: Date | null = null;
+  time = '';
   location = '';
   owner = '';
 
@@ -143,9 +142,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
 
         this.location = p.location;
         this.owner = p.owner;
-
-        this.startDate = p.startDate?.split('T')[0];
-        this.endDate = p.endDate?.split('T')[0];
+        this.time = p.time;
 
         this.ngZone.run(() => {
 
@@ -412,8 +409,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
       owner: this.owner,
       coverImageUrl: this.coverUrl,
       gallery: galleryItems,
-      startDate: this.startDate,
-      endDate: this.endDate
+      time: this.time
     };
 
     console.log('attempting to update:', updated);

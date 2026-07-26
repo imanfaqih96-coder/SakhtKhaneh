@@ -3,6 +3,7 @@ using Microsoft.Build.Evaluation;
 using Microsoft.EntityFrameworkCore;
 using SakhtKhaneh.Models;
 using SakhtKhaneh.Models.Blog;
+using SakhtKhaneh.Models.Messages;
 using SakhtKhaneh.Models.Projects;
 using SakhtKhaneh.Models.Template;
 
@@ -17,6 +18,7 @@ namespace SakhtKhaneh.Data
         public DbSet<SakhtKhaneh.Models.Blog.BlogPost> BlogPosts { get; set; }
         public DbSet<SakhtKhaneh.Models.Services.Service> Services { get; set; }
         public DbSet<SakhtKhaneh.Models.Template.TemplatesProperty> TemplatesProperties { get; set; }
+        public DbSet<SakhtKhaneh.Models.Messages.Message> Messages { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         { }
@@ -76,6 +78,12 @@ namespace SakhtKhaneh.Data
             modelBuilder.Entity<SakhtKhaneh.Models.Projects.ProjectGalleryItem>(entity =>
             {
                 entity.ToTable("ProjectsGalleryItems");
+                entity.HasKey(p => p.Id);
+            });
+
+            modelBuilder.Entity<Message>(entity =>
+            {
+                entity.ToTable("Messages");
                 entity.HasKey(p => p.Id);
             });
         }

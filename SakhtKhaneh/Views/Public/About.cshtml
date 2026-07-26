@@ -54,4 +54,70 @@
     <script src="/assets/js/before-after.js"></script>
     <script src="/assets/js/vegas.slider.min.js"></script>
     <script src="/assets/js/home.js"></script>
+
+    <script>
+        const geolocation_api_key = '97c62498a168489898a05d474162b7ab';
+
+        function geolocate() {
+        const myHeaders = new Headers();
+
+
+        const requestOptions = {
+            method: "GET",
+            headers: myHeaders,
+            redirect: "follow"
+        };
+
+        fetch("https://api.ipgeolocation.io/v2/ipgeo?apiKey=" + geolocation_api_key + "", requestOptions)
+            .then((response) => response.text())
+            .then((result) => {
+                console.log(result)
+            })
+            .catch((error) => console.error(error));
+        }
+
+        function recordVisit() {
+            var path = window.location.href.replace(window.location.origin, '');
+            const myHeaders = new Headers();
+
+
+            const requestOptions = {
+                method: "GET",
+                headers: myHeaders,
+                redirect: "follow"
+            };
+
+            fetch("https://api.ipgeolocation.io/v2/ipgeo?apiKey=" + geolocation_api_key + "", requestOptions)
+                .then((response) => response.text())
+                .then((result) => {
+                    var geolocation = result;
+                    var data = {
+                        path: path,
+                        pathType: 'static',
+                        pathParam: 'about',
+                        geolocation: JSON.parse(geolocation)
+                    }
+                    var stringified = JSON.stringify(data);
+
+                    fetch('/api/submitVisitRecord', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: stringified
+                    })
+                        .then(async res => {
+                            const result = res;
+                            console.log("✅ visit recorded:", result);
+                        })
+                        .catch(err => {
+                            console.error("❌ Visit record failed:", err);
+                        });
+
+                })
+                .catch((error) => console.error(error));
+        }
+
+        recordVisit();
+    </script>
 }

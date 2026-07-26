@@ -13,8 +13,7 @@ namespace SakhtKhaneh.Models.Projects
         public string CoverImageUrl { get; set; }
         public string Title { get; set; }
         public string? Description { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
+        public string? Time { get; set; }
         public string? Location { get; set; }
         public string? Owner { get; set; }
         public string Content { get; set; }
@@ -34,8 +33,7 @@ namespace SakhtKhaneh.Models.Projects
         public string coverImageUrl { get; set; }
         public string title { get; set; }
         public string? description { get; set; }
-        public DateTime? startDate { get; set; }
-        public DateTime? endDate { get; set; }
+        public string? time { get; set; }
         public string? location { get; set; }
         public string? owner { get; set; }
         public string content { get; set; }

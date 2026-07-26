@@ -9,6 +9,8 @@ using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddHttpClient();
+
 builder.Services.AddControllers();       // API
 builder.Services.AddControllersWithViews(); // MVC Views
 
@@ -54,6 +56,8 @@ app.Map("/admin", angular =>
         );
     });
 });
+
+app.UseHttpsRedirection();
 
 using (var scope = app.Services.CreateScope())
 {

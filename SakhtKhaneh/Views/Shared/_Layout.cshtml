@@ -1,55 +1,203 @@
 ﻿@using SakhtKhaneh.Models.Template.ViewModels
 @using SakhtKhaneh.Services
 
-@inject ITemplateDataManagementService templateDataManagementService;
+@inject ITemplateDataManagementService templateDataManagementService
+@inject IConfiguration Configuration
+
+@{
+    var menu = await templateDataManagementService.GetMainMenuItems();
+    var contacts = await templateDataManagementService.GetContacts();
+
+    var siteBaseUrl =
+        (Configuration["Site:BaseUrl"]
+         ?? $"{Context.Request.Scheme}://{Context.Request.Host}")
+        .TrimEnd('/');
+
+    var pageTitle = ViewData["Title"]?.ToString();
+
+    var fullPageTitle = string.IsNullOrWhiteSpace(pageTitle)
+        ? "ساخت خانه"
+        : $"{pageTitle} - ساخت خانه";
+
+    var metaDescription = ViewData["MetaDescription"]?.ToString();
+
+    if (string.IsNullOrWhiteSpace(metaDescription))
+    {
+        metaDescription =
+            "ساخت خانه؛ ارائه خدمات معماری، طراحی داخلی، بازسازی و اجرای پروژه‌های ساختمانی.";
+    }
+
+    var canonicalUrl = ViewData["CanonicalUrl"]?.ToString();
+
+    if (string.IsNullOrWhiteSpace(canonicalUrl))
+    {
+        canonicalUrl =
+            $"{siteBaseUrl}{Context.Request.PathBase}{Context.Request.Path}";
+    }
+
+    var robots = ViewData["Robots"]?.ToString();
+
+    if (string.IsNullOrWhiteSpace(robots))
+    {
+        robots = "index,follow,max-image-preview:large";
+    }
+
+    var author = ViewData["Author"]?.ToString();
+
+    if (string.IsNullOrWhiteSpace(author))
+    {
+        author = "ساخت خانه";
+    }
+
+    var openGraphType = ViewData["OpenGraphType"]?.ToString();
+
+    if (string.IsNullOrWhiteSpace(openGraphType))
+    {
+        openGraphType = "website";
+    }
+
+    var openGraphImage = ViewData["OpenGraphImage"]?.ToString();
+
+    if (string.IsNullOrWhiteSpace(openGraphImage))
+    {
+        openGraphImage =
+            $"{siteBaseUrl}/assets/img/logo_transparent_bg.png";
+    }
+}
 
 <!DOCTYPE html>
 
 <html dir="rtl" lang="fa">
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title - ساخت خانه</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <link rel="shortcut icon" href="/assets/img/favicon.png" type="image/png">
-    <meta name="description" content="وب سایت ساخت خانه">
-    <meta name="keywords" content="طراحی معماری داخلی بنا سازه دیزاین فرنیش فرنیچر">
-    <meta name="author" content="Iman Faghih">
-    <meta name="robots" content="index, follow">
-    <!-- Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com/">
-    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Didact+Gothic&amp;family=Oswald:wght@200..700&amp;display=swap" rel="stylesheet"> 
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/assets/css/plugins.css" />
-    <link rel="stylesheet" href="/assets/css/style.css" />
+    <meta charset="utf-8" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1" />
+
+    <title>@fullPageTitle</title>
+
+    <meta name="description"
+          content="@metaDescription" />
+
+    <meta name="author"
+          content="@author" />
+
+    <meta name="robots"
+          content="@robots" />
+
+    <link rel="canonical"
+          href="@canonicalUrl" />
+
+    <link rel="shortcut icon"
+          href="/assets/img/favicon.png"
+          type="image/png" />
+
+    <!-- Open Graph -->
+    <meta property="og:locale"
+          content="fa_IR" />
+
+    <meta property="og:site_name"
+          content="ساخت خانه" />
+
+    <meta property="og:type"
+          content="@openGraphType" />
+
+    <meta property="og:title"
+          content="@fullPageTitle" />
+
+    <meta property="og:description"
+          content="@metaDescription" />
+
+    <meta property="og:url"
+          content="@canonicalUrl" />
+
+    <meta property="og:image"
+          content="@openGraphImage" />
+
+    <meta property="og:image:alt"
+          content="@pageTitle" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card"
+          content="summary_large_image" />
+
+    <meta name="twitter:title"
+          content="@fullPageTitle" />
+
+    <meta name="twitter:description"
+          content="@metaDescription" />
+
+    <meta name="twitter:image"
+          content="@openGraphImage" />
+
+    @await RenderSectionAsync("Seo", required: false)
+
+    <!-- Fonts -->
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com/" />
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com/"
+          crossorigin />
+
+    <link href="https://fonts.googleapis.com/css2?family=Didact+Gothic&family=Oswald:wght@200..700&display=swap"
+          rel="stylesheet" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet" />
+
+    <link rel="stylesheet"
+          href="/assets/css/plugins.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="/assets/css/style.css"
+          asp-append-version="true" />
+
+    @await RenderSectionAsync("Styles", required: false)
 </head>
+
 <body>
-    <!-- jQuery -->
-    <script src="/assets/js/jquery-3.7.1.min.js"></script>
-    <script src="/assets/js/jquery-migrate-3.5.0.min.js"></script>
-    <script src="/assets/js/bootstrap.min.js"></script>
+
+    <!--
+        برای جلوگیری از شکستن قالب فعلی، ترتیب بارگذاری این فایل‌ها
+        فعلاً مانند نسخه قبلی حفظ شده است.
+    -->
+
+    <script src="/assets/js/jquery-3.7.1.min.js"
+            asp-append-version="true"></script>
+
+    <script src="/assets/js/jquery-migrate-3.5.0.min.js"
+            asp-append-version="true"></script>
+
+    <script src="/assets/js/bootstrap.min.js"
+            asp-append-version="true"></script>
 
     <!-- Preloader -->
     <div class="preloader-bg"></div>
+
     <div id="preloader">
         <div id="preloader-status">
-            <div class="preloader-position loader"><span></span></div>
+            <div class="preloader-position loader">
+                <span></span>
+            </div>
         </div>
     </div>
-    <!-- Progress scroll totop -->
-    <div class="progress-wrap cursor-pointer">
-        <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
-            <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
+
+    <!-- Progress scroll to top -->
+    <div class="progress-wrap cursor-pointer"
+         aria-hidden="true">
+
+        <svg class="progress-circle svg-content"
+             width="100%"
+             height="100%"
+             viewBox="-1 -1 102 102">
+
+            <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98">
+            </path>
+
         </svg>
     </div>
-
-    @{
-        var menu = await templateDataManagementService.GetMainMenuItems();
-
-        var contacts = await templateDataManagementService.GetContacts();
-    }
 
     @await Html.PartialAsync("_NavbarPartialView", menu)
 
@@ -58,5 +206,6 @@
     @await Html.PartialAsync("_FooterPartialView", contacts)
 
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

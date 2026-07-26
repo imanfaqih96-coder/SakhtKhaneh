@@ -62,8 +62,7 @@ export class NewProjectComponent implements OnInit, AfterViewInit {
   title = '';
   description = '';
   content = '';
-  startDate: Date | null = null;
-  endDate: Date | null = null;
+  time = '';
   location = '';
   owner = '';
 
@@ -333,8 +332,7 @@ export class NewProjectComponent implements OnInit, AfterViewInit {
       coverImageUrl: this.coverUrl,
       description: this.description,
       content: this.content,
-      startDate: this.startDate,
-      endDate: this.endDate,
+      time: this.time,
       location: this.location,
       owner: this.owner,
       gallery: gallery
@@ -370,8 +368,7 @@ export class NewProjectComponent implements OnInit, AfterViewInit {
     this.endpoint_Path = '';
     this.description = '';
     this.content = '';
-    this.startDate = null;
-    this.endDate = null;
+    this.time = '';
     this.location = '';
     this.owner = '';
     // cover

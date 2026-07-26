@@ -1,4 +1,5 @@
 ﻿using SakhtKhaneh.Models.Blog;
+using SakhtKhaneh.Models.Messages;
 using SakhtKhaneh.Models.Projects;
 using SakhtKhaneh.Models.Services;
 using SakhtKhaneh.Models.Template.ViewModels;
@@ -19,4 +20,6 @@ public interface ITemplateDataManagementService
     Task<BlogPost?> GetSingleBlogItem(string pathName);
     Task<List<Project>?> GetProjectsGridItems();
     Task<Project?> GetSingleProjectItem(string pathName);
+    Task<bool> SendMessageForContacts(MessageDto data);
+    Task<List<Service>> GetServices();
 }

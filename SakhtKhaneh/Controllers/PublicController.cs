@@ -68,6 +68,12 @@ namespace SakhtKhaneh.Controllers
                 return View("Projects", model);
             }
         }
+        [Route("Services")]
+        public async Task<IActionResult> Services()
+        {
+            var model = await _templateDataManagementService.GetServices();
+            return View("Services", model);
+        }
         public IActionResult CommingSoon()
         {
             return View();

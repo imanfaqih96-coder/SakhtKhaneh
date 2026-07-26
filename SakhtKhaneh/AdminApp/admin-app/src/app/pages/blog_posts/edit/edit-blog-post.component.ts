@@ -29,7 +29,6 @@ export interface BlogCategoryItem {
   title: string;
 }
 
-
 type UploadState = 'idle' | 'selected' | 'uploading' | 'uploaded' | 'error';
 
 @Component({

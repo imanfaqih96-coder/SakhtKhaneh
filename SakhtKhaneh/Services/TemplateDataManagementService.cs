@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SakhtKhaneh.Data;
 using SakhtKhaneh.Models.Blog;
+using SakhtKhaneh.Models.Messages;
 using SakhtKhaneh.Models.Projects;
 using SakhtKhaneh.Models.Services;
 using SakhtKhaneh.Models.Template.ViewModels;
@@ -41,6 +42,13 @@ namespace SakhtKhaneh.Services
             {
                 Path = "/Blog",
                 Title = "بلاگ",
+                Children = null
+            });
+
+            menus.Add(new TemplateMenuItem
+            {
+                Path = "/Services",
+                Title = "خدمات ما",
                 Children = null
             });
 
@@ -175,7 +183,7 @@ namespace SakhtKhaneh.Services
             using (var scope = _scopeFactory.CreateScope())
             {
                 var _context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                var projects = await _context.Projects.OrderByDescending(p => p.StartDate).ToListAsync();
+                var projects = await _context.Projects.OrderByDescending(p => p.Time).ToListAsync();
                 projects = projects.Take(4).ToList();
                 return projects;
             }
@@ -236,7 +244,7 @@ namespace SakhtKhaneh.Services
             return model;
         }
 
-        // Other
+        // Blog
 
         public async Task<List<BlogPost>?> GetBlogGridPosts()
         {
@@ -270,9 +278,72 @@ namespace SakhtKhaneh.Services
             using (var scope = _scopeFactory.CreateScope())
             {
                 var _context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                var project = await _context.Projects.Where(p => p.Endpoint_Path.ToLower() == pathName.ToLower()).FirstOrDefaultAsync();
+                var project = await _context.Projects.Where(p => p.Endpoint_Path.ToLower() == pathName.ToLower()).Include(p => p.Gallery).FirstOrDefaultAsync();
                 return project;
             }
         }
+
+        // Services
+
+        public async Task<List<Service>> GetServices()
+        {
+            using(var scope = _scopeFactory.CreateScope())
+            {
+                var _context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+                return await _context.Services.ToListAsync();
+            }
+        }
+
+        // Contacts
+        public async Task<Guid> GetUniqueIdForContactsMessages()
+        {
+            using (var scope = _scopeFactory.CreateScope())
+            {
+                var _context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                var id = Guid.NewGuid();
+                var target = _context.Messages.Where(p=>p.Id == id).FirstOrDefault();
+                if(target == null)
+                {
+                    return id;
+                }
+                else
+                {
+                    return await GetUniqueIdForContactsMessages();
+                }
+            }
+        }
+        public async Task<bool> SendMessageForContacts(MessageDto data)
+        {
+            try
+            {
+
+                using (var scope = _scopeFactory.CreateScope())
+                {
+                    var _context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+                    _context.Messages.Add(new Message
+                    {
+                        Id = await GetUniqueIdForContactsMessages(),
+                        Name = data.name,
+                        Email = data.email,
+                        Phone = data.phone,
+                        Subject = data.subject,
+                        Content = data.content
+                    });
+
+                    await _context.SaveChangesAsync();
+
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        // Others
     }
 }

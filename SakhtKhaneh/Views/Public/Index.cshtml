@@ -24,7 +24,7 @@
                                         برای مشاهده پروژه ها
                                         <br>روی دکمه زیر کلیک کنید.
                                     </p>
-                                    <div class="butn-light mt-30 mb-30 float-right"> <a href="/Public/Projects" target="_blank"><span>فهرست پروژه ها</span></a> </div>
+                                    <div class="butn-light mt-30 mb-30 float-right"> <a href="/Projects" target="_blank"><span>فهرست پروژه ها</span></a> </div>
                                 </div>
                             </div>
                         </div>
@@ -61,7 +61,7 @@
                         <div class="about-img">
                             <div class="img"> <img src="@Model.AboutInfo.imageUrl" class="img-fluid" alt=""> </div>
                             <div class="about-img-2 about-buro">
-                                <!-- Future Development Field -->
+                                @Model.AboutInfo.title
                             </div>
                         </div>
                     </div>
@@ -91,8 +91,8 @@
                                 <div class="item" dir="rtl">
                                     <div class="position-re o-hidden"> <img src="@project.CoverImageUrl" alt=""> </div>
                                     <div class="con">
-                                        <h6><a href="/Projects/@project.Endpoint_Path">@project.Title</a></h6>
-                                        <h5><a href="/Projects/@project.Endpoint_Path">@project.Description</a></h5>
+                                        <h6><a href="/Projects/@project.Endpoint_Path">@project.Location</a></h6>
+                                        <h5><a href="/Projects/@project.Endpoint_Path">@project.Title</a></h5>
                                         <div class="line"></div> <a href="/Public/Projects/@project.Id"><i class="ti-arrow-right"></i></a>
                                     </div>
                                 </div>
@@ -103,6 +103,11 @@
                     {
                         <h3 class="text-muted text-center">هیچ پروژه ای درج نشده است</h3>
                     }
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-2 col-md-3 col-sm-6">
+                    <div class="butn-light mt-30 mb-30 float-right w-100"> <a href="/Projects" target="_blank" class="w-100 text-center"><span>آرشیو پروژه ها</span></a> </div>
                 </div>
             </div>
         </div>
@@ -122,7 +127,7 @@
 
                     <div class="col-md-4">
                         <div class="item">
-                            <a href="architecture.html">
+                            <a href="#">
                                 <img src="@service.IconUrl" alt="">
                                 <h5>@service.Title</h5>
                                 <div class="line"></div>
@@ -133,6 +138,11 @@
                     </div>
 
                 }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-2 col-md-3 col-sm-6">
+                    <div class="butn-light mt-30 mb-30 float-right w-100"> <a href="/Services" target="_blank" class="w-100 text-center"><span>خدمات ما</span></a> </div>
+                </div>
             </div>
         </div>
     </section>
@@ -155,11 +165,16 @@
                                     <span class="category">
                                         <a href="/Blog/@post.EndpointPath">@post.Category.Title </a> - @post.CreationDate.ToShortDateString() @post.CreationDate.ToShortTimeString()
                                     </span>
-                                    <h5><a href="/Blog/@post.EndpointPath">@post.Description</a></h5>
+                                    <h5><a href="/Blog/@post.EndpointPath">@post.Title</a></h5>
                                 </div>
                             </div>
                         }
                     </div>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-2 col-md-3 col-sm-6">
+                    <div class="butn-light mt-30 mb-30 float-right w-100"> <a href="/Blog" target="_blank" class="w-100 text-center"><span>آرشیو مطالب</span></a> </div>
                 </div>
             </div>
         </div>

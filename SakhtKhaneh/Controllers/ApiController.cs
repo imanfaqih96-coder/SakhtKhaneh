@@ -11,13 +11,16 @@ using SakhtKhaneh.Models.Blog;
 using SakhtKhaneh.Models.Dto.Blog;
 using SakhtKhaneh.Models.Dto.Dashboard;
 using SakhtKhaneh.Models.Dto.Profile;
+using SakhtKhaneh.Models.Messages;
 using SakhtKhaneh.Models.Projects;
 using SakhtKhaneh.Models.Services;
 using SakhtKhaneh.Models.Template;
+using SakhtKhaneh.Services;
 using SQLitePCL;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SakhtKhaneh.Controllers
 {
@@ -28,7 +31,9 @@ namespace SakhtKhaneh.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private ITemplateDataManagementService _templateService;
         private IWebHostEnvironment _env;
+        private readonly HttpClient _httpClient;
 
         public class messageResponse
         {
@@ -36,12 +41,20 @@ namespace SakhtKhaneh.Controllers
             public string message { get; set; }
         }
 
-        public ApiController(ApplicationDbContext context, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IWebHostEnvironment env)
+        public ApiController(
+            ApplicationDbContext context,
+            UserManager<AppUser> userManager,
+            SignInManager<AppUser> signInManager,
+            IWebHostEnvironment env,
+            ITemplateDataManagementService templateDataManagementService,
+            HttpClient httpClient)
         {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
+            _templateService = templateDataManagementService;
             _env = env;
+            _httpClient = httpClient;
         }
 
         [HttpGet("GetProfile")]
@@ -249,30 +262,44 @@ namespace SakhtKhaneh.Controllers
         [HttpGet("getProjects")]
         public async Task<List<Project>?> getProjects()
         {
-            return await _context.Projects.OrderByDescending(p => p.StartDate).ToListAsync();
+            return await _context.Projects.OrderByDescending(p => p.Time).ToListAsync();
         }
 
         [HttpPost("projects/uploadCover")]
         public async Task<IActionResult> UploadCover(IFormFile cover)
         {
             if (cover == null || cover.Length == 0)
-                return BadRequest("No file uploaded");
+                return BadRequest("No file uploaded.");
 
-            var rootDirectory = Path.Combine("wwwroot/uploads");
+            var uploadDirectory = Path.Combine("wwwroot", "uploads");
 
-            if (!Path.Exists(rootDirectory))
+            if (!Directory.Exists(uploadDirectory))
+                Directory.CreateDirectory(uploadDirectory);
+
+            // حفظ پسوند فایل
+            var extension = Path.GetExtension(cover.FileName);
+
+            string fileName;
+            string filePath;
+
+            do
             {
-                Directory.CreateDirectory(rootDirectory);
+                fileName = $"{Guid.NewGuid():N}{extension}";
+                filePath = Path.Combine(uploadDirectory, fileName);
             }
+            while (System.IO.File.Exists(filePath));
 
-            var filePath = Path.Combine("wwwroot/uploads", cover.FileName);
-            using (var stream = System.IO.File.Create(filePath))
+            await using (var stream = new FileStream(filePath, FileMode.CreateNew))
             {
                 await cover.CopyToAsync(stream);
             }
 
-            var fileUrl = $"{Request.Scheme}://{Request.Host}/uploads/{cover.FileName}";
-            return Ok(new { url = fileUrl }); // ⚠ حتما JSON با key "url"
+            var fileUrl = $"{Request.Scheme}://{Request.Host}/uploads/{fileName}";
+
+            return Ok(new
+            {
+                url = fileUrl
+            });
         }
 
         [HttpPost("projects/uploadGallery")]
@@ -281,7 +308,7 @@ namespace SakhtKhaneh.Controllers
             if (gallery == null || gallery.Count == 0)
                 return BadRequest("No files uploaded");
 
-            var uploadDir = Path.Combine("wwwroot/uploads/gallery");
+            var uploadDir = Path.Combine("wwwroot", "uploads");
 
             if (!Directory.Exists(uploadDir))
                 Directory.CreateDirectory(uploadDir);
@@ -293,22 +320,36 @@ namespace SakhtKhaneh.Controllers
                 if (file == null || file.Length == 0)
                     continue;
 
-                var filePath = Path.Combine(uploadDir, file.FileName);
+                var extension = Path.GetExtension(file.FileName);
 
-                using (var stream = System.IO.File.Create(filePath))
+                string fileName;
+                string filePath;
+
+                do
+                {
+                    fileName = $"{Guid.NewGuid():N}{extension}";
+                    filePath = Path.Combine(uploadDir, fileName);
+
+                } while (System.IO.File.Exists(filePath));
+
+
+                await using (var stream = new FileStream(filePath, FileMode.CreateNew))
                 {
                     await file.CopyToAsync(stream);
                 }
 
-                // ساخت URL عمومی
-                var fileUrl = $"{Request.Scheme}://{Request.Host}/uploads/gallery/{file.FileName}";
+                var fileUrl = $"{Request.Scheme}://{Request.Host}/Uploads/{fileName}";
+
                 urls.Add(fileUrl);
             }
 
             if (urls.Count == 0)
                 return BadRequest("No valid images uploaded");
 
-            return Ok(new { urls }); // ✅ JSON با key: "urls"
+            return Ok(new
+            {
+                urls
+            });
         }
 
         private async Task<Guid> GetNewUniqueProjectId()
@@ -364,8 +405,7 @@ namespace SakhtKhaneh.Controllers
                             Title = project.title,
                             Description = project.description,
                             Content = project.content,
-                            StartDate = project.startDate,
-                            EndDate = project.endDate,
+                            Time = project.time,
                             Location = project.location,
                             Owner = project.owner,
                             Gallery = null
@@ -457,8 +497,7 @@ namespace SakhtKhaneh.Controllers
                 {
                     dbProject.Title = project.title;
                     dbProject.Description = project.description;
-                    dbProject.StartDate = project.startDate;
-                    dbProject.EndDate = project.endDate;
+                    dbProject.Time = project.time;
                     dbProject.Content = project.content;
                     dbProject.CoverImageUrl = project.coverImageUrl;
                     dbProject.Endpoint_Path = project.endpoint_Path;
@@ -838,15 +877,16 @@ namespace SakhtKhaneh.Controllers
             {
                 var current_items = await _context.TemplatesProperties.Where(p => p.Path == "home" && p.Key == "slider-item").ToListAsync();
 
-                if (current_items != null && current_items.Count > 0) { 
-                    foreach(var item in current_items)
+                if (current_items != null && current_items.Count > 0)
+                {
+                    foreach (var item in current_items)
                     {
                         _context.TemplatesProperties.Remove(item);
                     }
                     await _context.SaveChangesAsync();
                 }
 
-                foreach(var item in urls)
+                foreach (var item in urls)
                 {
                     var dbTemplateRow = new TemplatesProperty
                     {
@@ -865,7 +905,7 @@ namespace SakhtKhaneh.Controllers
 
                 return Ok(new messageResponse { status = "success", message = "slider setting has been updated." });
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(new messageResponse { status = "fail", message = ex.Message });
             }
@@ -964,6 +1004,49 @@ namespace SakhtKhaneh.Controllers
                 else
                 {
                     return BadRequest(new messageResponse { status = "fail", message = "no-service-was-found" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new messageResponse { status = "fail", message = ex.Message });
+            }
+        }
+
+        // Contacts
+        [HttpPost("SendMessage")]
+        public async Task<IActionResult> SendMessage(MessageDto data)
+        {
+            try
+            {
+                var success = await _templateService.SendMessageForContacts(data);
+
+                if (success)
+                {
+                    var model = new SendSmsModel
+                    {
+                        Target = "09124058249",
+                        Message = "شما یک پیام خوانده نشده روی پنل وب سایت دارید، متن پیام:" + "\n\n" + data.content + ""
+                    };
+
+                    var json = JsonConvert.SerializeObject(model);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                    var origin = $"{Request.Scheme}://{Request.Host.Value}";
+                    var response = await _httpClient.PostAsync($"{origin}/api/Sms/Send", content);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return Ok(new messageResponse { status = "success", message = "SMS sent via SmsController" });
+                    }
+                    else
+                    {
+                        var error = await response.Content.ReadAsStringAsync();
+                        return BadRequest(new messageResponse { status = "success", message = error });
+                    }
+                }
+                else
+                {
+                    return BadRequest(new messageResponse { status = "fail", message = "unknown error in saving data to the database." });
                 }
             }
             catch (Exception ex)
