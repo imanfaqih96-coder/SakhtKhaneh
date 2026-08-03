@@ -1,0 +1,84 @@
+<mat-toolbar class="main-header">
+  <div class="header-start">
+    <button
+      mat-icon-button
+      type="button"
+      (click)="drawer.toggle()"
+      class="menu-btn"
+      matTooltip="منوی مدیریت"
+      [disabled]="profile?.mustChangePassword"
+      aria-label="باز و بسته کردن منوی مدیریت">
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <a routerLink="/dashboard" class="panel-brand" aria-label="داشبورد ساخت خانه">
+      <span class="brand-logo">
+        <img src="/assets/img/logo-96.webp" alt="لوگوی ساخت خانه" />
+      </span>
+      <span class="brand-copy">
+        <strong>ساخت خانه</strong>
+        <small>مرکز مدیریت محتوا</small>
+      </span>
+    </a>
+  </div>
+
+  <span class="spacer"></span>
+
+  <div class="header-actions">
+    <a routerLink="/profile" class="profile-link" matTooltip="حساب کاربری">
+      <span class="profile-icon"><mat-icon>account_circle</mat-icon></span>
+      <span class="profile-copy">
+        <strong>{{ profile?.firstName || profile?.userName }}</strong>
+        <small>مدیر سامانه</small>
+      </span>
+    </a>
+
+    <button
+      mat-icon-button
+      type="button"
+      (click)="logout()"
+      matTooltip="خروج امن"
+      class="logout-button"
+      aria-label="خروج از حساب">
+      <mat-icon>logout</mat-icon>
+    </button>
+  </div>
+</mat-toolbar>
+
+<div *ngIf="profile?.mustChangePassword" class="password-lock-banner">
+  <span class="banner-icon"><mat-icon>warning</mat-icon></span>
+  <div>
+    <strong>تغییر رمز عبور ضروری است</strong>
+    <span>برای فعال‌شدن کامل پنل، رمز عبور پیش‌فرض را با یک رمز امن جایگزین کنید.</span>
+  </div>
+  <a mat-flat-button routerLink="/profile">تغییر رمز</a>
+</div>
+
+<mat-sidenav-container class="layout-container" [class.password-locked]="profile?.mustChangePassword">
+  <mat-sidenav
+    #drawer
+    [mode]="isMobile ? 'over' : 'side'"
+    [opened]="!isMobile && !profile?.mustChangePassword"
+    position="start"
+    class="sidebar">
+
+    <div class="sidebar-header">
+      <span class="sidebar-eyebrow">مدیریت یکپارچه</span>
+      <strong>کنترل محتوای سایت</strong>
+      <p>مقالات، پروژه‌ها، ژورنال‌ها و صفحات عمومی</p>
+    </div>
+
+    <app-sidebar (click)="closeOnMobile()"></app-sidebar>
+
+    <div class="sidebar-footer">
+      <span class="status-dot"></span>
+      <span>سامانه فعال است</span>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <main class="content-wrapper">
+      <router-outlet></router-outlet>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

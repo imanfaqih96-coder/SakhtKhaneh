@@ -1,0 +1,46 @@
+@model PageHeroViewModel
+
+<section class="sk-page-hero @(Model.Compact ? "sk-page-hero--compact" : string.Empty) bg-img"
+         data-background="@WebAssetUrl.Normalize(Model.BackgroundImage, "/assets/img/banner-1600.webp")"
+         style="background-image:url('@WebAssetUrl.Normalize(Model.BackgroundImage, "/assets/img/banner-1600.webp")')">
+    <div class="sk-page-hero__overlay" aria-hidden="true"></div>
+    <div class="sk-page-hero__grid" aria-hidden="true"></div>
+
+    <div class="container sk-page-hero__container">
+        <div class="sk-page-hero__content" data-sk-reveal="up">
+            <nav class="sk-breadcrumb" aria-label="مسیر صفحه">
+                <ol>
+                    <li>
+                        <a href="/">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.8 12 3l9 7.8v9.7a.5.5 0 0 1-.5.5h-5.7v-6.4H9.2V21H3.5a.5.5 0 0 1-.5-.5v-9.7Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+                            <span>صفحه اصلی</span>
+                        </a>
+                    </li>
+                    @if (!string.IsNullOrWhiteSpace(Model.ParentTitle) && !string.IsNullOrWhiteSpace(Model.ParentUrl))
+                    {
+                        <li><a href="@Model.ParentUrl">@Model.ParentTitle</a></li>
+                    }
+                    <li aria-current="page">@Model.CurrentPageTitle</li>
+                </ol>
+            </nav>
+
+            @if (!string.IsNullOrWhiteSpace(Model.Eyebrow))
+            {
+                <p class="sk-eyebrow">@Model.Eyebrow</p>
+            }
+
+            <h1 class="sk-page-hero__title">
+                @Model.Title
+                @if (!string.IsNullOrWhiteSpace(Model.AccentTitle))
+                {
+                    <span>@Model.AccentTitle</span>
+                }
+            </h1>
+
+            @if (!string.IsNullOrWhiteSpace(Model.Description))
+            {
+                <p class="sk-page-hero__description">@Model.Description</p>
+            }
+        </div>
+    </div>
+</section>

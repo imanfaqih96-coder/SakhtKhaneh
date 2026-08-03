@@ -1,47 +1,111 @@
-﻿@using SakhtKhaneh.Models.Template.ViewModels
-
 @model List<TemplateMenuItem>
+@{
+    var currentPath = Context.Request.Path.Value ?? "/";
+}
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg">
-    <div class="container">
-        <!-- Logo -->
-        <div class="logo-wrapper">
-            <a class="logo" href="/Public/"> <img src="/assets/img/logo_transparent_bg.png" class="logo-img" alt="" style="width:65px;"> </a>
-            <!-- <a class="logo" href="index.html"> <h2>BAUEN</h2> </a> -->
-        </div>
-        <!-- Button -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"><i class="ti-menu"></i></span> </button>
-        <!-- Menu -->
-        <div class="collapse navbar-collapse" id="navbar">
-            <ul class="navbar-nav ms-auto">
+<nav class="navbar navbar-expand-lg sk-navbar" data-site-navbar aria-label="منوی اصلی">
+    <div class="container sk-navbar__container">
+        <a class="sk-brand" href="/" aria-label="صفحه اصلی ساخت خانه">
+            <span class="sk-brand__mark">
+                <img src="/assets/img/logo_transparent_bg.png"
+                     alt=""
+                     width="300"
+                     height="300"
+                     decoding="async" />
+            </span>
+            <span class="sk-brand__copy">
+                <strong>ساخت خانه</strong>
+                <small>معماری، طراحی و اجرا</small>
+            </span>
+        </a>
 
+        <button class="navbar-toggler sk-navbar__toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#siteNavbar"
+                aria-controls="siteNavbar"
+                aria-expanded="false"
+                aria-label="باز کردن منوی اصلی">
+            <span class="sk-navbar__toggler-lines" aria-hidden="true"><span></span><span></span><span></span></span>
+        </button>
+
+        <div class="collapse navbar-collapse sk-navbar__collapse" id="siteNavbar">
+            <div class="sk-navbar__mobile-head d-lg-none">
+                <span>منوی سایت</span>
+                <button type="button" class="sk-navbar__mobile-close" data-navbar-close aria-label="بستن منو">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                </button>
+            </div>
+
+            <ul class="navbar-nav sk-navbar__menu ms-auto d-none d-lg-flex">
                 @foreach (var item in Model)
                 {
-                    if (item.Children == null)
-                    {
-                        <li class="nav-item"><a class="nav-link" href="@item.Path">@item.Title</a></li>
-                    }
-                    else
-                    {
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">Services <i class="ti-angle-down"></i></a>
-                            <ul class="dropdown-menu">
-                                @foreach(var childItem in item.Children) {
-                                    <li>
-                                        <a href="@childItem.Path" class="dropdown-item">
-                                            <span>
-                                                @childItem.Title
-                                            </span>
-                                        </a>
-                                    </li>
-                                }
-                            </ul>
-                        </li>
-                    }
-                }
+                    var isActive = item.Path == "/"
+                        ? currentPath == "/" || currentPath.Equals("/Public/Index", StringComparison.OrdinalIgnoreCase)
+                        : currentPath.StartsWith(item.Path, StringComparison.OrdinalIgnoreCase);
+                    var children = item.Children ?? new List<TemplateMenuItem>();
 
+                    <li class="nav-item @(children.Count > 0 ? "sk-navbar__project-root" : string.Empty)">
+                        <a class="nav-link sk-navbar__link @(isActive ? "active" : string.Empty)"
+                           href="@item.Path"
+                           aria-current="@(isActive ? "page" : null)">
+                            <span>@item.Title</span>
+                            @if (children.Count > 0)
+                            {
+                                <svg class="sk-navbar__chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            }
+                        </a>
+                        @if (children.Count > 0)
+                        {
+                            <ul class="sk-desktop-tree-root" aria-label="دسته‌بندی‌های پروژه">
+                                @await Html.PartialAsync("_MenuTreePartialView", new MenuTreeRenderModel
+                                {
+                                    Items = children,
+                                    IsMobile = false,
+                                    Level = 0,
+                                    CurrentPath = currentPath
+                                })
+                            </ul>
+                        }
+                    </li>
+                }
             </ul>
+
+            <div class="sk-navbar__mobile-menu d-lg-none">
+                <ul class="sk-mobile-nav-list">
+                    @foreach (var item in Model)
+                    {
+                        var isProjects = item.Path.Equals("/Projects", StringComparison.OrdinalIgnoreCase);
+                        var isActive = item.Path == "/"
+                            ? currentPath == "/" || currentPath.Equals("/Public/Index", StringComparison.OrdinalIgnoreCase)
+                            : currentPath.StartsWith(item.Path, StringComparison.OrdinalIgnoreCase);
+
+                        if (isProjects && item.Children?.Count > 0)
+                        {
+                            @await Html.PartialAsync("_MenuTreePartialView", new MenuTreeRenderModel
+                            {
+                                Items = item.Children,
+                                IsMobile = true,
+                                Level = 0,
+                                CurrentPath = currentPath
+                            })
+                        }
+                        else
+                        {
+                            <li><a class="sk-mobile-main-link @(isActive ? "active" : string.Empty)" href="@item.Path">@item.Title</a></li>
+                        }
+                    }
+                </ul>
+            </div>
+
+            <div class="sk-navbar__actions">
+                <a class="sk-navbar__cta" href="/Public/Contacts">
+                    <span>درخواست مشاوره</span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
+            </div>
         </div>
     </div>
 </nav>
+
+<button class="sk-navbar-backdrop" type="button" data-navbar-backdrop aria-label="بستن منوی اصلی" tabindex="-1"></button>

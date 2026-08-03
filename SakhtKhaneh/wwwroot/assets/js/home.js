@@ -361,11 +361,15 @@ $(document).ready(function() {
     // Slider owlCarousel
     $('.slider-fade .owl-carousel').owlCarousel({
         items: 1,
-        loop:true,
+        loop: true,
         dots: false,
         margin: 0,
-        autoplay: false,
+        autoplay: true,
         autoplayTimeout: 5000,
+        autoplayHoverPause: false,
+        smartSpeed: 900,
+        touchDrag: true,
+        mouseDrag: true,
         animateOut: 'fadeOut',
         nav: true,
         navText: ['<i class="ti-angle-left" aria-hidden="true"></i>', '<i class="ti-angle-right" aria-hidden="true"></i>']

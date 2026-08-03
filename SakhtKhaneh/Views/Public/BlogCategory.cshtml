@@ -1,0 +1,52 @@
+@model BlogCategoryPageViewModel
+@{
+    ViewData["Title"] = $"مقالات {Model.Category.Title}";
+    ViewData["MetaDescription"] = $"مقالات دسته‌بندی {Model.Category.Title} در بلاگ ساخت خانه.";
+    ViewData["VisitType"] = "blog-category";
+    ViewData["VisitParam"] = Model.Category.Id.ToString();
+}
+
+@await Html.PartialAsync("_PageHeroPartialView", new PageHeroViewModel
+{
+    Eyebrow = "دسته‌بندی بلاگ",
+    Title = "مقالات",
+    AccentTitle = Model.Category.Title,
+    Description = "مطالب این دسته‌بندی و زیرشاخه‌های آن را یکجا مرور کنید.",
+    CurrentPageTitle = Model.Category.Title,
+    ParentTitle = "بلاگ",
+    ParentUrl = "/Blog"
+})
+
+<div class="content-wrapper">
+    <section class="content-lines-wrapper" aria-hidden="true"><div class="content-lines-inner"><div class="content-lines"></div></div></section>
+    <section class="sk-section section-padding">
+        <div class="container">
+            <div class="sk-section-heading" data-sk-reveal="up">
+                <div class="sk-section-heading__copy"><p class="sk-section-heading__eyebrow">@Model.Category.Title</p><h2 class="sk-section-heading__title">دانش تخصصی در حوزه <span>@Model.Category.Title</span></h2></div>
+                <a class="sk-section-heading__link" href="/Blog"><span>همه مقالات</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            </div>
+            @if (Model.Posts.Count > 0)
+            {
+                <div class="sk-card-grid">
+                    @for (var i = 0; i < Model.Posts.Count; i++)
+                    {
+                        var post = Model.Posts[i];
+                        <article class="sk-content-card" data-sk-reveal="up" data-sk-delay-index="@(i % 5)">
+                            <a class="sk-content-card__media" href="/Blog/@post.EndpointPath"><img class="sk-content-card__image" src="@WebAssetUrl.Normalize(post.ImageUrl)" alt="@(post.ImageAlt ?? post.Title)" width="1200" height="800" loading="lazy" decoding="async" /></a>
+                            <div class="sk-content-card__body">
+                                <p class="sk-content-card__meta"><a href="/Blog/Category/@post.Category.Slug">@post.Category.Title</a><span aria-hidden="true">—</span><time datetime="@post.CreationDate.ToString("yyyy-MM-dd")">@IranDateTime.ToPersianDate(post.CreationDate)</time></p>
+                                <h2 class="sk-content-card__title"><a href="/Blog/@post.EndpointPath">@post.Title</a></h2>
+                                <p class="sk-content-card__excerpt">@post.Description</p>
+                                <div class="sk-content-card__footer"><a class="sk-content-card__more" href="/Blog/@post.EndpointPath"><span>مطالعه مقاله</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a><span class="sk-content-card__index">@IranDateTime.ToPersianDigits((i + 1).ToString("00"))</span></div>
+                            </div>
+                        </article>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="sk-empty-state"><h2>هنوز مقاله‌ای در این دسته ثبت نشده است</h2></div>
+            }
+        </div>
+    </section>
+</div>

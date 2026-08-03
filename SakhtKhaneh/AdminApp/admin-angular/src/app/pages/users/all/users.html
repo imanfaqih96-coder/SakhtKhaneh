@@ -1,0 +1,21 @@
+<div class="container py-4 admin-page">
+  <mat-card class="p-4 rounded admin-card">
+    <div class="users-heading"><div><h1>مدیران سامانه</h1><p>وضعیت حساب‌ها و الزام تغییر رمز عبور را مشاهده کنید.</p></div></div>
+    <div class="row g-3 filters">
+      <div class="col-md-7"><mat-form-field appearance="outline"><mat-label>جستجو</mat-label><input matInput [(ngModel)]="searchValue" (input)="applyFilters()"><mat-icon matPrefix fontSet="material-icons-outlined">search</mat-icon></mat-form-field></div>
+      <div class="col-md-5"><mat-form-field appearance="outline"><mat-label>وضعیت امنیتی</mat-label><mat-select [(ngModel)]="statusFilter" (selectionChange)="applyFilters()"><mat-option value="all">همه</mat-option><mat-option value="secure">رمز تغییر کرده</mat-option><mat-option value="must-change">نیازمند تغییر رمز</mat-option></mat-select></mat-form-field></div>
+    </div>
+    <div *ngIf="loading" class="loading"><mat-spinner diameter="44"></mat-spinner></div>
+    <div *ngIf="!loading" class="table-wrap">
+      <table mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="userName"><th mat-header-cell *matHeaderCellDef>نام کاربری</th><td mat-cell *matCellDef="let user"><strong dir="ltr">{{ user.userName }}</strong></td></ng-container>
+        <ng-container matColumnDef="email"><th mat-header-cell *matHeaderCellDef>ایمیل</th><td mat-cell *matCellDef="let user" dir="ltr">{{ user.email }}</td></ng-container>
+        <ng-container matColumnDef="name"><th mat-header-cell *matHeaderCellDef>نام</th><td mat-cell *matCellDef="let user">{{ (user.firstName || user.lastName) ? ((user.firstName || '') + ' ' + (user.lastName || '')) : '—' }}</td></ng-container>
+        <ng-container matColumnDef="passwordStatus"><th mat-header-cell *matHeaderCellDef>وضعیت رمز</th><td mat-cell *matCellDef="let user"><mat-chip [class.warning-chip]="user.mustChangePassword" [class.secure-chip]="!user.mustChangePassword">{{ user.mustChangePassword ? 'تغییر رمز الزامی' : 'ایمن' }}</mat-chip></td></ng-container>
+        <ng-container matColumnDef="lastLogin"><th mat-header-cell *matHeaderCellDef>آخرین ورود</th><td mat-cell *matCellDef="let user">{{ user.lastLoginAt ? (user.lastLoginAt | persianDate:true) : 'هنوز وارد نشده' }}</td></ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr><tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+    <mat-paginator [pageSize]="10" [pageSizeOptions]="[5,10,20]" showFirstLastButtons></mat-paginator>
+  </mat-card>
+</div>

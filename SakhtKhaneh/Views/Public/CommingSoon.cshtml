@@ -1,83 +1,26 @@
-﻿@{
-    ViewData["Title"] = "Comming Soon";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+@{
+    ViewData["Title"] = "به‌زودی";
+    ViewData["MetaDescription"] = "این بخش از وب‌سایت ساخت خانه در حال آماده‌سازی است.";
+    ViewData["Robots"] = "noindex,follow";
 }
 
-<!-- Comming soon -->
-<section class="comming section-padding">
-    <div class="v-middle">
-        <div class="container">
-            <div class="row text-center mb-45">
-                <div class="col-md-12">
-                    <h6>Our website is under construction</h6>
-                    <h2>Coming Soon!</h2>
-                </div>
-            </div>
-            <div class="row text-center mb-45">
-                <div class="col-6 col-md-3">
-                    <div class="item">
-                        <div class="down">
-                            <h3 id="days">00</h3>
-                        </div>
-                        <div class="item-info">
-                            <h6>Days</h6>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="item">
-                        <div class="down">
-                            <h3 id="hours">00</h3>
-                        </div>
-                        <div class="item-info">
-                            <h6>Hours</h6>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="item">
-                        <div class="down">
-                            <h3 id="minutes">00</h3>
-                        </div>
-                        <div class="item-info">
-                            <h6>Minutes</h6>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="item">
-                        <div class="down">
-                            <h3 id="seconds">00</h3>
-                        </div>
-                        <div class="item-info">
-                            <h6>Seconds</h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row justify-content-center">
-                <div class="col-lg-6 col-md-12 text-center">
-                    <p>Sign up for our latest news & articles.</p>
-                    <form>
-                        <input type="email" name="email" placeholder="Email Address">
-                        <button>Subscribe</button>
-                    </form>
-                </div>
-            </div>
-            <div class="row text-center">
-                <div class="go-back col-md-12">
-                    <a href='#'> <span><i class="ti-arrow-left" aria-hidden="true"></i></span>&nbsp; Back To Home </a>
-                </div>
-            </div>
+@await Html.PartialAsync("_PageHeroPartialView", new PageHeroViewModel
+{
+    Eyebrow = "در حال آماده‌سازی",
+    Title = "این بخش به‌زودی",
+    AccentTitle = "در دسترس قرار می‌گیرد",
+    Description = "در حال تکمیل این بخش هستیم تا تجربه‌ای کامل‌تر و منظم‌تر در اختیار شما قرار دهیم.",
+    CurrentPageTitle = "به‌زودی",
+    Compact = true
+})
+
+<section class="sk-section section-padding">
+    <div class="container">
+        <div class="sk-empty-state" data-sk-reveal="scale">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v4m0 10v4M3 12h4m10 0h4M5.6 5.6l2.8 2.8m7.2 7.2 2.8 2.8m0-12.8-2.8 2.8m-7.2 7.2-2.8 2.8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            <h2>در حال تکمیل این صفحه هستیم</h2>
+            <p>برای مشاهده پروژه‌ها، مطالب و راه‌های ارتباط با مجموعه می‌توانید از منوی اصلی استفاده کنید.</p>
+            <a class="sk-button sk-button--primary mt-20" href="/"><span>بازگشت به صفحه اصلی</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         </div>
     </div>
 </section>
-
-@section Scripts {
-    <script>
-        $('#preloader').hide();
-        $('.preloader-bg').hide();
-    </script>
-    <script type="text/javascript" src="/assets/js/comming-soon.js"></script>
-}
-

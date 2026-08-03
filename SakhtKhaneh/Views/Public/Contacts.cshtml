@@ -1,102 +1,136 @@
-﻿@using SakhtKhaneh.Models.Template.ViewModels;
-
-@model ContactDataViewModel;
-
+@model ContactDataViewModel
 @{
     ViewData["Title"] = "تماس با ما";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["MetaDescription"] = "راه‌های ارتباط با مجموعه ساخت خانه و فرم درخواست مشاوره معماری، بازسازی و اجرای پروژه.";
+    ViewData["VisitType"] = "static";
+    ViewData["VisitParam"] = "contacts";
 }
 
-<!-- Content -->
+@await Html.PartialAsync("_PageHeroPartialView", new PageHeroViewModel
+{
+    Eyebrow = "ارتباط با مجموعه",
+    Title = "گفت‌وگو درباره",
+    AccentTitle = "پروژه بعدی شما",
+    Description = "اطلاعات اولیه پروژه، نوع فضا و نیازهای خود را برای ما ارسال کنید تا مسیر مناسب همکاری بررسی شود.",
+    CurrentPageTitle = "تماس با ما"
+})
+
 <div class="content-wrapper">
-
-    <!-- Lines -->
-    <section class="content-lines-wrapper">
-        <div class="content-lines-inner">
-            <div class="content-lines"></div>
-        </div>
-    </section>
-    <!-- Header Banner -->
-    <section class="banner-header banner-img valign bg-img bg-fixed" data-overlay-darkgray="5" data-background="/assets/img/banner.jpg"> </section>
-
-    <!-- Contact -->
-    <section class="section-padding2">
+    <section class="content-lines-wrapper" aria-hidden="true"><div class="content-lines-inner"><div class="content-lines"></div></div></section>
+    <section class="sk-section section-padding">
         <div class="container">
-            <div class="row">
-                <div class="col-md-12 animate-box" data-animate-effect="fadeInUp">
-                    <h2 class="section-title">تماس با <span>ما</span></h2>
-                </div>
-            </div>
-            <div class="row mb-90">
-                <div class="col-lg-6 col-md-12 mb-30 animate-box" data-animate-effect="fadeInUp">
-                    <p><b>اطلاعات تماس</b></p>
-                    <p><b>شماره تماس :</b> @Model.Phone</p>
-                    <p><b>آدرس ایمیل :</b> @Model.Email</p>
-                    <p><b>نشانی :</b> @Model.Address</p>
-                </div>
-                <div class="col-lg-6 col-md-12 animate-box" data-animate-effect="fadeInUp">
-                    <p><b>Contact Form</b></p>
-                    <form method="post" class="contact__form" action="https://duruthemes.com/demo/html/bauen/fullscreen-multipage-dark/mail.php">
-                        <!-- Form message -->
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="alert alert-success contact__msg" style="display: none" role="alert"> پیام شما با موفقیت ارسال گردید. </div>
+            <div class="sk-contact-layout">
+                <section class="sk-contact-panel" data-sk-reveal="right">
+                    <p class="sk-section-heading__eyebrow">اطلاعات تماس</p>
+                    <h2>راه‌های ارتباط با ساخت خانه</h2>
+                    @if (!string.IsNullOrWhiteSpace(Model.Description))
+                    {
+                        <p class="sk-contact-panel__intro">@Model.Description</p>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(Model.Content))
+                    {
+                        <div class="article-content mb-30">@Html.Raw(Model.Content)</div>
+                    }
+
+                    <div class="sk-contact-items">
+                        @if (!string.IsNullOrWhiteSpace(Model.Phone))
+                        {
+                            <div class="sk-contact-item">
+                                <span class="sk-contact-item__icon">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.4 3.7 10 7.9 8.3 9.5c1.1 2.1 2.8 3.8 4.9 4.9l1.6-1.7 4.2 2.6c.4.2.6.7.5 1.1l-.7 3c-.1.5-.6.9-1.1.9C10 20.3 3.7 14 3.7 6.3c0-.5.4-1 .9-1.1l3-.7c.4-.1.9.1 1.1.5Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </span>
+                                <span><small>شماره تماس</small><a dir="ltr" href="tel:@Model.Phone.Replace(" ", string.Empty)">@Model.Phone</a></span>
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(Model.Email))
+                        {
+                            <div class="sk-contact-item">
+                                <span class="sk-contact-item__icon">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5h16v11H4v-11Zm.5.5 7.5 6 7.5-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+                                </span>
+                                <span><small>ایمیل</small><a href="mailto:@Model.Email">@Model.Email</a></span>
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(Model.Address))
+                        {
+                            <div class="sk-contact-item">
+                                <span class="sk-contact-item__icon">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s6-5.4 6-11a6 6 0 1 0-12 0c0 5.6 6 11 6 11Zm0-8.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </span>
+                                <span><small>نشانی</small><span>@Model.Address</span></span>
+                            </div>
+                        }
+                    </div>
+
+                    @if (Model.SocialLinks.Count > 0)
+                    {
+                        <div class="sk-contact-socials" aria-label="شبکه‌های اجتماعی و پیام‌رسان‌ها">
+                            <h3>شبکه‌های اجتماعی و ارتباط سریع</h3>
+                            <div class="sk-contact-socials__grid">
+                                @foreach (var link in Model.SocialLinks)
+                                {
+                                    <a href="@link.Url" target="_blank" rel="noopener noreferrer">
+                                        <span class="sk-contact-socials__icon">@await Html.PartialAsync("_SocialIconPartialView", link.Platform)</span>
+                                        <span><strong>@link.Title</strong>@if (!string.IsNullOrWhiteSpace(link.Username)) { <small dir="ltr">@link.Username</small> }</span>
+                                        <svg class="sk-contact-socials__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    </a>
+                                }
                             </div>
                         </div>
-                        <!-- Form elements -->
-                        <div class="row">
-                            <div class="col-md-12 form-group">
-                                <input name="name" type="text" placeholder="نام *" required>
+                    }
+                </section>
+
+                <section class="sk-contact-panel sk-contact-panel--form" data-sk-reveal="left">
+                    <p class="sk-section-heading__eyebrow">ارسال درخواست</p>
+                    <h2>فرم مشاوره و تماس</h2>
+                    <p class="sk-contact-panel__intro">فیلدهای ستاره‌دار را تکمیل کنید. پیام شما در سامانه ثبت می‌شود و برای بررسی در اختیار مجموعه قرار می‌گیرد.</p>
+
+                    <form method="post" data-contact-form novalidate>
+                        <div class="contact-status" data-contact-status aria-live="polite"></div>
+                        <div class="sk-form-grid">
+                            <div class="sk-field sk-field--full">
+                                <label for="contact-name">نام و نام خانوادگی *</label>
+                                <input id="contact-name" name="name" type="text" placeholder="نام شما" autocomplete="name" maxlength="150" required />
                             </div>
-                            <div class="col-md-6 form-group">
-                                <input name="email" type="email" placeholder="آدرس ایمیل *" required>
+                            <div class="sk-field">
+                                <label for="contact-phone">شماره تماس *</label>
+                                <input id="contact-phone" name="phone" type="tel" inputmode="numeric" pattern="09[0-9]{9}" placeholder="0912xxxxxxx" autocomplete="tel" maxlength="11" required dir="ltr" />
                             </div>
-                            <div class="col-md-6 form-group">
-                                <input name="phone" type="text" placeholder="شماره تماس *" required>
+                            <div class="sk-field">
+                                <label for="contact-email">آدرس ایمیل</label>
+                                <input id="contact-email" name="email" type="email" placeholder="name@example.com" autocomplete="email" maxlength="200" dir="ltr" />
                             </div>
-                            <div class="col-md-12 form-group">
-                                <input name="subject" type="text" placeholder="موضوع *" required>
+                            <div class="sk-field sk-field--full">
+                                <label for="contact-subject">موضوع درخواست</label>
+                                <input id="contact-subject" name="subject" type="text" placeholder="طراحی، بازسازی، اجرا یا مشاوره" maxlength="250" />
                             </div>
-                            <div class="col-md-12 form-group">
-                                <textarea name="message" id="message" cols="30" rows="4" placeholder="متن پیام *" required></textarea>
+                            <div class="sk-field sk-field--full">
+                                <label for="contact-message">توضیحات پروژه *</label>
+                                <textarea id="contact-message" name="message" placeholder="نوع فضا، متراژ، موقعیت، نیازها و زمان‌بندی تقریبی پروژه را بنویسید." maxlength="4000" required></textarea>
                             </div>
-                            <div class="col-md-12">
-                                <input name="submit" type="submit" id="sendMessage" value="ارسال پیام">
+                            <div class="sk-field sk-field--full">
+                                <button type="submit" class="sk-submit">
+                                    <span>ارسال پیام</span>
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </button>
+                                <p class="sk-form-note">اطلاعات شما فقط برای پاسخ‌گویی به درخواست استفاده می‌شود.</p>
                             </div>
                         </div>
                     </form>
-                </div>
+                </section>
             </div>
-            <!-- Map Section -->
-            <div class="row">
-                <div class="col-md-12 mb-30 animate-box" data-animate-effect="fadeInUp">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3238.7018913816887!2d51.34267777623319!3d35.73354942709736!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f8dfd9c18576459%3A0x46f3645a6ef10494!2z2KjYsdisINin2YTZiNmG2K8!5e0!3m2!1sen!2sus!4v1783734412796!5m2!1sen!2sus" width="900" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" class="map w-100"></iframe>
-                </div>
+
+            <div class="mt-60" data-sk-reveal="up">
+                <iframe title="موقعیت دفتر ساخت خانه روی نقشه"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3238.7018913816887!2d51.34267777623319!3d35.73354942709736!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f8dfd9c18576459%3A0x46f3645a6ef10494!2z2KjYsdisINin2YTZiNmG2K8!5e0!3m2!1sen!2sus!4v1783734412796!5m2!1sen!2sus"
+                        width="900"
+                        height="360"
+                        style="border:0;border-radius:18px"
+                        allowfullscreen
+                        loading="lazy"
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        class="map w-100"></iframe>
             </div>
         </div>
     </section>
-
-
 </div>
-
-
-
-@section Scripts{
-    <script src="/assets/js/modernizr-2.6.2.min.js"></script>
-    <script src="/assets/js/imagesloaded.pkgd.min.js"></script>
-    <script src="/assets/js/jquery.isotope.v3.0.2.js"></script>
-    <script src="/assets/js/popper.min.js"></script>
-    <script src="/assets/js/bootstrap.min.js"></script>
-    <script src="/assets/js/scrollIt.min.js"></script>
-    <script src="/assets/js/jquery.waypoints.min.js"></script>
-    <script src="/assets/js/owl.carousel.min.js"></script>
-    <script src="/assets/js/jquery.stellar.min.js"></script>
-    <script src="/assets/js/jquery.magnific-popup.js"></script>
-    <script src="/assets/js/YouTubePopUp.js"></script>
-    <script src="/assets/js/before-after.js"></script>
-    <script src="/assets/js/vegas.slider.min.js"></script>
-    <script src="/assets/js/home.js"></script>
-
-    <script src="/assets/js/swal2/swal2.js"></script>
-    <script src="/assets/js/contacts.js"></script>
-}

@@ -1,0 +1,104 @@
+<section class="admin-page contact-settings-page">
+  <header class="admin-page-heading">
+    <div>
+      <span class="eyebrow">تنظیمات ارتباطی</span>
+      <h1>تماس با ما و شبکه‌های اجتماعی</h1>
+      <p>اطلاعات این صفحه به‌صورت یکپارچه در صفحه تماس، فوتر و لینک‌های ارتباط سریع نمایش داده می‌شود.</p>
+    </div>
+    <button mat-flat-button color="primary" type="button" (click)="saveChanges()" [disabled]="saving || loading">
+      <mat-icon>save</mat-icon><span>{{ saving ? 'در حال ذخیره...' : 'ذخیره همه تغییرات' }}</span>
+    </button>
+  </header>
+
+  <mat-progress-bar *ngIf="loading || saving" mode="indeterminate"></mat-progress-bar>
+
+  <div class="contact-settings-grid">
+    <mat-card class="settings-card contact-content-card">
+      <div class="card-heading">
+        <div><span class="eyebrow">اطلاعات اصلی</span><h2>محتوای صفحه تماس</h2></div>
+        <mat-icon>contact_page</mat-icon>
+      </div>
+
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>توضیح کوتاه</mat-label>
+        <input matInput [(ngModel)]="description" name="description">
+      </mat-form-field>
+
+      <div class="editor-wrapper">
+        <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"></ngx-editor-menu>
+        <ngx-editor [editor]="editor" [(ngModel)]="content" name="content" [placeholder]="'متن تماس با ما را اینجا بنویسید...'" class="ngx-editor"></ngx-editor>
+      </div>
+
+      <div class="contact-fields-grid">
+        <mat-form-field appearance="outline">
+          <mat-icon matPrefix>call</mat-icon><mat-label>شماره تماس</mat-label>
+          <input matInput [(ngModel)]="phone" name="phone" dir="ltr">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-icon matPrefix>mail</mat-icon><mat-label>ایمیل</mat-label>
+          <input matInput [(ngModel)]="email" name="email" dir="ltr">
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-icon matPrefix>location_on</mat-icon><mat-label>نشانی</mat-label>
+        <textarea matInput [(ngModel)]="address" name="address" rows="3"></textarea>
+      </mat-form-field>
+    </mat-card>
+
+    <mat-card class="settings-card social-settings-card">
+      <div class="card-heading social-heading">
+        <div><span class="eyebrow">نمایش پویا</span><h2>شبکه‌های اجتماعی</h2><p>فقط گزینه‌های فعال و دارای لینک در سایت نشان داده می‌شوند.</p></div>
+        <button mat-stroked-button type="button" (click)="addSocial()"><mat-icon>add</mat-icon>افزودن شبکه</button>
+      </div>
+
+      <div class="social-admin-list" *ngIf="socialLinks.length; else noSocials">
+        <article class="social-admin-item" *ngFor="let item of socialLinks; let i = index">
+          <div class="social-item-order">
+            <span>{{ i + 1 }}</span>
+            <div>
+              <button mat-icon-button type="button" (click)="moveSocial(i, -1)" [disabled]="i === 0" matTooltip="انتقال به بالا"><mat-icon>keyboard_arrow_up</mat-icon></button>
+              <button mat-icon-button type="button" (click)="moveSocial(i, 1)" [disabled]="i === socialLinks.length - 1" matTooltip="انتقال به پایین"><mat-icon>keyboard_arrow_down</mat-icon></button>
+            </div>
+          </div>
+
+          <div class="social-item-fields">
+            <mat-form-field appearance="outline">
+              <mat-label>نوع شبکه</mat-label>
+              <mat-select [(ngModel)]="item.platform" name="platform-{{i}}" (selectionChange)="platformChanged(item)">
+                <mat-option *ngFor="let platform of platforms" [value]="platform.value">{{ platform.label }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>عنوان نمایشی</mat-label>
+              <input matInput [(ngModel)]="item.title" name="title-{{i}}">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>نام کاربری یا شماره</mat-label>
+              <input matInput [(ngModel)]="item.username" name="username-{{i}}" dir="ltr">
+              <mat-hint>{{ platformHint(item) }}</mat-hint>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>لینک کامل (اختیاری)</mat-label>
+              <input matInput [(ngModel)]="item.url" name="url-{{i}}" dir="ltr" placeholder="https://...">
+            </mat-form-field>
+          </div>
+
+          <div class="social-item-actions">
+            <mat-slide-toggle [(ngModel)]="item.isVisible" name="visible-{{i}}">نمایش در سایت</mat-slide-toggle>
+            <button mat-icon-button type="button" color="warn" (click)="removeSocial(i)" matTooltip="حذف شبکه"><mat-icon>delete</mat-icon></button>
+          </div>
+        </article>
+      </div>
+
+      <ng-template #noSocials>
+        <div class="social-empty"><mat-icon>share</mat-icon><h3>شبکه‌ای تعریف نشده است</h3><p>اینستاگرام، تلگرام، واتساپ یا هر لینک سفارشی را اضافه کنید.</p><button mat-flat-button color="primary" type="button" (click)="addSocial()"><mat-icon>add</mat-icon>افزودن اولین شبکه</button></div>
+      </ng-template>
+    </mat-card>
+  </div>
+
+  <div class="sticky-save-bar">
+    <span>تغییرات پس از ذخیره بلافاصله در فوتر و صفحه تماس اعمال می‌شوند.</span>
+    <button mat-flat-button color="primary" type="button" (click)="saveChanges()" [disabled]="saving || loading"><mat-icon>save</mat-icon>ذخیره همه تغییرات</button>
+  </div>
+</section>

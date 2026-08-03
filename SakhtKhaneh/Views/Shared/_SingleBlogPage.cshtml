@@ -1,115 +1,63 @@
-﻿@using System.Text.Json
-@using SakhtKhaneh.Models.Blog
-
+@using System.Text.Json
 @model BlogPost
-
 @inject IConfiguration Configuration
-
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    var siteBaseUrl = (Configuration["Site:BaseUrl"] ?? $"{Context.Request.Scheme}://{Context.Request.Host}").TrimEnd('/');
+    var canonicalUrl = $"{siteBaseUrl}/Blog/{Model.EndpointPath}";
+    var imageUrl = WebAssetUrl.Normalize(Model.ImageUrl, "/assets/img/banner-1600.webp");
+    var absoluteImageUrl = WebAssetUrl.Absolute(imageUrl, siteBaseUrl);
+    var seoTitle = string.IsNullOrWhiteSpace(Model.SeoTitle) ? Model.Title : Model.SeoTitle;
+    var seoDescription = string.IsNullOrWhiteSpace(Model.MetaDescription) ? Model.Description : Model.MetaDescription;
+    seoDescription = seoDescription?.Trim() ?? Model.Title;
+    if (seoDescription.Length > 165) seoDescription = $"{seoDescription[..162].TrimEnd()}...";
+    var imageAlt = string.IsNullOrWhiteSpace(Model.ImageAlt) ? Model.Title : Model.ImageAlt;
+    var contentAuthor = Configuration["Site:ContentAuthor"] ?? "حسین کنعانی";
+    var contentAuthorImage = Configuration["Site:ContentAuthorImage"] ?? "/assets/img/author-320.webp";
+    var articleContent = Model.Content ?? string.Empty;
+    var contentContainsArticle = articleContent.Contains("<article", StringComparison.OrdinalIgnoreCase);
+    var contentContainsH1 = articleContent.Contains("<h1", StringComparison.OrdinalIgnoreCase);
+    var articleContentWithoutFirstH1 = contentContainsH1
+        ? new System.Text.RegularExpressions.Regex("<h1\\b[^>]*>.*?</h1>", System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Singleline).Replace(articleContent, string.Empty, 1)
+        : articleContent;
+    var tags = (Model.Tags ?? string.Empty).Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+    var publishedUtc = DateTime.SpecifyKind(Model.CreationDate, DateTimeKind.Utc);
+    var modifiedUtc = DateTime.SpecifyKind(Model.LastUpdateDate ?? Model.CreationDate, DateTimeKind.Utc);
 
-    var siteBaseUrl =
-        (Configuration["Site:BaseUrl"]
-         ?? $"{Context.Request.Scheme}://{Context.Request.Host}")
-        .TrimEnd('/');
-
-    var canonicalUrl =
-        $"{siteBaseUrl}{Context.Request.PathBase}{Context.Request.Path}";
-
-    var imageUrl = string.IsNullOrWhiteSpace(Model.ImageUrl)
-        ? "/assets/img/banner.jpg"
-        : Model.ImageUrl;
-
-    var absoluteImageUrl =
-        imageUrl.StartsWith(
-            "http",
-            StringComparison.OrdinalIgnoreCase)
-            ? imageUrl
-            : $"{siteBaseUrl}/{imageUrl.TrimStart('/')}";
-
-    var seoDescription = string.IsNullOrWhiteSpace(Model.Description)
-        ? Model.Title
-        : Model.Description.Trim();
-
-    // جلوگیری از Meta Description بیش از حد طولانی
-    if (seoDescription.Length > 165)
-    {
-        seoDescription =
-            $"{seoDescription[..162].TrimEnd()}...";
-    }
-
-    var publishedDateIso =
-        Model.CreationDate.ToString("O");
-
-    var publishedDateAttribute =
-        Model.CreationDate.ToString("yyyy-MM-dd");
-
-    var persianTime =
-        new PersianDateTime(Model.CreationDate);
-
-    var articleContent =
-        Model.Content ?? string.Empty;
-
-    /*
-     * سازگاری با مقالات قبلی:
-     *
-     * در مقاله فعلی، Model.Content خودش شامل article و h1 است.
-     * بنابراین نباید عنوان و توضیحات دوباره در View رندر شوند.
-     *
-     * برای مقالات جدیدی که Content آن‌ها فقط از h2 شروع می‌شود،
-     * View خودش article، h1 و توضیحات را تولید می‌کند.
-     */
-    var contentContainsArticle =
-        articleContent.Contains(
-            "<article",
-            StringComparison.OrdinalIgnoreCase);
-
-    var contentContainsH1 =
-        articleContent.Contains(
-            "<h1",
-            StringComparison.OrdinalIgnoreCase);
-
-    ViewData["Title"] = Model.Title;
+    ViewData["Title"] = seoTitle;
     ViewData["MetaDescription"] = seoDescription;
     ViewData["CanonicalUrl"] = canonicalUrl;
-    ViewData["Author"] = Model.Author;
-    ViewData["Robots"] = "index,follow,max-image-preview:large";
+    ViewData["Author"] = contentAuthor;
     ViewData["OpenGraphType"] = "article";
     ViewData["OpenGraphImage"] = absoluteImageUrl;
+    ViewData["VisitType"] = "post";
+    ViewData["VisitParam"] = Model.Id.ToString();
 
     var articleSchema = new Dictionary<string, object?>
     {
         ["@context"] = "https://schema.org",
         ["@type"] = "BlogPosting",
-
-        ["mainEntityOfPage"] = new Dictionary<string, object?>
-        {
-            ["@type"] = "WebPage",
-            ["@id"] = canonicalUrl
-        },
-
+        ["mainEntityOfPage"] = new Dictionary<string, object?> { ["@type"] = "WebPage", ["@id"] = canonicalUrl },
         ["headline"] = Model.Title,
         ["description"] = seoDescription,
         ["image"] = new[] { absoluteImageUrl },
-        ["datePublished"] = publishedDateIso,
+        ["datePublished"] = publishedUtc.ToString("O"),
+        ["dateModified"] = modifiedUtc.ToString("O"),
+        ["keywords"] = tags,
         ["inLanguage"] = "fa-IR",
-
         ["author"] = new Dictionary<string, object?>
         {
             ["@type"] = "Person",
-            ["name"] = Model.Author
+            ["name"] = contentAuthor,
+            ["image"] = WebAssetUrl.Absolute(contentAuthorImage, siteBaseUrl)
         },
-
         ["publisher"] = new Dictionary<string, object?>
         {
             ["@type"] = "Organization",
             ["name"] = "ساخت خانه",
-
             ["logo"] = new Dictionary<string, object?>
             {
                 ["@type"] = "ImageObject",
-                ["url"] =
-                    $"{siteBaseUrl}/assets/img/logo_transparent_bg.png"
+                ["url"] = $"{siteBaseUrl}/assets/img/logo_transparent_bg.png"
             }
         }
     };
@@ -118,487 +66,81 @@
     {
         ["@context"] = "https://schema.org",
         ["@type"] = "BreadcrumbList",
-
         ["itemListElement"] = new object[]
         {
-            new Dictionary<string, object?>
-            {
-                ["@type"] = "ListItem",
-                ["position"] = 1,
-                ["name"] = "صفحه اصلی",
-                ["item"] = $"{siteBaseUrl}/Public/Index"
-            },
-
-            new Dictionary<string, object?>
-            {
-                ["@type"] = "ListItem",
-                ["position"] = 2,
-                ["name"] = "بلاگ",
-                ["item"] = $"{siteBaseUrl}/Blog"
-            },
-
-            new Dictionary<string, object?>
-            {
-                ["@type"] = "ListItem",
-                ["position"] = 3,
-                ["name"] = Model.Title,
-                ["item"] = canonicalUrl
-            }
+            new Dictionary<string, object?> { ["@type"] = "ListItem", ["position"] = 1, ["name"] = "صفحه اصلی", ["item"] = siteBaseUrl },
+            new Dictionary<string, object?> { ["@type"] = "ListItem", ["position"] = 2, ["name"] = "بلاگ", ["item"] = $"{siteBaseUrl}/Blog" },
+            new Dictionary<string, object?> { ["@type"] = "ListItem", ["position"] = 3, ["name"] = Model.Title, ["item"] = canonicalUrl }
         }
     };
 }
-
 @section Seo {
-
-    <meta property="article:published_time"
-          content="@publishedDateIso" />
-
-    <meta property="article:author"
-          content="@Model.Author" />
-
-    <script type="application/ld+json">
-        @Html.Raw(JsonSerializer.Serialize(articleSchema))
-    </script>
-
-    <script type="application/ld+json">
-        @Html.Raw(JsonSerializer.Serialize(breadcrumbSchema))
-    </script>
+    <meta property="article:published_time" content="@publishedUtc.ToString("O")" />
+    <meta property="article:modified_time" content="@modifiedUtc.ToString("O")" />
+    <meta property="article:author" content="@contentAuthor" />
+    @foreach (var tag in tags) { <meta property="article:tag" content="@tag" /> }
+    <script type="application/ld+json">@Html.Raw(JsonSerializer.Serialize(articleSchema))</script>
+    <script type="application/ld+json">@Html.Raw(JsonSerializer.Serialize(breadcrumbSchema))</script>
 }
 
-@section Styles {
 
-    <style>
-        table thead tr th,
-        table tbody tr td {
-            color: #fff !important;
-        }
+@await Html.PartialAsync("_PageHeroPartialView", new PageHeroViewModel
+{
+    Eyebrow = Model.Category?.Title ?? "مقاله تخصصی",
+    Title = Model.Title,
+    Description = seoDescription,
+    CurrentPageTitle = Model.Title,
+    ParentTitle = "بلاگ",
+    ParentUrl = "/Blog",
+    BackgroundImage = imageUrl,
+    Compact = true
+})
 
-        /*
-         * ul برای لیست بدون ترتیب و ol برای مراحل شماره‌دار است.
-         */
-        .blog-post ul {
-            list-style: disc;
-        }
-
-        .blog-post ol {
-            list-style: decimal;
-        }
-
-        .blog-post ul,
-        .blog-post ol {
-            padding-right: 1.5rem;
-        }
-
-        .article-breadcrumb {
-            margin-bottom: 25px;
-        }
-
-        .article-breadcrumb ol {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin: 0;
-            padding: 0;
-            list-style: none;
-        }
-
-        .article-breadcrumb li {
-            display: flex;
-            align-items: center;
-        }
-
-        .article-breadcrumb li:not(:last-child)::after {
-            content: "/";
-            margin-right: 8px;
-            opacity: .65;
-        }
-
-        .article-breadcrumb a {
-            text-decoration: none;
-        }
-
-        .article-breadcrumb [aria-current="page"] {
-            opacity: .8;
-        }
-
-        .article-cover {
-            margin: 0 0 30px;
-        }
-
-        .article-cover img {
-            display: block;
-            width: 100%;
-            height: auto;
-        }
-
-        .article-header {
-            margin-bottom: 30px;
-        }
-
-        .article-description {
-            margin-bottom: 0;
-        }
-
-        .article-content img {
-            max-width: 100%;
-            height: auto;
-        }
-
-        .article-author-meta {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin: 0;
-        }
-
-        @@media (max-width: 768px) {
-            .bg-fixed {
-                background-attachment: scroll !important;
-            }
-        }
-    </style>
-}
-
-<!-- Content -->
-<main class="content-wrapper">
-
-    <!-- Lines -->
-    <section class="content-lines-wrapper"
-             aria-hidden="true">
-
-        <div class="content-lines-inner">
-            <div class="content-lines"></div>
-        </div>
-
-    </section>
-
-    <!-- Header Banner -->
-    <section class="banner-header banner-img valign bg-img bg-fixed"
-             aria-hidden="true"
-             data-overlay-darkgray="5"
-             data-background="/assets/img/banner.jpg">
-    </section>
-
-    <!-- Post -->
+<div class="content-wrapper">
+    <section class="content-lines-wrapper" aria-hidden="true"><div class="content-lines-inner"><div class="content-lines"></div></div></section>
     <section class="section-padding2">
-
         <div class="container">
+            <div class="sk-content-shell blog-post">
+                <figure class="sk-feature-image" data-sk-reveal="scale">
+                    <img src="@imageUrl" alt="@imageAlt" width="1400" height="900" fetchpriority="high" decoding="async" />
+                </figure>
 
-            <!-- Breadcrumb -->
-            <nav class="article-breadcrumb"
-                 aria-label="مسیر صفحه">
+                @if (contentContainsArticle)
+                {
+                    <div data-sk-reveal="up">@Html.Raw(articleContentWithoutFirstH1)</div>
+                }
+                else
+                {
+                    <article data-sk-reveal="up">
+                        @if (!string.IsNullOrWhiteSpace(Model.Description))
+                        {
+                            <p class="sk-article-intro">@Model.Description</p>
+                        }
+                        <div class="article-content">@Html.Raw(articleContentWithoutFirstH1)</div>
+                    </article>
+                }
 
-                <ol>
-                    <li>
-                        <a href="/Public/Index">
-                            صفحه اصلی
-                        </a>
-                    </li>
+                @if (tags.Length > 0)
+                {
+                    <ul class="journal-tags" aria-label="برچسب‌های مقاله">
+                        @foreach (var tag in tags) { <li>#@tag</li> }
+                    </ul>
+                }
 
-                    <li>
-                        <a href="/Blog">
-                            بلاگ
-                        </a>
-                    </li>
-
-                    <li aria-current="page">
-                        @Model.Title
-                    </li>
-                </ol>
-
-            </nav>
-
-            <div class="row">
-
-                <div class="col-md-12 blog-post">
-
-                    <!-- Main article image -->
-                    <figure class="article-cover">
-
-                        <img src="@imageUrl"
-                             alt="@Model.Title"
-                             class="mb-30"
-                             fetchpriority="high"
-                             decoding="async" />
-
-                    </figure>
-
-                    @*
-                        مقالات قدیمی مانند مقاله تراتزو، داخل Content
-                        تگ article و h1 دارند.
-
-                        در این حالت محتوا مستقیماً نمایش داده می‌شود
-                        تا عنوان و مقدمه تکراری نشوند.
-                    *@
-
-                    @if (contentContainsArticle)
-                    {
-                        @Html.Raw(articleContent)
-                    }
-                    else
-                    {
-                        <article>
-
-                            @if (!contentContainsH1)
-                            {
-                                <header class="article-header">
-
-                                    <h1 class="section-title2">
-                                        @Model.Title
-                                    </h1>
-
-                                    @if (!string.IsNullOrWhiteSpace(
-                                        Model.Description))
-                                    {
-                                        <p class="article-description">
-                                            @Model.Description
-                                        </p>
-                                    }
-
-                                </header>
-                            }
-
-                            <div class="article-content">
-                                @Html.Raw(articleContent)
-                            </div>
-
-                        </article>
-                    }
-
-                </div>
-
-            </div>
-
-            <!-- Author -->
-            <div class="bauen-comment-section">
-
-                <div class="row">
-
-                    <div class="col-lg-7 col-md-12">
-
-                        <div class="bauen-post-comment-wrap">
-
-                            <div class="bauen-user-comment">
-
-                                <img src="/assets/img/author.png"
-                                     alt="تصویر نویسنده، @Model.Author"
-                                     width="80"
-                                     height="80"
-                                     loading="lazy"
-                                     decoding="async" />
-
-                            </div>
-
-                            <div class="bauen-user-content">
-
-                                <p class="article-author-meta">
-
-                                    <span>
-                                        نوشته‌شده توسط
-                                        <strong>@Model.Author</strong>
-                                    </span>
-
-                                    <span aria-hidden="true">—</span>
-
-                                    <time datetime="@publishedDateAttribute">
-                                        @persianTime.ToPersianDateString()
-                                    </time>
-
-                                </p>
-
-                            </div>
-
-                        </div>
-
+                <div class="sk-author-card" data-sk-reveal="up">
+                    <img src="@contentAuthorImage"
+                         alt="تصویر نویسنده، @contentAuthor"
+                         width="64"
+                         height="64"
+                         loading="lazy"
+                         decoding="async" />
+                    <div>
+                        <small>نویسنده مقاله</small>
+                        <strong>@contentAuthor</strong>
+                        <time datetime="@publishedUtc.ToString("yyyy-MM-dd")">انتشار: @IranDateTime.ToPersianDate(Model.CreationDate, true)</time>
                     </div>
-
-                    <!-- Contact Form -->
-                    <div class="col-lg-4 offset-lg-1 col-md-12 d-none">
-
-                        <h3>Leave a Reply</h3>
-
-                        <form method="post"
-                              class="row">
-
-                            <div class="col-md-12">
-                                <input type="text"
-                                       name="name"
-                                       id="name"
-                                       placeholder="Full Name *"
-                                       required />
-                            </div>
-
-                            <div class="col-md-12">
-                                <input type="email"
-                                       name="email"
-                                       id="email"
-                                       placeholder="Email Address *"
-                                       required />
-                            </div>
-
-                            <div class="col-md-12">
-                                <textarea name="message"
-                                          id="message"
-                                          cols="40"
-                                          rows="4"
-                                          placeholder="Your Comment *"
-                                          required></textarea>
-                            </div>
-
-                            <div class="col-md-12">
-
-                                <button type="submit"
-                                        class="butn-dark mt-15">
-
-                                    <span>Send</span>
-
-                                </button>
-
-                            </div>
-
-                        </form>
-
-                    </div>
-
                 </div>
-
             </div>
-
         </div>
-
     </section>
-
-</main>
-
-@section Scripts {
-
-    <script src="/assets/js/modernizr-2.6.2.min.js"
-            asp-append-version="true"></script>
-
-    <script src="/assets/js/imagesloaded.pkgd.min.js"
-            asp-append-version="true"></script>
-
-    <script src="/assets/js/jquery.isotope.v3.0.2.js"
-            asp-append-version="true"></script>
-
-    @*
-        Bootstrap در Layout بارگذاری شده است؛ بنابراین از اینجا حذف شد.
-        Popper نیز در صورتی که Bootstrap فعلی شما به آن احتیاج ندارد،
-        نیازی به بارگذاری جداگانه ندارد.
-    *@
-
-    <script src="/assets/js/scrollIt.min.js"
-            asp-append-version="true"></script>
-
-    <script src="/assets/js/jquery.waypoints.min.js"
-            asp-append-version="true"></script>
-
-    <script src="/assets/js/owl.carousel.min.js"
-            asp-append-version="true"></script>
-
-    <script src="/assets/js/jquery.stellar.min.js"
-            asp-append-version="true"></script>
-
-    <script src="/assets/js/jquery.magnific-popup.js"
-            asp-append-version="true"></script>
-
-    <script src="/assets/js/YouTubePopUp.js"
-            asp-append-version="true"></script>
-
-    <script src="/assets/js/before-after.js"
-            asp-append-version="true"></script>
-
-    <script src="/assets/js/vegas.slider.min.js"
-            asp-append-version="true"></script>
-
-    <script src="/assets/js/home.js"
-            asp-append-version="true"></script>
-
-    <script>
-        /*
-         * ثبت بازدید مطابق درخواست فعلاً نگه داشته شده است.
-         *
-         * توجه:
-         * کلید API در سمت مرورگر عمومی است و بعداً باید به Backend
-         * منتقل و کلید فعلی تعویض شود.
-         */
-
-        const geolocation_api_key =
-            '97c62498a168489898a05d474162b7ab';
-
-        function geolocate() {
-            const myHeaders = new Headers();
-
-            const requestOptions = {
-                method: "GET",
-                headers: myHeaders,
-                redirect: "follow"
-            };
-
-            fetch(
-                "https://api.ipgeolocation.io/v2/ipgeo?apiKey="
-                + geolocation_api_key,
-                requestOptions)
-                .then(response => response.text())
-                .then(result => {
-                    console.log(result);
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-        }
-
-        function recordVisit() {
-            const path =
-                window.location.href.replace(
-                    window.location.origin,
-                    "");
-
-            const myHeaders = new Headers();
-
-            const requestOptions = {
-                method: "GET",
-                headers: myHeaders,
-                redirect: "follow"
-            };
-
-            fetch(
-                "https://api.ipgeolocation.io/v2/ipgeo?apiKey="
-                + geolocation_api_key,
-                requestOptions)
-                .then(response => response.text())
-                .then(result => {
-                    const geolocation = result;
-
-                    const data = {
-                        path: path,
-                        pathType: "post",
-                        pathParam: "@Model.Id",
-                        geolocation: JSON.parse(geolocation)
-                    };
-
-                    return fetch("/api/submitVisitRecord", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify(data)
-                    });
-                })
-                .then(response => {
-                    console.log(
-                        "✅ visit recorded:",
-                        response);
-                })
-                .catch(error => {
-                    console.error(
-                        "❌ Visit record failed:",
-                        error);
-                });
-        }
-
-        recordVisit();
-    </script>
-}
+</div>

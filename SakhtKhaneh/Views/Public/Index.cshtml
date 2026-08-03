@@ -1,30 +1,92 @@
-﻿@using SakhtKhaneh.Models.Template.ViewModels
-@model HomeDataViewModel;
-
+@model HomeDataViewModel
+@inject IConfiguration Configuration
 @{
-    ViewData["Title"] = "صفحه اصلی";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "معماری، طراحی داخلی و اجرای ساختمان";
+    ViewData["MetaDescription"] = "ساخت خانه؛ ارائه خدمات تخصصی معماری، طراحی داخلی، بازسازی، اجرای پروژه‌های ساختمانی و انتشار مطالب فنی حوزه ساخت‌وساز.";
+    ViewData["CanonicalUrl"] = (Configuration["Site:BaseUrl"] ?? $"{Context.Request.Scheme}://{Context.Request.Host}").TrimEnd('/');
+    ViewData["VisitType"] = "static";
+    ViewData["VisitParam"] = "home";
+
+    string PlainText(string? html, int maxLength = 150)
+    {
+        var value = System.Net.WebUtility.HtmlDecode(
+            System.Text.RegularExpressions.Regex.Replace(html ?? string.Empty, "<.*?>", string.Empty));
+        value = System.Text.RegularExpressions.Regex.Replace(value, @"\s+", " ").Trim();
+        return value.Length <= maxLength ? value : $"{value[..(maxLength - 3)].TrimEnd()}...";
+    }
+
+    string OptimizedAboutImage(string? imageUrl)
+    {
+        var normalized = WebAssetUrl.Normalize(imageUrl, "/assets/img/about-960.webp");
+        return normalized.EndsWith("/uploads/about-logo.png", StringComparison.OrdinalIgnoreCase)
+            ? "/assets/img/about-960.webp"
+            : normalized;
+    }
+}
+@section Preloads {
+    @if (Model.Slider.Count > 0)
+    {
+        <link rel="preload" as="image" href="@WebAssetUrl.Normalize(Model.Slider[0].ImageUrl)" fetchpriority="high" />
+    }
+    else
+    {
+        <link rel="preload" as="image" href="/assets/img/banner-1600.webp" fetchpriority="high" />
+    }
 }
 
-<!-- Slider -->
-@if(Model.Slider != null && Model.Slider.Count > 0)
-{
-    <header class="header slider-fade">
+<header id="home-hero" class="header slider-fade sk-home-hero" data-home-hero data-sk-scroll-section data-scroll-label="شروع">
+    <div class="sk-home-hero__grid" aria-hidden="true"></div>
+
+    @if (Model.Slider.Count > 0)
+    {
         <div class="owl-carousel owl-theme" dir="ltr">
-            <!-- The opacity on the image is made with "data-overlay-dark="number". You can change it using the numbers 0-9. -->
-            @foreach (var item in Model.Slider)
+            @for (var i = 0; i < Model.Slider.Count; i++)
             {
-                <div class="text-start item bg-img" data-overlay-dark="3" data-background="@item.ImageUrl">
-                    <div class="v-middle caption mt-30">
+                var item = Model.Slider[i];
+                var normalizedSliderImage = WebAssetUrl.Normalize(item.ImageUrl);
+                var lazyBackground = i == 0 ? "false" : "true";
+                var initialBackgroundStyle = i == 0 ? $"background-image:url('{normalizedSliderImage}')" : null;
+                <div class="text-start item bg-img"
+                     data-overlay-dark="3"
+                     data-background="@normalizedSliderImage"
+                     data-background-lazy="@lazyBackground"
+                     style="@initialBackgroundStyle">
+                    <div class="v-middle caption">
                         <div class="container" dir="rtl">
-                            <div class="row justify-content-start" dir="rtl">
-                                <div class="col-lg-7 col-md-12" dir="rtl">
-                                    <h1 class="text-right">ساخت خانه</h1>
-                                    <p class="text-right">
-                                        برای مشاهده پروژه ها
-                                        <br>روی دکمه زیر کلیک کنید.
-                                    </p>
-                                    <div class="butn-light mt-30 mb-30 float-right"> <a href="/Projects" target="_blank"><span>فهرست پروژه ها</span></a> </div>
+                            <div class="row justify-content-start">
+                                <div class="col-xl-8 col-lg-9 col-md-11">
+                                    <div class="sk-home-hero__content">
+                                        <p class="sk-home-hero__eyebrow">طراحی و اجرای حرفه‌ای ساختمان</p>
+
+                                        @if (i == 0)
+                                        {
+                                            <h1 class="sk-home-hero__title">فضاهایی که برای <span>زندگی</span> ساخته می‌شوند</h1>
+                                        }
+                                        else
+                                        {
+                                            <h2 class="sk-home-hero__title">از ایده تا اجرای <span>جزئیات ماندگار</span></h2>
+                                        }
+
+                                        <p class="sk-home-hero__description">
+                                            طراحی معماری، بازسازی و اجرای پروژه‌های مسکونی و تجاری با تمرکز بر کیفیت، هماهنگی جزئیات و نتیجه‌ای که در طول زمان ارزش خود را حفظ کند.
+                                        </p>
+
+                                        <div class="sk-home-hero__actions">
+                                            <a class="sk-button sk-button--primary" href="/Projects">
+                                                <span>مشاهده پروژه‌ها</span>
+                                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                            </a>
+                                            <a class="sk-button sk-button--outline" href="/Public/Contacts">
+                                                <span>شروع یک همکاری</span>
+                                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+                                        </div>
+
+                                        <div class="sk-home-hero__meta" aria-label="حوزه‌های فعالیت">
+                                            <span><i></i>معماری و طراحی داخلی</span>
+                                            <span><i></i>بازسازی و اجرا</span>
+                                            <span><i></i>مدیریت جزئیات پروژه</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -32,236 +94,269 @@
                 </div>
             }
         </div>
-    </header>
-}
+    }
+    else
+    {
+        <div class="item bg-img" data-background="/assets/img/banner-1600.webp" style="background-image:url('/assets/img/banner-1600.webp')">
+            <div class="v-middle caption">
+                <div class="container" dir="rtl">
+                    <div class="sk-home-hero__content">
+                        <p class="sk-home-hero__eyebrow">ساخت خانه</p>
+                        <h1 class="sk-home-hero__title">طراحی، بازسازی و اجرای <span>حرفه‌ای</span></h1>
+                        <p class="sk-home-hero__description">از شکل‌گیری ایده تا تحویل نهایی پروژه در کنار شما هستیم.</p>
+                        <a class="sk-button sk-button--primary" href="/Public/Contacts"><span>درخواست مشاوره</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 
-<!-- Content -->
+    <a class="sk-home-hero__scroll" href="#home-about" aria-label="رفتن به بخش بعدی">بیشتر ببینید</a>
+    <div class="sk-home-hero__progress" data-hero-progress aria-hidden="true"><span></span></div>
+</header>
+
 <div class="content-wrapper">
+    <section class="content-lines-wrapper" aria-hidden="true">
+        <div class="content-lines-inner"><div class="content-lines"></div></div>
+    </section>
 
-    <!-- Lines -->
-    <section class="content-lines-wrapper">
-        <div class="content-lines-inner">
-            <div class="content-lines"></div>
+    <section id="home-about" class="sk-section section-padding" data-sk-scroll-section data-scroll-label="درباره ما">
+        <div class="container">
+            @if (Model.AboutInfo is not null && !string.IsNullOrWhiteSpace(Model.AboutInfo.title))
+            {
+                <div class="sk-about-grid">
+                    <div class="sk-about-copy" data-sk-reveal="right">
+                        <p class="sk-section-heading__eyebrow">درباره مجموعه</p>
+                        <h2 class="sk-section-heading__title">ساخت خانه؛ از <span>تفکر طراحی</span> تا اجرای دقیق</h2>
+                        <p class="sk-about-copy__lead">@Model.AboutInfo.title</p>
+                        <div class="article-content sk-home-about-excerpt">@Html.Raw(HtmlExcerpt.FirstParagraphs(Model.AboutInfo.content, 2))</div>
+                        <a class="sk-section-heading__link mt-30" href="/Public/About">
+                            <span>بیشتر درباره ما</span>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </a>
+                    </div>
+
+                    <div class="sk-about-media" data-sk-reveal="left">
+                        <div class="sk-about-media__frame">
+                            <img src="@OptimizedAboutImage(Model.AboutInfo.imageUrl)"
+                                 alt="درباره مجموعه ساخت خانه"
+                                 width="960"
+                                 height="960"
+                                 loading="lazy"
+                                 decoding="async" />
+                        </div>
+                        <div class="sk-about-media__badge">@Model.AboutInfo.title</div>
+                    </div>
+                </div>
+            }
         </div>
     </section>
-    <!-- About -->
-    <section class="about section-padding">
+
+    <section id="home-projects" class="sk-section sk-section--surface projects section-padding" data-sk-scroll-section data-scroll-label="پروژه‌ها">
         <div class="container">
-            @if (Model.AboutInfo != null && Model.AboutInfo.title != "" && Model.AboutInfo.content != "")
+            <div class="sk-section-heading" data-sk-reveal="up">
+                <div class="sk-section-heading__copy">
+                    <p class="sk-section-heading__eyebrow">منتخب پروژه‌ها</p>
+                    <h2 class="sk-section-heading__title">نتیجه‌ای که در <span>جزئیات</span> دیده می‌شود</h2>
+                    <p class="sk-section-heading__description">بخشی از پروژه‌های طراحی، بازسازی و اجرای مجموعه ساخت خانه را مرور کنید.</p>
+                </div>
+                <a class="sk-section-heading__link" href="/Projects">
+                    <span>آرشیو پروژه‌ها</span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
+            </div>
+
+            @if (Model.Projects.Count > 0)
             {
-                <div class="row">
-                    <div class="col-lg-6 col-md-12 mb-30 animate-box" data-animate-effect="fadeInUp">
-                        <h2 class="section-title">درباره <span>ما</span></h2>
-                        <h6>
-                            @Model.AboutInfo.title
-                        </h6>
-                        @Html.Raw(Model.AboutInfo.content)
-                    </div>
-                    <div class="col-lg-6 col-md-12 animate-box" data-animate-effect="fadeInUp">
-                        <div class="about-img">
-                            <div class="img"> <img src="@Model.AboutInfo.imageUrl" class="img-fluid" alt=""> </div>
-                            <div class="about-img-2 about-buro">
-                                @Model.AboutInfo.title
+                <div class="owl-carousel owl-theme sk-project-carousel" dir="ltr">
+                    @foreach (var project in Model.Projects)
+                    {
+                        <article class="item sk-project-card" dir="rtl">
+                            <div class="position-re o-hidden">
+                                <span class="sk-project-status @ProjectPresentation.StatusCss(project.Status)">@ProjectPresentation.StatusTitle(project.Status)</span>
+                                <a href="/Projects/@project.Endpoint_Path" aria-label="مشاهده پروژه @project.Title">
+                                    <img src="@WebAssetUrl.Normalize(project.CoverImageUrl)"
+                                         alt="@(project.CoverImageAlt ?? project.Title)"
+                                         width="1200"
+                                         height="800"
+                                         loading="lazy"
+                                         decoding="async" />
+                                </a>
                             </div>
-                        </div>
-                    </div>
+                            <div class="con">
+                                <p class="sk-project-card__location">
+                                    @if (project.Category is not null)
+                                    {
+                                        <a href="/Projects/Category/@project.Category.Slug">@project.Category.Title</a><span aria-hidden="true"> · </span>
+                                    }
+                                    <a href="/Projects/@project.Endpoint_Path">@(string.IsNullOrWhiteSpace(project.Location) ? "پروژه ساخت خانه" : project.Location)</a>
+                                </p>
+                                <h3><a href="/Projects/@project.Endpoint_Path">@project.Title</a></h3>
+                                <a class="sk-project-card__arrow" href="/Projects/@project.Endpoint_Path" aria-label="مشاهده پروژه @project.Title">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </a>
+                            </div>
+                        </article>
+                    }
                 </div>
             }
             else
             {
-                <h3 class="text-muted text-center">اطلاعات درباره ما وارد نشده است</h3>
+                <div class="sk-empty-state"><h2>پروژه‌ای برای نمایش ثبت نشده است</h2></div>
             }
         </div>
     </section>
-    <!-- Projects -->
-    <section class="projects section-padding">
+
+    <section id="home-services" class="sk-section section-padding" data-sk-scroll-section data-scroll-label="خدمات">
         <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h2 class="section-title">پروژه های <span>ما</span></h2>
+            <div class="sk-section-heading" data-sk-reveal="up">
+                <div class="sk-section-heading__copy">
+                    <p class="sk-section-heading__eyebrow">خدمات ما</p>
+                    <h2 class="sk-section-heading__title">یک مسیر یکپارچه؛ از <span>تصمیم تا اجرا</span></h2>
+                    <p class="sk-section-heading__description">خدمات مجموعه با هدف کاهش دوباره‌کاری، کنترل بهتر کیفیت و حفظ یکپارچگی طراحی ارائه می‌شوند.</p>
                 </div>
+                <a class="sk-section-heading__link" href="/Services">
+                    <span>مشاهده همه خدمات</span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    @if (Model.Projects != null && Model.Projects.Count > 0)
-                    {
-                        <div class="owl-carousel owl-theme" dir="ltr">
-                            @foreach (var project in Model.Projects)
-                            {
-                                <div class="item" dir="rtl">
-                                    <div class="position-re o-hidden"> <img src="@project.CoverImageUrl" alt=""> </div>
-                                    <div class="con">
-                                        <h6><a href="/Projects/@project.Endpoint_Path">@project.Location</a></h6>
-                                        <h5><a href="/Projects/@project.Endpoint_Path">@project.Title</a></h5>
-                                        <div class="line"></div> <a href="/Public/Projects/@project.Id"><i class="ti-arrow-right"></i></a>
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    }
-                    else
-                    {
-                        <h3 class="text-muted text-center">هیچ پروژه ای درج نشده است</h3>
-                    }
-                </div>
-            </div>
-            <div class="row justify-content-center">
-                <div class="col-lg-2 col-md-3 col-sm-6">
-                    <div class="butn-light mt-30 mb-30 float-right w-100"> <a href="/Projects" target="_blank" class="w-100 text-center"><span>آرشیو پروژه ها</span></a> </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- Services -->
-    <section class="services section-padding">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h2 class="section-title">خدمات <span>ما</span></h2>
-                </div>
-            </div>
-            <div class="row">
-                @for(var i = 0; i < Model.Services.Count; i++)
+
+            <div class="sk-service-grid">
+                @for (var i = 0; i < Model.Services.Count; i++)
                 {
                     var service = Model.Services[i];
-
-                    <div class="col-md-4">
-                        <div class="item">
-                            <a href="#">
-                                <img src="@service.IconUrl" alt="">
-                                <h5>@service.Title</h5>
-                                <div class="line"></div>
-                                <p>@service.Description</p>
-                                <div class="numb">@(i+1)</div>
-                            </a>
+                    <article class="sk-service-card" data-sk-reveal="up" data-sk-delay-index="@i">
+                        <div class="sk-service-card__icon">
+                            <img src="@WebAssetUrl.Normalize(service.IconUrl)"
+                                 alt=""
+                                 width="128"
+                                 height="128"
+                                 loading="lazy"
+                                 decoding="async" />
                         </div>
-                    </div>
-
+                        <span class="sk-service-card__number">@((i + 1).ToString("00"))</span>
+                        <h3 class="sk-service-card__title">@service.Title</h3>
+                        <p class="sk-service-card__description">@PlainText(service.Description, 165)</p>
+                    </article>
                 }
-            </div>
-            <div class="row justify-content-center">
-                <div class="col-lg-2 col-md-3 col-sm-6">
-                    <div class="butn-light mt-30 mb-30 float-right w-100"> <a href="/Services" target="_blank" class="w-100 text-center"><span>خدمات ما</span></a> </div>
-                </div>
             </div>
         </div>
     </section>
-    <!-- Blog -->
-    <section class="bauen-blog section-padding">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h2 class="section-title">مطالب <span>ما</span></h2>
+
+    @if (Model.Journals.Count > 0)
+    {
+        <section id="home-journals" class="sk-section sk-section--surface section-padding" data-sk-scroll-section data-scroll-label="ژورنال‌ها">
+            <div class="container">
+                <div class="sk-section-heading" data-sk-reveal="up">
+                    <div class="sk-section-heading__copy">
+                        <p class="sk-section-heading__eyebrow">ژورنال تصویری</p>
+                        <h2 class="sk-section-heading__title">ایده‌ها، متریال‌ها و <span>جزئیات طراحی</span></h2>
+                        <p class="sk-section-heading__description">منتخبی از شیت‌های طراحی و ژورنال‌های تصویری مجموعه برای شناخت بهتر رویکرد پروژه‌ها.</p>
+                    </div>
+                    <a class="sk-section-heading__link" href="/Journals">
+                        <span>همه ژورنال‌ها</span>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </a>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="owl-carousel owl-theme" dir="ltr">
-                        @foreach(var post in Model.Posts)
-                        {
-                            <div class="item" dir="rtl">
-                                <div class="position-re o-hidden"> <img src="@post.ImageUrl" alt=""> </div>
-                                <div class="con">
-                                    <span class="category">
-                                        <a href="/Blog/@post.EndpointPath">@post.Category.Title </a> - @post.CreationDate.ToShortDateString() @post.CreationDate.ToShortTimeString()
-                                    </span>
-                                    <h5><a href="/Blog/@post.EndpointPath">@post.Title</a></h5>
+
+                <div class="sk-journal-grid">
+                    @for (var i = 0; i < Model.Journals.Count; i++)
+                    {
+                        var journal = Model.Journals[i];
+                        <article class="sk-content-card" data-sk-reveal="up" data-sk-delay-index="@i">
+                            <a class="sk-content-card__media" href="/Journals/@journal.EndpointPath">
+                                <img class="sk-content-card__image"
+                                     src="@WebAssetUrl.Normalize(journal.ImageUrl)"
+                                     alt="@(string.IsNullOrWhiteSpace(journal.ImageAlt) ? journal.Title : journal.ImageAlt)"
+                                     width="1200"
+                                     height="900"
+                                     loading="lazy"
+                                     decoding="async" />
+                            </a>
+                            <div class="sk-content-card__body">
+                                <p class="sk-content-card__meta">ژورنال معماری</p>
+                                <h3 class="sk-content-card__title"><a href="/Journals/@journal.EndpointPath">@journal.Title</a></h3>
+                                <p class="sk-content-card__excerpt">@PlainText(journal.Description, i == 0 ? 220 : 125)</p>
+                                <div class="sk-content-card__footer">
+                                    <a class="sk-content-card__more" href="/Journals/@journal.EndpointPath">
+                                        <span>مشاهده ژورنال</span>
+                                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    </a>
+                                    <span class="sk-content-card__index">@((i + 1).ToString("00"))</span>
                                 </div>
                             </div>
-                        }
-                    </div>
+                        </article>
+                    }
                 </div>
             </div>
-            <div class="row justify-content-center">
-                <div class="col-lg-2 col-md-3 col-sm-6">
-                    <div class="butn-light mt-30 mb-30 float-right w-100"> <a href="/Blog" target="_blank" class="w-100 text-center"><span>آرشیو مطالب</span></a> </div>
+        </section>
+    }
+
+    <section id="home-blog" class="sk-section section-padding" data-sk-scroll-section data-scroll-label="مقالات">
+        <div class="container">
+            <div class="sk-section-heading" data-sk-reveal="up">
+                <div class="sk-section-heading__copy">
+                    <p class="sk-section-heading__eyebrow">دانش اجرایی</p>
+                    <h2 class="sk-section-heading__title">مطالبی برای تصمیم‌گیری <span>آگاهانه‌تر</span></h2>
+                    <p class="sk-section-heading__description">مقالات تخصصی درباره متریال، اجرا، طراحی داخلی و نکاتی که کیفیت پروژه را تغییر می‌دهند.</p>
+                </div>
+                <a class="sk-section-heading__link" href="/Blog">
+                    <span>آرشیو مقالات</span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
+            </div>
+
+            <div class="sk-card-grid">
+                @for (var i = 0; i < Model.Posts.Count; i++)
+                {
+                    var post = Model.Posts[i];
+                    <article class="sk-content-card" data-sk-reveal="up" data-sk-delay-index="@i">
+                        <a class="sk-content-card__media" href="/Blog/@post.EndpointPath">
+                            <img class="sk-content-card__image"
+                                 src="@WebAssetUrl.Normalize(post.ImageUrl)"
+                                 alt="@(post.ImageAlt ?? post.Title)"
+                                 width="1200"
+                                 height="800"
+                                 loading="lazy"
+                                 decoding="async" />
+                        </a>
+                        <div class="sk-content-card__body">
+                            <p class="sk-content-card__meta">
+                                <a href="/Blog/Category/@post.Category.Slug">@post.Category.Title</a>
+                                <span aria-hidden="true">—</span>
+                                <time datetime="@post.CreationDate.ToString("yyyy-MM-dd")">@IranDateTime.ToPersianDate(post.CreationDate)</time>
+                            </p>
+                            <h3 class="sk-content-card__title"><a href="/Blog/@post.EndpointPath">@post.Title</a></h3>
+                            <p class="sk-content-card__excerpt">@PlainText(post.Description, 145)</p>
+                            <div class="sk-content-card__footer">
+                                <a class="sk-content-card__more" href="/Blog/@post.EndpointPath">
+                                    <span>مطالعه مقاله</span>
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </a>
+                                <span class="sk-content-card__index">@((i + 1).ToString("00"))</span>
+                            </div>
+                        </div>
+                    </article>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section id="home-contact" class="sk-section section-padding pt-0" data-sk-scroll-section data-scroll-label="شروع همکاری">
+        <div class="container">
+            <div class="sk-cta-band" data-sk-reveal="scale">
+                <div class="sk-cta-band__inner">
+                    <div class="sk-cta-band__copy">
+                        <p class="sk-section-heading__eyebrow">شروع یک پروژه</p>
+                        <h2>برای تبدیل ایده به یک فضای قابل اجرا آماده‌اید؟</h2>
+                        <p>شرح کوتاهی از پروژه، نیازها و زمان‌بندی خود برای ما ارسال کنید تا مسیر مناسب همکاری را بررسی کنیم.</p>
+                    </div>
+                    <a class="sk-button sk-button--primary" href="/Public/Contacts">
+                        <span>درخواست مشاوره</span>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </a>
                 </div>
             </div>
         </div>
     </section>
 </div>
-
-
-@section Scripts {
-    <script src="/assets/js/modernizr-2.6.2.min.js"></script>
-    <script src="/assets/js/imagesloaded.pkgd.min.js"></script>
-    <script src="/assets/js/jquery.isotope.v3.0.2.js"></script>
-    <script src="/assets/js/popper.min.js"></script>
-    <script src="/assets/js/bootstrap.min.js"></script>
-    <script src="/assets/js/scrollIt.min.js"></script>
-    <script src="/assets/js/jquery.waypoints.min.js"></script>
-    <script src="/assets/js/owl.carousel.min.js"></script>
-    <script src="/assets/js/jquery.stellar.min.js"></script>
-    <script src="/assets/js/jquery.magnific-popup.js"></script>
-    <script src="/assets/js/YouTubePopUp.js"></script>
-    <script src="/assets/js/before-after.js"></script>
-    <script src="/assets/js/vegas.slider.min.js"></script>
-    <script src="/assets/js/home.js"></script>
-
-    <script>
-        const geolocation_api_key = '97c62498a168489898a05d474162b7ab';
-
-        function geolocate() {
-        const myHeaders = new Headers();
-
-
-        const requestOptions = {
-            method: "GET",
-            headers: myHeaders,
-            redirect: "follow"
-        };
-
-        fetch("https://api.ipgeolocation.io/v2/ipgeo?apiKey=" + geolocation_api_key + "", requestOptions)
-            .then((response) => response.text())
-            .then((result) => {
-                console.log(result)
-            })
-            .catch((error) => console.error(error));
-        }
-
-        function recordVisit() {
-            var path = window.location.href.replace(window.location.origin, '');
-            const myHeaders = new Headers();
-
-
-            const requestOptions = {
-                method: "GET",
-                headers: myHeaders,
-                redirect: "follow"
-            };
-
-            fetch("https://api.ipgeolocation.io/v2/ipgeo?apiKey=" + geolocation_api_key + "", requestOptions)
-                .then((response) => response.text())
-                .then((result) => {
-                    var geolocation = result;
-                    var data = {
-                        path: path,
-                        pathType: 'static',
-                        pathParam: 'index',
-                        geolocation: JSON.parse(geolocation)
-                    }
-                    var stringified = JSON.stringify(data);
-
-                    fetch('/api/submitVisitRecord', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: stringified
-                    })
-                        .then(async res => {
-                            const result = res;
-                            console.log("✅ visit recorded:", result);
-                        })
-                        .catch(err => {
-                            console.error("❌ Visit record failed:", err);
-                        });
-
-                })
-                .catch((error) => console.error(error));
-        }
-
-        recordVisit();
-    </script>
-
-}

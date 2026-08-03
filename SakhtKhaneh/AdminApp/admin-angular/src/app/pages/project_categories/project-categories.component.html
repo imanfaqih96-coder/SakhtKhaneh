@@ -1,0 +1,45 @@
+<div class="container py-4 admin-page taxonomy-page">
+  <div class="taxonomy-heading">
+    <div><h1>دسته‌بندی پروژه‌ها</h1><p>ساختار درختی منوی پروژه‌ها و دسته‌بندی قابل‌انتساب به هر پروژه را مدیریت کنید.</p></div>
+    <button mat-flat-button color="primary" type="button" (click)="create()"><mat-icon>add</mat-icon> دسته اصلی جدید</button>
+  </div>
+
+  <mat-card class="taxonomy-card">
+    <div class="taxonomy-toolbar">
+      <mat-form-field appearance="outline">
+        <mat-label>جستجو در عنوان یا مسیر</mat-label>
+        <input matInput [(ngModel)]="searchTerm" (input)="applyFilter()" />
+        <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
+      <div class="taxonomy-summary"><strong>{{ flat.length }}</strong><span>دسته‌بندی</span></div>
+    </div>
+
+    <div class="taxonomy-loading" *ngIf="loading"><mat-spinner diameter="44"></mat-spinner></div>
+
+    <div class="taxonomy-tree" *ngIf="!loading && filtered.length">
+      <article class="taxonomy-row" *ngFor="let item of filtered" [style.--tree-depth]="item.depth">
+        <div class="taxonomy-row__branch"><span></span></div>
+        <div class="taxonomy-row__content">
+          <div class="taxonomy-row__identity">
+            <span class="taxonomy-row__icon"><mat-icon>{{ item.children.length ? 'account_tree' : 'folder' }}</mat-icon></span>
+            <div><strong>{{ item.title }}</strong><code dir="ltr">/Projects/Category/{{ item.slug }}</code></div>
+          </div>
+          <div class="taxonomy-row__meta">
+            <mat-chip [class.is-hidden]="!item.isVisible">{{ item.isVisible ? 'نمایش در سایت' : 'مخفی' }}</mat-chip>
+            <span>{{ item.projectCount }} پروژه</span><span>ترتیب {{ item.sortOrder }}</span>
+          </div>
+          <div class="taxonomy-row__actions">
+            <button mat-icon-button type="button" (click)="create(item)" matTooltip="افزودن زیرشاخه"><mat-icon>add</mat-icon></button>
+            <button mat-icon-button color="primary" type="button" (click)="edit(item)" matTooltip="ویرایش"><mat-icon>edit</mat-icon></button>
+            <button mat-icon-button color="warn" type="button" (click)="delete(item)" matTooltip="حذف"><mat-icon>delete</mat-icon></button>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="taxonomy-empty" *ngIf="!loading && !filtered.length">
+      <mat-icon>account_tree</mat-icon><h2>{{ searchTerm ? 'نتیجه‌ای پیدا نشد' : 'هنوز دسته‌بندی پروژه‌ای ثبت نشده است' }}</h2>
+      <button *ngIf="!searchTerm" mat-stroked-button type="button" (click)="create()">ساخت اولین دسته‌بندی</button>
+    </div>
+  </mat-card>
+</div>

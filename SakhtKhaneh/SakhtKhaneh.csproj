@@ -1,44 +1,59 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
+<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>SakhtKhaneh-Production-Secrets</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="AdminApp\admin-app\src\app\pages\profile\profile.css" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.0">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.9.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.0-rc.1.25458.5" />
     <PackageReference Include="PersianDateTime.Core" Version="2.0.5" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="AdminApp\admin-app\src\app\guards\" />
-    <Folder Include="AdminApp\admin-app\src\app\pages\components\logout\" />
-    <Folder Include="AdminApp\admin-app\src\app\pages\components\message\" />
-    <Folder Include="AdminApp\admin-app\src\environments\" />
-    <Folder Include="AdminApp\admin-app\src\app\services\" />
     <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\assets\img\logo-circular.png" />
+    <!-- Production data and user uploads must never be overwritten by publish output. -->
+    <Content Remove="app.db;app.db-shm;app.db-wal" />
+    <None Remove="app.db;app.db-shm;app.db-wal" />
+    <Content Update="wwwroot\uploads\**\*" CopyToPublishDirectory="Never" />
+    <None Include="app.db;app.db-shm;app.db-wal"
+          CopyToOutputDirectory="Never"
+          CopyToPublishDirectory="Never"
+          Visible="false" />
   </ItemGroup>
-  
+
+  <PropertyGroup>
+    <AdminAppRoot>$(MSBuildProjectDirectory)\AdminApp\admin-angular</AdminAppRoot>
+    <BuildAdminOnPublish Condition="'$(BuildAdminOnPublish)' == ''">true</BuildAdminOnPublish>
+  </PropertyGroup>
+
+
+  <Target Name="BuildPublicAssets"
+          BeforeTargets="ComputeFilesToPublish"
+          Condition="'$(OS)' == 'Windows_NT' and Exists('$(MSBuildProjectDirectory)\Build-Public-Assets.ps1')">
+    <Message Importance="high" Text="Building optimized public CSS..." />
+    
+  </Target>
+
+  <Target Name="BuildAngularAdmin"
+          BeforeTargets="ComputeFilesToPublish"
+          Condition="'$(BuildAdminOnPublish)' == 'true' and '$(OS)' == 'Windows_NT' and Exists('$(MSBuildProjectDirectory)\Build-Admin.ps1')">
+    <Message Importance="high" Text="Building Angular admin panel through the verified build script..." />
+    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildProjectDirectory)\Build-Admin.ps1&quot;" />
+  </Target>
 
 </Project>

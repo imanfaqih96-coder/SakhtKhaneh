@@ -1,0 +1,238 @@
+<div class="container py-4 admin-page project-editor-page">
+  <div class="editor-heading">
+    <div>
+      <span class="eyebrow">مدیریت پروژه‌ها</span>
+      <h1>ایجاد پروژه جدید</h1>
+      <p>اطلاعات، وضعیت، محتوای پروژه و تصاویر آن را در یک فرم یکپارچه ثبت کنید.</p>
+    </div>
+    <a mat-stroked-button routerLink="/projects/all">
+      <mat-icon>arrow_forward</mat-icon>
+      بازگشت به پروژه‌ها
+    </a>
+  </div>
+
+  <mat-card class="editor-card">
+    <form #projectForm="ngForm" (ngSubmit)="submitProject()">
+      <section class="editor-section">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">اطلاعات پایه</span>
+            <h2>مشخصات پروژه</h2>
+          </div>
+          <span class="section-index">01</span>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-lg-7">
+            <mat-form-field appearance="outline">
+              <mat-label>عنوان پروژه</mat-label>
+              <input matInput [(ngModel)]="title" name="title" required maxlength="180">
+              <mat-icon matPrefix>title</mat-icon>
+            </mat-form-field>
+          </div>
+          <div class="col-lg-5">
+            <mat-form-field appearance="outline">
+              <mat-label>مسیر انگلیسی</mat-label>
+              <input matInput dir="ltr" [(ngModel)]="endpoint_Path" name="endpoint" required placeholder="modern-villa-project">
+              <mat-icon matPrefix>route</mat-icon>
+            </mat-form-field>
+          </div>
+          <div class="col-lg-6">
+            <mat-form-field appearance="outline">
+              <mat-label>دسته‌بندی پروژه</mat-label>
+              <mat-select [(ngModel)]="categoryId" name="categoryId">
+                <mat-option [value]="null">بدون دسته‌بندی — موقت</mat-option>
+                <mat-option *ngFor="let category of categories" [value]="category.id">{{ categoryLabel(category) }}</mat-option>
+              </mat-select>
+              <mat-icon matPrefix>account_tree</mat-icon>
+              <mat-hint>فعلاً اختیاری است و پروژه‌های قدیمی بدون دسته باقی می‌مانند.</mat-hint>
+            </mat-form-field>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <mat-form-field appearance="outline">
+              <mat-label>وضعیت پروژه</mat-label>
+              <mat-select [(ngModel)]="status" name="status" required>
+                <mat-option *ngFor="let option of statusOptions" [value]="option.value">{{ option.title }}</mat-option>
+              </mat-select>
+              <mat-icon matPrefix>construction</mat-icon>
+            </mat-form-field>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <mat-form-field appearance="outline">
+              <mat-label>تاریخ پروژه (شمسی)</mat-label>
+              <input matInput [(ngModel)]="time" name="time" inputmode="numeric" placeholder="۱۴۰۵/۰۵/۱۲">
+              <mat-icon matPrefix>calendar_month</mat-icon>
+            </mat-form-field>
+          </div>
+          <div class="col-12">
+            <mat-form-field appearance="outline">
+              <mat-label>توضیح کوتاه پروژه</mat-label>
+              <textarea matInput [(ngModel)]="description" name="description" required rows="3" maxlength="420"></textarea>
+              <mat-icon matPrefix>short_text</mat-icon>
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field appearance="outline">
+              <mat-label>کارفرما</mat-label>
+              <input matInput [(ngModel)]="owner" name="owner" maxlength="180">
+              <mat-icon matPrefix>account_circle</mat-icon>
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field appearance="outline">
+              <mat-label>موقعیت مکانی</mat-label>
+              <input matInput [(ngModel)]="location" name="location" maxlength="220">
+              <mat-icon matPrefix>location_on</mat-icon>
+            </mat-form-field>
+          </div>
+        </div>
+      </section>
+
+      <section class="editor-section">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">نمایش در گوگل</span>
+            <h2>تنظیمات سئو</h2>
+          </div>
+          <span class="section-index">02</span>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <mat-form-field appearance="outline">
+              <mat-label>عنوان سئو پروژه</mat-label>
+              <input matInput [(ngModel)]="seoTitle" name="seoTitle" maxlength="70" [placeholder]="title">
+              <mat-icon matPrefix>travel_explore</mat-icon>
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field appearance="outline">
+              <mat-label>متن جایگزین تصویر کاور</mat-label>
+              <input matInput [(ngModel)]="coverImageAlt" name="coverImageAlt" maxlength="220" [placeholder]="title">
+              <mat-icon matPrefix>image_search</mat-icon>
+            </mat-form-field>
+          </div>
+          <div class="col-12">
+            <mat-form-field appearance="outline">
+              <mat-label>توضیحات متای پروژه</mat-label>
+              <textarea matInput [(ngModel)]="metaDescription" name="metaDescription" rows="3" maxlength="180" [placeholder]="description"></textarea>
+              <mat-icon matPrefix>description</mat-icon>
+              <mat-hint align="end">{{ metaDescription.length }}/180</mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+      </section>
+
+      <section class="media-manager">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">رسانه پروژه</span>
+            <h2>کاور و گالری تصاویر</h2>
+            <p>آپلود هر تصویر باید پیش از ذخیره پروژه کامل شده باشد.</p>
+          </div>
+          <span class="section-index">03</span>
+        </div>
+
+        <div class="media-workspace">
+          <div class="cover-manager">
+            <div class="media-title">
+              <div>
+                <strong>تصویر کاور</strong>
+                <span>تصویر اصلی کارت و صفحه پروژه</span>
+              </div>
+              <span class="upload-state" [attr.data-state]="coverState">
+                {{ coverState === 'uploaded' ? 'آماده' : coverState === 'uploading' ? 'در حال آپلود' : coverState === 'error' ? 'خطا' : 'انتخاب نشده' }}
+              </span>
+            </div>
+
+            <input #coverInput type="file" hidden accept="image/jpeg,image/png,image/webp" (change)="onCoverSelect($event, coverInput)">
+            <button type="button" class="cover-dropzone" (click)="coverInput.click()" (drop)="onCoverDrop($event)" (dragover)="onDragOver($event)">
+              <img *ngIf="coverPreview || coverUrl" [src]="coverPreview || coverUrl || ''" [alt]="coverImageAlt || title">
+              <ng-container *ngIf="!coverPreview && !coverUrl">
+                <mat-icon>add_photo_alternate</mat-icon>
+                <strong>انتخاب تصویر کاور</strong>
+                <span>JPEG، PNG یا WebP</span>
+              </ng-container>
+              <span *ngIf="coverPreview || coverUrl" class="replace-cover"><mat-icon>edit</mat-icon> تغییر تصویر</span>
+            </button>
+            <mat-progress-bar *ngIf="coverState === 'uploading'" mode="determinate" [value]="coverProgress"></mat-progress-bar>
+            <div class="media-actions">
+              <button mat-stroked-button type="button" (click)="coverInput.click()"><mat-icon>image</mat-icon> انتخاب</button>
+              <button mat-stroked-button type="button" class="danger-button" (click)="removeCover()" [disabled]="coverState === 'uploading'"><mat-icon>delete_outline</mat-icon> حذف</button>
+              <button mat-stroked-button type="button" *ngIf="coverState === 'error'" (click)="retryCoverUpload()"><mat-icon>refresh</mat-icon> تلاش مجدد</button>
+              <button mat-stroked-button type="button" *ngIf="coverState === 'uploading'" (click)="cancelCoverUpload()"><mat-icon>close</mat-icon> لغو</button>
+            </div>
+          </div>
+
+          <div class="gallery-manager">
+            <div class="media-title">
+              <div>
+                <strong>گالری پروژه</strong>
+                <span>{{ gallery.length ? gallery.length + ' تصویر' : 'هنوز تصویری اضافه نشده است' }}</span>
+              </div>
+              <div>
+                <input #galleryInput type="file" hidden accept="image/jpeg,image/png,image/webp" multiple (change)="onGallerySelect($event)">
+                <button mat-flat-button type="button" class="upload-button" (click)="galleryInput.click()">
+                  <mat-icon>collections</mat-icon>
+                  افزودن تصاویر
+                </button>
+              </div>
+            </div>
+
+            <button *ngIf="!gallery.length" type="button" class="empty-gallery" (click)="galleryInput.click()" (drop)="onGalleryDrop($event)" (dragover)="onDragOver($event)">
+              <mat-icon>photo_library</mat-icon>
+              <strong>گالری پروژه خالی است</strong>
+              <span>چند تصویر را هم‌زمان انتخاب یا در این بخش رها کنید.</span>
+            </button>
+
+            <div *ngIf="gallery.length" class="gallery-grid" (drop)="onGalleryDrop($event)" (dragover)="onDragOver($event)">
+              <article class="gallery-item" *ngFor="let item of gallery; let i = index" [attr.data-state]="item.state">
+                <img [src]="item.src" [alt]="title + ' - تصویر ' + (i + 1)">
+                <div class="gallery-item__meta">
+                  <strong>تصویر {{ i + 1 }}</strong>
+                  <span *ngIf="item.state === 'uploading'">در حال آپلود {{ item.progress }}٪</span>
+                  <span *ngIf="item.state === 'uploaded'">آپلود کامل شد</span>
+                  <span *ngIf="item.state === 'error'">آپلود ناموفق بود</span>
+                </div>
+                <mat-progress-bar *ngIf="item.state === 'uploading'" mode="determinate" [value]="item.progress"></mat-progress-bar>
+                <div class="gallery-item__actions">
+                  <button mat-icon-button type="button" *ngIf="item.state === 'error'" (click)="retryGalleryUpload(i)" aria-label="تلاش مجدد"><mat-icon>refresh</mat-icon></button>
+                  <button mat-icon-button type="button" *ngIf="item.state === 'uploading'" (click)="cancelGalleryUpload(i)" aria-label="لغو آپلود"><mat-icon>close</mat-icon></button>
+                  <button mat-icon-button type="button" class="danger-button" (click)="removeGalleryImage(i)" aria-label="حذف تصویر"><mat-icon>delete_outline</mat-icon></button>
+                </div>
+              </article>
+            </div>
+
+            <button *ngIf="gallery.length" mat-button type="button" class="clear-gallery" (click)="resetGallery()">
+              <mat-icon>delete_sweep</mat-icon>
+              پاک‌کردن تمام گالری
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="editor-section content-section">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">شرح کامل</span>
+            <h2>محتوای پروژه</h2>
+          </div>
+          <span class="section-index">04</span>
+        </div>
+        <div class="editor-field">
+          <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"></ngx-editor-menu>
+          <ngx-editor [editor]="editor" [(ngModel)]="content" name="content" [placeholder]="'شرح کامل پروژه را بنویسید...'" required></ngx-editor>
+        </div>
+      </section>
+
+      <div class="form-actions">
+        <a mat-stroked-button routerLink="/projects/all">انصراف</a>
+        <button mat-flat-button type="submit" [disabled]="saving || projectForm.invalid || coverState === 'uploading' || hasPendingGalleryUploads()">
+          <mat-spinner *ngIf="saving" diameter="18"></mat-spinner>
+          <mat-icon *ngIf="!saving">save</mat-icon>
+          ذخیره پروژه
+        </button>
+      </div>
+    </form>
+  </mat-card>
+</div>

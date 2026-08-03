@@ -1,52 +1,89 @@
-﻿@using SakhtKhaneh.Models.Template.ViewModels;
+@model ContactDataViewModel
 
-@model ContactDataViewModel;
-
-<!-- Footer -->
 <footer class="main-footer dark">
+    <div class="sk-footer-accent" aria-hidden="true"></div>
     <div class="container">
-        <div class="row">
-            <div class="col-md-4 mb-30">
-                <div class="item fotcont">
-                    <div class="fothead">
-                        <h6>شماره تلفن</h6>
-                    </div>
-                    <p dir="ltr" class="text-right">@Model.Phone</p>
+        <div class="sk-footer-main sk-footer-main--v7">
+            <section class="sk-footer-brand" aria-label="درباره ساخت خانه" data-sk-reveal="up">
+                <div class="sk-footer-brand__head">
+                    <img src="/assets/img/logo_transparent_bg.png" alt="" width="300" height="300" loading="lazy" decoding="async" />
+                    <span><strong>ساخت خانه</strong><small>معماری، طراحی و اجرا</small></span>
                 </div>
-            </div>
-            <div class="col-md-4 mb-30">
-                <div class="item fotcont">
-                    <div class="fothead">
-                        <h6>آدرس ایمیل</h6>
+                <p>همراه شما در مسیر طراحی، بازسازی و اجرای فضاهای ماندگار؛ با رویکرد مهندسی، جزئیات دقیق و اجرای حرفه‌ای.</p>
+                @if (Model.SocialLinks.Count > 0)
+                {
+                    <div class="sk-footer-social sk-footer-social--brand" aria-label="شبکه‌های اجتماعی ساخت خانه">
+                        @foreach (var link in Model.SocialLinks)
+                        {
+                            <a href="@link.Url" target="_blank" rel="noopener noreferrer" aria-label="@link.Title" title="@link.Title">
+                                @await Html.PartialAsync("_SocialIconPartialView", link.Platform)
+                            </a>
+                        }
                     </div>
-                    <p>@Model.Email</p>
+                }
+            </section>
+
+            <nav class="sk-footer-nav" aria-label="دسترسی سریع" data-sk-reveal="up" data-sk-delay-index="1">
+                <h2 class="sk-footer-title">دسترسی سریع</h2>
+                <div class="sk-footer-links">
+                    <a href="/Projects">همه پروژه‌ها</a>
+                    <a href="/Blog">مقالات تخصصی</a>
+                    <a href="/Journals">ژورنال‌ها</a>
+                    <a href="/Services">خدمات ما</a>
+                    <a href="/Public/About">درباره مجموعه</a>
+                    <a href="/Public/Contacts">شروع همکاری</a>
                 </div>
-            </div>
-            <div class="col-md-4 mb-30">
-                <div class="item fotcont">
-                    <div class="fothead">
-                        <h6>نشانی</h6>
-                    </div>
-                    <p>@Model.Address</p>
+            </nav>
+
+            <nav class="sk-footer-nav" aria-label="دسته‌بندی پروژه‌ها" data-sk-reveal="up" data-sk-delay-index="2">
+                <h2 class="sk-footer-title">حوزه‌های پروژه</h2>
+                <div class="sk-footer-links">
+                    @if (Model.ProjectCategories.Count > 0)
+                    {
+                        @foreach (var category in Model.ProjectCategories.Take(7))
+                        {
+                            <a href="@category.Path">@category.Title</a>
+                        }
+                    }
+                    else
+                    {
+                        <a href="/Projects">مشاهده آرشیو پروژه‌ها</a>
+                    }
                 </div>
-            </div>
+            </nav>
+
+            <section class="sk-footer-contact-column" aria-label="اطلاعات تماس" data-sk-reveal="up" data-sk-delay-index="3">
+                <h2 class="sk-footer-title">ارتباط مستقیم</h2>
+                <div class="sk-footer-contact">
+                    @if (!string.IsNullOrWhiteSpace(Model.Phone))
+                    {
+                        <a href="tel:@Model.Phone.Replace(" ", string.Empty)" dir="ltr">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.4 3.7 10 7.9 8.3 9.5c1.1 2.1 2.8 3.8 4.9 4.9l1.6-1.7 4.2 2.6c.4.2.6.7.5 1.1l-.7 3c-.1.5-.6.9-1.1.9C10 20.3 3.7 14 3.7 6.3c0-.5.4-1 .9-1.1l3-.7c.4-.1.9.1 1.1.5Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <span>@Model.Phone</span>
+                        </a>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(Model.Email))
+                    {
+                        <a href="mailto:@Model.Email">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5h16v11H4v-11Zm.5.5 7.5 6 7.5-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+                            <span>@Model.Email</span>
+                        </a>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(Model.Address))
+                    {
+                        <p>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s6-5.4 6-11a6 6 0 1 0-12 0c0 5.6 6 11 6 11Zm0-8.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <span>@Model.Address</span>
+                        </p>
+                    }
+                </div>
+                <a class="sk-footer-contact-cta" href="/Public/Contacts"><span>درخواست مشاوره</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            </section>
         </div>
-    </div>
-    <div class="sub-footer">
-        <div class="container">
-            <div class="row">
-                
-                <div class="col-12 abot">
-                    <div class="social-icon">
-                        <a href="#"><i class="ti-instagram"></i></a>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="text-center">
-                        <p>©@DateTime.Now.Year تمامی حقوق مادی و معنوی محفوظ است.</p>
-                    </div>
-                </div>
-            </div>
+
+        <div class="sk-footer-bottom">
+            <p>©@IranDateTime.CurrentPersianYear() تمامی حقوق مادی و معنوی برای مجموعه ساخت خانه محفوظ است.</p>
+            <div class="sk-footer-bottom__links"><a href="/sitemap.xml">نقشه سایت</a><a href="/rss.xml">خوراک RSS</a></div>
         </div>
     </div>
 </footer>

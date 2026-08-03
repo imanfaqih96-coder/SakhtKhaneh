@@ -1,0 +1,62 @@
+@model ProjectCategoryPageViewModel
+@{
+    ViewData["Title"] = $"پروژه‌های {Model.Category.Title}";
+    ViewData["MetaDescription"] = $"مشاهده پروژه‌های دسته‌بندی {Model.Category.Title} در مجموعه ساخت خانه.";
+    ViewData["VisitType"] = "project-category";
+    ViewData["VisitParam"] = Model.Category.Id?.ToString() ?? Model.Category.Slug;
+}
+
+@await Html.PartialAsync("_PageHeroPartialView", new PageHeroViewModel
+{
+    Eyebrow = "دسته‌بندی پروژه‌ها",
+    Title = "پروژه‌های",
+    AccentTitle = Model.Category.Title,
+    Description = "پروژه‌های این حوزه و تمام زیرشاخه‌های آن را در یک نمای یکپارچه مرور کنید.",
+    CurrentPageTitle = Model.Category.Title,
+    ParentTitle = "پروژه‌ها",
+    ParentUrl = "/Projects"
+})
+
+<div class="content-wrapper">
+    <section class="content-lines-wrapper" aria-hidden="true"><div class="content-lines-inner"><div class="content-lines"></div></div></section>
+    <section class="sk-section projects section-padding">
+        <div class="container">
+            <div class="sk-section-heading" data-sk-reveal="up">
+                <div class="sk-section-heading__copy">
+                    <p class="sk-section-heading__eyebrow">@Model.Category.Title</p>
+                    <h2 class="sk-section-heading__title">پروژه‌های مرتبط با <span>@Model.Category.Title</span></h2>
+                    <p class="sk-section-heading__description">@IranDateTime.ToPersianDigits(Model.Projects.Count.ToString()) پروژه در این دسته‌بندی و زیرشاخه‌های آن قرار دارد.</p>
+                </div>
+                <a class="sk-section-heading__link" href="/Projects"><span>همه پروژه‌ها</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            </div>
+
+            @if (Model.Projects.Count > 0)
+            {
+                <div class="sk-card-grid sk-card-grid--two">
+                    @for (var i = 0; i < Model.Projects.Count; i++)
+                    {
+                        var project = Model.Projects[i];
+                        <article class="item sk-project-card" data-sk-reveal="up" data-sk-delay-index="@(i % 4)">
+                            <div class="position-re o-hidden">
+                                <span class="sk-project-status @ProjectPresentation.StatusCss(project.Status)">@ProjectPresentation.StatusTitle(project.Status)</span>
+                                <a href="/Projects/@project.Endpoint_Path"><img src="@WebAssetUrl.Normalize(project.CoverImageUrl)" alt="@(project.CoverImageAlt ?? project.Title)" width="1200" height="800" loading="lazy" decoding="async" /></a>
+                            </div>
+                            <div class="con">
+                                <p class="sk-project-card__location">
+                                    @if (project.Category is not null) { <a href="/Projects/Category/@project.Category.Slug">@project.Category.Title</a><span aria-hidden="true"> · </span> }
+                                    <a href="/Projects/@project.Endpoint_Path">@(string.IsNullOrWhiteSpace(project.Location) ? "پروژه ساخت خانه" : project.Location)</a>
+                                </p>
+                                <h2><a href="/Projects/@project.Endpoint_Path">@project.Title</a></h2>
+                                <a class="sk-project-card__arrow" href="/Projects/@project.Endpoint_Path" aria-label="مشاهده پروژه @project.Title"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+                            </div>
+                        </article>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="sk-empty-state"><h2>هنوز پروژه‌ای در این دسته ثبت نشده است</h2><a class="sk-button sk-button--outline" href="/Projects"><span>مشاهده همه پروژه‌ها</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+            }
+        </div>
+    </section>
+</div>

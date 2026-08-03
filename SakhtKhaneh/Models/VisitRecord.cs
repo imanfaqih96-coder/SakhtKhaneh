@@ -8,7 +8,7 @@ namespace SakhtKhaneh.Models
         public string path { get; set; }
         public string pathType { get; set; }
         public string? pathParam { get; set; }
-        public Geo geolocation { get; set; }
+        public Geo? geolocation { get; set; }
     }
 
     public class Visit

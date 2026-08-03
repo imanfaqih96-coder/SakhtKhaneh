@@ -1,132 +1,74 @@
-﻿@{
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewData["Title"] = "خدمات ما";
+@model List<SakhtKhaneh.Models.Services.Service>
+@{
+    ViewData["Title"] = "خدمات معماری و اجرایی";
+    ViewData["MetaDescription"] = "خدمات تخصصی ساخت خانه در زمینه معماری، طراحی داخلی، بازسازی و اجرای پروژه‌های ساختمانی.";
+    ViewData["VisitType"] = "static";
+    ViewData["VisitParam"] = "services";
+
+    string PlainText(string? html)
+    {
+        var value = System.Net.WebUtility.HtmlDecode(System.Text.RegularExpressions.Regex.Replace(html ?? string.Empty, "<.*?>", string.Empty));
+        return System.Text.RegularExpressions.Regex.Replace(value, @"\s+", " ").Trim();
+    }
 }
 
-@model List<SakhtKhaneh.Models.Services.Service>?
+@await Html.PartialAsync("_PageHeroPartialView", new PageHeroViewModel
+{
+    Eyebrow = "خدمات تخصصی",
+    Title = "از ایده تا اجرای",
+    AccentTitle = "هماهنگ و دقیق",
+    Description = "خدمات ساخت خانه با رویکرد یکپارچه ارائه می‌شوند تا طراحی، تصمیم‌های فنی و اجرای پروژه در یک مسیر هماهنگ قرار بگیرند.",
+    CurrentPageTitle = "خدمات"
+})
 
-<!-- Content -->
 <div class="content-wrapper">
-
-    <!-- Lines -->
-    <section class="content-lines-wrapper">
-        <div class="content-lines-inner">
-            <div class="content-lines"></div>
-        </div>
-    </section>
-    <!-- Header Banner -->
-    <section class="banner-header banner-img valign bg-img bg-fixed" data-overlay-darkgray="5" data-background="/assets/img/banner.jpg"> </section>
-
-    <!-- Services -->
-    <section class="services section-padding">
+    <section class="content-lines-wrapper" aria-hidden="true"><div class="content-lines-inner"><div class="content-lines"></div></div></section>
+    <section class="sk-section section-padding">
         <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h2 class="section-title">خدمات <span>ما</span></h2>
+            <div class="sk-section-heading" data-sk-reveal="up">
+                <div class="sk-section-heading__copy">
+                    <p class="sk-section-heading__eyebrow">حوزه‌های فعالیت</p>
+                    <h2 class="sk-section-heading__title">خدماتی برای یک مسیر <span>کامل‌تر</span></h2>
+                    <p class="sk-section-heading__description">هر خدمت با توجه به نیاز واقعی پروژه تعریف می‌شود و می‌تواند به‌صورت مستقل یا در قالب همکاری کامل اجرا شود.</p>
                 </div>
             </div>
-            <div class="row">
-                @for (var i = 0; i < Model.Count; i++)
-                {
-                    var service = Model[i];
 
-                    <div class="col-md-4">
-                        <div class="item">
-                            <a href="#">
-                                <img src="@service.IconUrl" alt="">
-                                <h5>@service.Title</h5>
-                                <div class="line"></div>
-                                <p>@service.Description</p>
-                                <div class="numb">@(i + 1)</div>
-                            </a>
-                        </div>
-                    </div>
-
-                }
-            </div>
+            @if (Model.Count > 0)
+            {
+                <div class="sk-service-grid">
+                    @for (var i = 0; i < Model.Count; i++)
+                    {
+                        var service = Model[i];
+                        <article class="sk-service-card" data-sk-reveal="up" data-sk-delay-index="@i">
+                            <div class="sk-service-card__icon">
+                                <img src="@WebAssetUrl.Normalize(service.IconUrl)" alt="" width="128" height="128" loading="lazy" decoding="async" />
+                            </div>
+                            <span class="sk-service-card__number">@((i + 1).ToString("00"))</span>
+                            <h2 class="sk-service-card__title">@service.Title</h2>
+                            <p class="sk-service-card__description">@PlainText(service.Description)</p>
+                        </article>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="sk-empty-state"><h2>خدمتی برای نمایش ثبت نشده است</h2></div>
+            }
         </div>
     </section>
 
+    <section class="sk-section section-padding pt-0">
+        <div class="container">
+            <div class="sk-cta-band" data-sk-reveal="scale">
+                <div class="sk-cta-band__inner">
+                    <div class="sk-cta-band__copy">
+                        <p class="sk-section-heading__eyebrow">مشاوره پروژه</p>
+                        <h2>برای انتخاب مسیر مناسب پروژه نیاز به بررسی دارید؟</h2>
+                        <p>اطلاعات اولیه پروژه را برای ما ارسال کنید تا متناسب با شرایط فضا و هدف شما، بهترین مسیر همکاری مشخص شود.</p>
+                    </div>
+                    <a class="sk-button sk-button--primary" href="/Public/Contacts"><span>درخواست مشاوره</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+                </div>
+            </div>
+        </div>
+    </section>
 </div>
-
-@section Scripts{
-    <script src="/assets/js/modernizr-2.6.2.min.js"></script>
-    <script src="/assets/js/imagesloaded.pkgd.min.js"></script>
-    <script src="/assets/js/jquery.isotope.v3.0.2.js"></script>
-    <script src="/assets/js/popper.min.js"></script>
-    <script src="/assets/js/bootstrap.min.js"></script>
-    <script src="/assets/js/scrollIt.min.js"></script>
-    <script src="/assets/js/jquery.waypoints.min.js"></script>
-    <script src="/assets/js/owl.carousel.min.js"></script>
-    <script src="/assets/js/jquery.stellar.min.js"></script>
-    <script src="/assets/js/jquery.magnific-popup.js"></script>
-    <script src="/assets/js/YouTubePopUp.js"></script>
-    <script src="/assets/js/before-after.js"></script>
-    <script src="/assets/js/vegas.slider.min.js"></script>
-    <script src="/assets/js/home.js"></script>
-    <script>
-        const geolocation_api_key = '97c62498a168489898a05d474162b7ab';
-
-        function geolocate() {
-        const myHeaders = new Headers();
-
-
-        const requestOptions = {
-            method: "GET",
-            headers: myHeaders,
-            redirect: "follow"
-        };
-
-        fetch("https://api.ipgeolocation.io/v2/ipgeo?apiKey=" + geolocation_api_key + "", requestOptions)
-            .then((response) => response.text())
-            .then((result) => {
-                console.log(result)
-            })
-            .catch((error) => console.error(error));
-        }
-
-        function recordVisit() {
-            var path = window.location.href.replace(window.location.origin, '');
-            const myHeaders = new Headers();
-
-
-            const requestOptions = {
-                method: "GET",
-                headers: myHeaders,
-                redirect: "follow"
-            };
-
-            fetch("https://api.ipgeolocation.io/v2/ipgeo?apiKey=" + geolocation_api_key + "", requestOptions)
-                .then((response) => response.text())
-                .then((result) => {
-                    var geolocation = result;
-                    var data = {
-                        path: path,
-                        pathType: 'static',
-                        pathParam: 'services',
-                        geolocation: JSON.parse(geolocation)
-                    }
-                    var stringified = JSON.stringify(data);
-
-                    fetch('/api/submitVisitRecord', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: stringified
-                    })
-                        .then(async res => {
-                            const result = res;
-                            console.log("✅ visit recorded:", result);
-                        })
-                        .catch(err => {
-                            console.error("❌ Visit record failed:", err);
-                        });
-
-                })
-                .catch((error) => console.error(error));
-        }
-
-        recordVisit();
-    </script>
-}

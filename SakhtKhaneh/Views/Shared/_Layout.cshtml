@@ -1,211 +1,166 @@
-﻿@using SakhtKhaneh.Models.Template.ViewModels
+@using System.Text.Json
 @using SakhtKhaneh.Services
-
-@inject ITemplateDataManagementService templateDataManagementService
+@inject ITemplateDataManagementService TemplateDataManagementService
 @inject IConfiguration Configuration
 
 @{
-    var menu = await templateDataManagementService.GetMainMenuItems();
-    var contacts = await templateDataManagementService.GetContacts();
+    var menu = await TemplateDataManagementService.GetMainMenuItems();
+    var contacts = await TemplateDataManagementService.GetContacts();
 
-    var siteBaseUrl =
-        (Configuration["Site:BaseUrl"]
-         ?? $"{Context.Request.Scheme}://{Context.Request.Host}")
-        .TrimEnd('/');
-
+    var siteBaseUrl = (Configuration["Site:BaseUrl"] ?? $"{Context.Request.Scheme}://{Context.Request.Host}").TrimEnd('/');
+    var siteName = Configuration["Site:Name"] ?? "ساخت خانه";
     var pageTitle = ViewData["Title"]?.ToString();
+    var fullPageTitle = string.IsNullOrWhiteSpace(pageTitle) ? siteName : $"{pageTitle} - {siteName}";
+    var metaDescription = ViewData["MetaDescription"]?.ToString()
+        ?? "ساخت خانه؛ خدمات تخصصی معماری، طراحی داخلی، بازسازی و اجرای پروژه‌های ساختمانی.";
+    var canonicalUrl = ViewData["CanonicalUrl"]?.ToString()
+        ?? $"{siteBaseUrl}{Context.Request.PathBase}{Context.Request.Path}";
+    var robots = ViewData["Robots"]?.ToString() ?? "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1";
+    var author = ViewData["Author"]?.ToString() ?? siteName;
+    var openGraphType = ViewData["OpenGraphType"]?.ToString() ?? "website";
+    var openGraphImage = ViewData["OpenGraphImage"]?.ToString() ?? $"{siteBaseUrl}/assets/img/logo_transparent_bg.png";
+    var visitType = ViewData["VisitType"]?.ToString() ?? "static";
+    var visitParam = ViewData["VisitParam"]?.ToString() ?? Context.Request.Path.Value?.Trim('/').Replace('/', '-') ?? "home";
 
-    var fullPageTitle = string.IsNullOrWhiteSpace(pageTitle)
-        ? "ساخت خانه"
-        : $"{pageTitle} - ساخت خانه";
+    if (openGraphImage.StartsWith('/'))
+        openGraphImage = $"{siteBaseUrl}{openGraphImage}";
 
-    var metaDescription = ViewData["MetaDescription"]?.ToString();
-
-    if (string.IsNullOrWhiteSpace(metaDescription))
+    var organizationSchema = JsonSerializer.Serialize(new Dictionary<string, object?>
     {
-        metaDescription =
-            "ساخت خانه؛ ارائه خدمات معماری، طراحی داخلی، بازسازی و اجرای پروژه‌های ساختمانی.";
-    }
-
-    var canonicalUrl = ViewData["CanonicalUrl"]?.ToString();
-
-    if (string.IsNullOrWhiteSpace(canonicalUrl))
-    {
-        canonicalUrl =
-            $"{siteBaseUrl}{Context.Request.PathBase}{Context.Request.Path}";
-    }
-
-    var robots = ViewData["Robots"]?.ToString();
-
-    if (string.IsNullOrWhiteSpace(robots))
-    {
-        robots = "index,follow,max-image-preview:large";
-    }
-
-    var author = ViewData["Author"]?.ToString();
-
-    if (string.IsNullOrWhiteSpace(author))
-    {
-        author = "ساخت خانه";
-    }
-
-    var openGraphType = ViewData["OpenGraphType"]?.ToString();
-
-    if (string.IsNullOrWhiteSpace(openGraphType))
-    {
-        openGraphType = "website";
-    }
-
-    var openGraphImage = ViewData["OpenGraphImage"]?.ToString();
-
-    if (string.IsNullOrWhiteSpace(openGraphImage))
-    {
-        openGraphImage =
-            $"{siteBaseUrl}/assets/img/logo_transparent_bg.png";
-    }
+        ["@context"] = "https://schema.org",
+        ["@type"] = "Organization",
+        ["name"] = siteName,
+        ["url"] = siteBaseUrl,
+        ["logo"] = $"{siteBaseUrl}/assets/img/logo_transparent_bg.png",
+        ["contactPoint"] = new Dictionary<string, object?>
+        {
+            ["@type"] = "ContactPoint",
+            ["telephone"] = contacts.Phone,
+            ["contactType"] = "customer service",
+            ["availableLanguage"] = "Persian"
+        },
+        ["sameAs"] = contacts.SocialLinks.Select(link => link.Url).ToArray()
+    });
 }
-
 <!DOCTYPE html>
-
 <html dir="rtl" lang="fa">
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#263740" />
+    <meta name="color-scheme" content="dark" />
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1" />
+    <meta name="sakhtekhaneh-public-ui" content="2026.08.04.7.1" />
 
     <title>@fullPageTitle</title>
+    <meta name="description" content="@metaDescription" />
+    <meta name="author" content="@author" />
+    <meta name="robots" content="@robots" />
 
-    <meta name="description"
-          content="@metaDescription" />
+    <link rel="canonical" href="@canonicalUrl" />
+    <link rel="alternate" type="application/rss+xml" title="RSS ساخت خانه" href="@siteBaseUrl/rss.xml" />
+    <link rel="icon" href="/assets/img/favicon.png" type="image/png" />
 
-    <meta name="author"
-          content="@author" />
+    <meta property="og:locale" content="fa_IR" />
+    <meta property="og:site_name" content="@siteName" />
+    <meta property="og:type" content="@openGraphType" />
+    <meta property="og:title" content="@fullPageTitle" />
+    <meta property="og:description" content="@metaDescription" />
+    <meta property="og:url" content="@canonicalUrl" />
+    <meta property="og:image" content="@openGraphImage" />
+    <meta property="og:image:alt" content="@(pageTitle ?? siteName)" />
 
-    <meta name="robots"
-          content="@robots" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="@fullPageTitle" />
+    <meta name="twitter:description" content="@metaDescription" />
+    <meta name="twitter:image" content="@openGraphImage" />
 
-    <link rel="canonical"
-          href="@canonicalUrl" />
-
-    <link rel="shortcut icon"
-          href="/assets/img/favicon.png"
-          type="image/png" />
-
-    <!-- Open Graph -->
-    <meta property="og:locale"
-          content="fa_IR" />
-
-    <meta property="og:site_name"
-          content="ساخت خانه" />
-
-    <meta property="og:type"
-          content="@openGraphType" />
-
-    <meta property="og:title"
-          content="@fullPageTitle" />
-
-    <meta property="og:description"
-          content="@metaDescription" />
-
-    <meta property="og:url"
-          content="@canonicalUrl" />
-
-    <meta property="og:image"
-          content="@openGraphImage" />
-
-    <meta property="og:image:alt"
-          content="@pageTitle" />
-
-    <!-- Twitter / X -->
-    <meta name="twitter:card"
-          content="summary_large_image" />
-
-    <meta name="twitter:title"
-          content="@fullPageTitle" />
-
-    <meta name="twitter:description"
-          content="@metaDescription" />
-
-    <meta name="twitter:image"
-          content="@openGraphImage" />
-
+    <script type="application/ld+json">@Html.Raw(organizationSchema)</script>
     @await RenderSectionAsync("Seo", required: false)
+    @await RenderSectionAsync("Preloads", required: false)
 
-    <!-- Fonts -->
-    <link rel="preconnect"
-          href="https://fonts.googleapis.com/" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload"
+          as="style"
+          href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600&family=Vazirmatn:wght@300;400;500;600;700&display=swap"
+          onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600&family=Vazirmatn:wght@300;400;500;600;700&display=swap" />
+    </noscript>
 
-    <link rel="preconnect"
-          href="https://fonts.gstatic.com/"
-          crossorigin />
-
-    <link href="https://fonts.googleapis.com/css2?family=Didact+Gothic&family=Oswald:wght@200..700&display=swap"
-          rel="stylesheet" />
-
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap"
-          rel="stylesheet" />
-
-    <link rel="stylesheet"
-          href="/assets/css/plugins.css"
-          asp-append-version="true" />
-
-    <link rel="stylesheet"
-          href="/assets/css/style.css"
-          asp-append-version="true" />
-
+    <link rel="stylesheet" href="/assets/css/plugins/bootstrap.min.css" asp-append-version="true" />
+    @if (Context.Request.Path == "/")
+    {
+        <link rel="stylesheet" href="/assets/css/plugins/owl.carousel.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="/assets/css/plugins/owl.theme.default.min.css" asp-append-version="true" />
+    }
+    <link rel="stylesheet" href="/assets/css/site-public.min.css" asp-append-version="true" />
     @await RenderSectionAsync("Styles", required: false)
 </head>
+<body class="sk-site sk-ui-ready" data-visit-type="@visitType" data-visit-param="@visitParam">
+    <a class="skip-link" href="#main-content">رفتن به محتوای اصلی</a>
 
-<body>
-
-    <!--
-        برای جلوگیری از شکستن قالب فعلی، ترتیب بارگذاری این فایل‌ها
-        فعلاً مانند نسخه قبلی حفظ شده است.
-    -->
-
-    <script src="/assets/js/jquery-3.7.1.min.js"
-            asp-append-version="true"></script>
-
-    <script src="/assets/js/jquery-migrate-3.5.0.min.js"
-            asp-append-version="true"></script>
-
-    <script src="/assets/js/bootstrap.min.js"
-            asp-append-version="true"></script>
-
-    <!-- Preloader -->
-    <div class="preloader-bg"></div>
-
-    <div id="preloader">
-        <div id="preloader-status">
-            <div class="preloader-position loader">
-                <span></span>
-            </div>
-        </div>
+    <div class="sk-preloader" id="preloader" aria-hidden="true">
+        <div class="sk-preloader-v4__mark"><i></i><i></i><i></i></div>
+        <span>ساخت خانه</span>
     </div>
 
-    <!-- Progress scroll to top -->
-    <div class="progress-wrap cursor-pointer"
-         aria-hidden="true">
-
-        <svg class="progress-circle svg-content"
-             width="100%"
-             height="100%"
-             viewBox="-1 -1 102 102">
-
-            <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98">
-            </path>
-
+    <button class="progress-wrap cursor-pointer" type="button" aria-label="بازگشت به بالای صفحه">
+        <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102" aria-hidden="true">
+            <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"></path>
         </svg>
-    </div>
+    </button>
 
     @await Html.PartialAsync("_NavbarPartialView", menu)
 
-    @RenderBody()
+    <main id="main-content">
+        @RenderBody()
+    </main>
 
     @await Html.PartialAsync("_FooterPartialView", contacts)
 
-    @await RenderSectionAsync("Scripts", required: false)
+    <div class="sk-lightbox" data-gallery-lightbox data-allow-zoom hidden aria-hidden="true" role="dialog" aria-modal="true" aria-label="نمایش بزرگ تصاویر">
+        <div class="sk-lightbox__backdrop" data-lightbox-close></div>
+        <div class="sk-lightbox__dialog">
+            <header class="sk-lightbox__header">
+                <div>
+                    <strong data-lightbox-title>گالری تصاویر</strong>
+                    <span data-lightbox-counter></span>
+                </div>
+                <div class="sk-lightbox__tools">
+                    <button type="button" data-lightbox-zoom-out aria-label="کوچک‌نمایی">−</button>
+                    <button type="button" data-lightbox-reset aria-label="بازنشانی بزرگ‌نمایی">۱۰۰٪</button>
+                    <button type="button" data-lightbox-zoom-in aria-label="بزرگ‌نمایی">+</button>
+                    <button type="button" data-lightbox-close aria-label="بستن گالری">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+                    </button>
+                </div>
+            </header>
+            <div class="sk-lightbox__stage" data-lightbox-stage>
+                <button type="button" class="sk-lightbox__nav sk-lightbox__nav--prev" data-lightbox-prev aria-label="تصویر قبلی">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>
+                </button>
+                <div class="sk-lightbox__viewport" data-lightbox-viewport>
+                    <img data-lightbox-image alt="" draggable="false" />
+                </div>
+                <button type="button" class="sk-lightbox__nav sk-lightbox__nav--next" data-lightbox-next aria-label="تصویر بعدی">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+                </button>
+            </div>
+            <div class="sk-lightbox__thumbs" data-lightbox-thumbs aria-label="تصاویر گالری"></div>
+        </div>
+    </div>
 
+    <script src="/assets/js/jquery-3.7.1.min.js" asp-append-version="true" defer></script>
+    @if (Context.Request.Path == "/")
+    {
+        <script src="/assets/js/owl.carousel.min.js" asp-append-version="true" defer></script>
+    }
+    <script src="/assets/js/viewport-lock.js" asp-append-version="true" defer></script>
+    <script src="/assets/js/site-enhancements.js" asp-append-version="true" defer></script>
+    <script src="/assets/js/site-shell-v4.js" asp-append-version="true" defer></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -1,0 +1,89 @@
+<section class="admin-page projects-page">
+  <header class="admin-page-heading">
+    <div>
+      <span class="eyebrow">مدیریت محتوا</span>
+      <h1>پروژه‌ها</h1>
+      <p>وضعیت، دسته‌بندی و اطلاعات پروژه‌های سایت را مدیریت کنید.</p>
+    </div>
+    <a href="/admin/projects/new" mat-flat-button color="primary" class="admin-primary-action">
+      <mat-icon>add</mat-icon><span>پروژه جدید</span>
+    </a>
+  </header>
+
+  <mat-card class="admin-data-card">
+    <div class="table-toolbar">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-icon matPrefix>search</mat-icon>
+        <mat-label>جست‌وجوی پروژه</mat-label>
+        <input matInput (input)="applyFilter($event)">
+      </mat-form-field>
+      <span class="result-count">{{ dataSource.filteredData.length }} پروژه</span>
+    </div>
+
+    <div class="mobile-horizontal-scroll" *ngIf="dataSource.data.length; else emptyState">
+      <table mat-table [dataSource]="dataSource" class="projects-table">
+        <ng-container matColumnDef="index">
+          <th mat-header-cell *matHeaderCellDef>#</th>
+          <td mat-cell *matCellDef="let row; let i = index">{{ i + 1 }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="image">
+          <th mat-header-cell *matHeaderCellDef>تصویر</th>
+          <td mat-cell *matCellDef="let row">
+            <img [src]="row.coverImageUrl" [alt]="row.coverImageAlt || row.title" class="project-cover" />
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef>پروژه</th>
+          <td mat-cell *matCellDef="let row">
+            <strong class="project-title">{{ row.title }}</strong>
+            <small>{{ row.location || row.owner || 'بدون توضیح تکمیلی' }}</small>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="category">
+          <th mat-header-cell *matHeaderCellDef>دسته‌بندی</th>
+          <td mat-cell *matCellDef="let row">
+            <span class="category-pill" [class.category-pill--empty]="!row.category">{{ row.category?.title || 'اختصاص داده نشده' }}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>وضعیت</th>
+          <td mat-cell *matCellDef="let row">
+            <span class="project-status" [ngClass]="statusClass(row.status)">{{ statusLabel(row.status) }}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="time">
+          <th mat-header-cell *matHeaderCellDef>تاریخ پروژه</th>
+          <td mat-cell *matCellDef="let row"><span class="persian-date">{{ displayProjectDate(row.time) }}</span></td>
+        </ng-container>
+
+        <ng-container matColumnDef="options">
+          <th mat-header-cell *matHeaderCellDef>عملیات</th>
+          <td mat-cell *matCellDef="let row">
+            <div class="row-actions">
+              <a mat-icon-button href="/admin/projects/edit/{{row.id}}" aria-label="ویرایش" matTooltip="ویرایش پروژه"><mat-icon>edit</mat-icon></a>
+              <button mat-icon-button type="button" (click)="deleteProject(row)" aria-label="حذف" matTooltip="حذف"><mat-icon>delete</mat-icon></button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+      <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25]"></mat-paginator>
+    </div>
+  </mat-card>
+
+  <ng-template #emptyState>
+    <div class="admin-empty-state">
+      <mat-icon>folder_open</mat-icon>
+      <h2>هنوز پروژه‌ای ثبت نشده است</h2>
+      <p>با ایجاد اولین پروژه، اطلاعات آن در این جدول نمایش داده می‌شود.</p>
+      <a href="/admin/projects/new" mat-flat-button color="primary"><mat-icon>add</mat-icon>پروژه جدید</a>
+    </div>
+  </ng-template>
+</section>

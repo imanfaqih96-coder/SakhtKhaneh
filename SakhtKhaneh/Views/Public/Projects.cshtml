@@ -1,133 +1,70 @@
-﻿@using SakhtKhaneh.Models.Projects;
-
-@model List<Project>?;
-
+@model List<Project>
 @{
-    ViewData["Title"] = "پروژه ها";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "پروژه‌های معماری و اجرایی";
+    ViewData["MetaDescription"] = "آرشیو پروژه‌های طراحی، بازسازی و اجرای ساختمان مجموعه ساخت خانه.";
+    ViewData["VisitType"] = "static";
+    ViewData["VisitParam"] = "projects";
 }
 
+@await Html.PartialAsync("_PageHeroPartialView", new PageHeroViewModel
+{
+    Eyebrow = "آرشیو پروژه‌ها",
+    Title = "نمونه‌هایی از",
+    AccentTitle = "طراحی و اجرای واقعی",
+    Description = "پروژه‌هایی با مقیاس، نیاز و زبان طراحی متفاوت؛ اما با یک استاندارد مشترک در جزئیات و کیفیت اجرا.",
+    CurrentPageTitle = "پروژه‌ها"
+})
 
-<!-- Content -->
 <div class="content-wrapper">
-
-    <!-- Lines -->
-    <section class="content-lines-wrapper">
-        <div class="content-lines-inner">
-            <div class="content-lines"></div>
-        </div>
-    </section>
-    <!-- Header Banner -->
-    <section class="banner-header banner-img valign bg-img bg-fixed" data-overlay-darkgray="5" data-background="/assets/img/banner.jpg"> </section>
-
-    <!-- Projects -->
-    <section class="projects section-padding2">
+    <section class="content-lines-wrapper" aria-hidden="true"><div class="content-lines-inner"><div class="content-lines"></div></div></section>
+    <section class="sk-section projects section-padding">
         <div class="container">
-            <div class="row">
-                <div class="col-md-12 text-center animate-box" data-animate-effect="fadeInUp">
-                    <h2 class="section-title">پروژه های <span>ما</span></h2>
+            <div class="sk-section-heading" data-sk-reveal="up">
+                <div class="sk-section-heading__copy">
+                    <p class="sk-section-heading__eyebrow">پروژه‌های منتخب</p>
+                    <h2 class="sk-section-heading__title">هر پروژه، پاسخی به یک <span>نیاز مشخص</span></h2>
                 </div>
             </div>
-            <div class="row">
-                @foreach(var item in Model)
-                {
-                    <div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
-                        <div class="item">
-                            <div class="position-re o-hidden"> <img src="@item.CoverImageUrl" alt="" class="w-100"> </div>
-                            <div class="con">
-                                <h6><a href="/Projects/@item.Endpoint_Path">@item.Location</a></h6>
-                                <h5><a href="/Projects/@item.Endpoint_Path">@item.Title</a></h5>
-                                <div class="line"></div> <a href="/Projects/@item.Endpoint_Path"><i class="ti-arrow-right"></i></a>
+
+            @if (Model.Count > 0)
+            {
+                <div class="sk-card-grid sk-card-grid--two">
+                    @for (var i = 0; i < Model.Count; i++)
+                    {
+                        var project = Model[i];
+                        <article class="item sk-project-card" data-sk-reveal="up" data-sk-delay-index="@(i % 4)">
+                            <div class="position-re o-hidden">
+                                <span class="sk-project-status @ProjectPresentation.StatusCss(project.Status)">@ProjectPresentation.StatusTitle(project.Status)</span>
+                                <a href="/Projects/@project.Endpoint_Path">
+                                    <img src="@WebAssetUrl.Normalize(project.CoverImageUrl)"
+                                         alt="@(project.CoverImageAlt ?? project.Title)"
+                                         width="1200"
+                                         height="800"
+                                         loading="lazy"
+                                         decoding="async" />
+                                </a>
                             </div>
-                        </div>
-                    </div>
-                }
-            </div>
+                            <div class="con">
+                                <p class="sk-project-card__location">
+                                    @if (project.Category is not null)
+                                    {
+                                        <a href="/Projects/Category/@project.Category.Slug">@project.Category.Title</a><span aria-hidden="true"> · </span>
+                                    }
+                                    <a href="/Projects/@project.Endpoint_Path">@(string.IsNullOrWhiteSpace(project.Location) ? "پروژه ساخت خانه" : project.Location)</a>
+                                </p>
+                                <h2><a href="/Projects/@project.Endpoint_Path">@project.Title</a></h2>
+                                <a class="sk-project-card__arrow" href="/Projects/@project.Endpoint_Path" aria-label="مشاهده پروژه @project.Title">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </a>
+                            </div>
+                        </article>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="sk-empty-state"><h2>پروژه‌ای برای نمایش ثبت نشده است</h2></div>
+            }
         </div>
     </section>
-
 </div>
-
-
-@section Scripts {
-    <script src="/assets/js/modernizr-2.6.2.min.js"></script>
-    <script src="/assets/js/imagesloaded.pkgd.min.js"></script>
-    <script src="/assets/js/jquery.isotope.v3.0.2.js"></script>
-    <script src="/assets/js/popper.min.js"></script>
-    <script src="/assets/js/bootstrap.min.js"></script>
-    <script src="/assets/js/scrollIt.min.js"></script>
-    <script src="/assets/js/jquery.waypoints.min.js"></script>
-    <script src="/assets/js/owl.carousel.min.js"></script>
-    <script src="/assets/js/jquery.stellar.min.js"></script>
-    <script src="/assets/js/jquery.magnific-popup.js"></script>
-    <script src="/assets/js/YouTubePopUp.js"></script>
-    <script src="/assets/js/before-after.js"></script>
-    <script src="/assets/js/vegas.slider.min.js"></script>
-    <script src="/assets/js/home.js"></script>
-
-    <script>
-        const geolocation_api_key = '97c62498a168489898a05d474162b7ab';
-
-        function geolocate() {
-        const myHeaders = new Headers();
-
-
-        const requestOptions = {
-            method: "GET",
-            headers: myHeaders,
-            redirect: "follow"
-        };
-
-        fetch("https://api.ipgeolocation.io/v2/ipgeo?apiKey=" + geolocation_api_key + "", requestOptions)
-            .then((response) => response.text())
-            .then((result) => {
-                console.log(result)
-            })
-            .catch((error) => console.error(error));
-        }
-
-        function recordVisit() {
-            var path = window.location.href.replace(window.location.origin, '');
-            const myHeaders = new Headers();
-
-
-            const requestOptions = {
-                method: "GET",
-                headers: myHeaders,
-                redirect: "follow"
-            };
-
-            fetch("https://api.ipgeolocation.io/v2/ipgeo?apiKey=" + geolocation_api_key + "", requestOptions)
-                .then((response) => response.text())
-                .then((result) => {
-                    var geolocation = result;
-                    var data = {
-                        path: path,
-                        pathType: 'static',
-                        pathParam: 'projects',
-                        geolocation: JSON.parse(geolocation)
-                    }
-                    var stringified = JSON.stringify(data);
-
-                    fetch('/api/submitVisitRecord', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: stringified
-                    })
-                        .then(async res => {
-                            const result = res;
-                            console.log("✅ visit recorded:", result);
-                        })
-                        .catch(err => {
-                            console.error("❌ Visit record failed:", err);
-                        });
-
-                })
-                .catch((error) => console.error(error));
-        }
-
-        recordVisit();
-    </script>
-}

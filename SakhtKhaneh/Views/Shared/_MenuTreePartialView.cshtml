@@ -1,0 +1,63 @@
+@model MenuTreeRenderModel
+@foreach (var item in Model.Items)
+{
+    var children = item.Children?.Where(child => child is not null).ToList() ?? new List<TemplateMenuItem>();
+    var isActive = Model.CurrentPath.StartsWith(item.Path, StringComparison.OrdinalIgnoreCase);
+
+    if (Model.IsMobile)
+    {
+        if (children.Count > 0)
+        {
+            <li class="sk-mobile-tree-item sk-mobile-tree-item--level-@Model.Level">
+                <details class="sk-mobile-tree">
+                    <summary>
+                        <span>@item.Title</span>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </summary>
+                    <div class="sk-mobile-tree__panel">
+                        <a class="sk-mobile-tree__all @(isActive ? "active" : string.Empty)" href="@item.Path">مشاهده همه @item.Title</a>
+                        <ul>
+                            @await Html.PartialAsync("_MenuTreePartialView", new MenuTreeRenderModel
+                            {
+                                Items = children,
+                                IsMobile = true,
+                                Level = Model.Level + 1,
+                                CurrentPath = Model.CurrentPath
+                            })
+                        </ul>
+                    </div>
+                </details>
+            </li>
+        }
+        else
+        {
+            <li class="sk-mobile-tree-item sk-mobile-tree-item--level-@Model.Level">
+                <a class="sk-mobile-tree-link @(isActive ? "active" : string.Empty)" href="@item.Path">@item.Title</a>
+            </li>
+        }
+    }
+    else
+    {
+        <li class="sk-desktop-tree-item sk-desktop-tree-item--level-@Model.Level">
+            <a class="sk-desktop-tree-link @(isActive ? "active" : string.Empty)" href="@item.Path">
+                <span>@item.Title</span>
+                @if (children.Count > 0)
+                {
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 7 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                }
+            </a>
+            @if (children.Count > 0)
+            {
+                <ul class="sk-desktop-tree-submenu">
+                    @await Html.PartialAsync("_MenuTreePartialView", new MenuTreeRenderModel
+                    {
+                        Items = children,
+                        IsMobile = false,
+                        Level = Model.Level + 1,
+                        CurrentPath = Model.CurrentPath
+                    })
+                </ul>
+            }
+        </li>
+    }
+}

@@ -1,0 +1,78 @@
+<section class="reports-page admin-page">
+  <header class="reports-heading">
+    <div>
+      <span class="eyebrow">تحلیل و گزارشات</span>
+      <h1>مرکز گزارشات سایت</h1>
+      <p>موضوع و بازه زمانی را انتخاب کنید و روند، مقدار کل و جزئیات را یکجا بررسی کنید.</p>
+    </div>
+    <div class="report-total" *ngIf="report">
+      <span>{{ report.title }}</span>
+      <strong>{{ report.total | number:'1.0-0' }}</strong>
+      <small [class.negative]="report.changePercent < 0">
+        {{ report.changePercent >= 0 ? '+' : '' }}{{ report.changePercent | number:'1.0-1' }}٪ نسبت به دوره قبل
+      </small>
+    </div>
+  </header>
+
+  <section class="report-filters">
+    <label>
+      <span>موضوع گزارش</span>
+      <select [(ngModel)]="metric" (change)="load()">
+        <option *ngFor="let item of metrics" [ngValue]="item.value">{{ item.label }}</option>
+      </select>
+    </label>
+
+    <div class="preset-group" aria-label="بازه‌های سریع">
+      <button type="button" [class.active]="preset === '7'" (click)="applyPreset('7')">۷ روز</button>
+      <button type="button" [class.active]="preset === '30'" (click)="applyPreset('30')">۳۰ روز</button>
+      <button type="button" [class.active]="preset === '90'" (click)="applyPreset('90')">۹۰ روز</button>
+    </div>
+
+    <label>
+      <span>از تاریخ</span>
+      <input type="text" inputmode="numeric" dir="ltr" [(ngModel)]="from" (input)="customRangeChanged()" placeholder="۱۴۰۵/۰۵/۱۲" />
+    </label>
+    <label>
+      <span>تا تاریخ</span>
+      <input type="text" inputmode="numeric" dir="ltr" [(ngModel)]="to" (input)="customRangeChanged()" placeholder="۱۴۰۵/۰۵/۱۲" />
+    </label>
+
+    <button mat-flat-button type="button" class="apply-button" (click)="load()" [disabled]="loading">
+      <mat-icon>query_stats</mat-icon>
+      اعمال فیلتر
+    </button>
+  </section>
+
+  <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+
+  <section class="report-chart-card">
+    <div class="chart-heading">
+      <div>
+        <span class="eyebrow">روند زمانی</span>
+        <h2>{{ report?.title || 'گزارش' }}</h2>
+      </div>
+      <span *ngIf="report">{{ report.from | persianDate }} تا {{ report.to | persianDate }}</span>
+    </div>
+    <div #mainChart class="report-chart" aria-label="نمودار جامع گزارش"></div>
+  </section>
+
+  <section class="breakdown-card" *ngIf="report?.breakdown?.length">
+    <div class="chart-heading">
+      <div>
+        <span class="eyebrow">جزئیات گزارش</span>
+        <h2>بیشترین سهم در بازه انتخابی</h2>
+      </div>
+    </div>
+    <div class="breakdown-list">
+      <div class="breakdown-row" *ngFor="let item of report!.breakdown; let i = index">
+        <span class="rank">{{ i + 1 }}</span>
+        <div class="breakdown-copy">
+          <strong>{{ item.label }}</strong>
+          <small *ngIf="item.path" dir="ltr">{{ item.path }}</small>
+        </div>
+        <span class="breakdown-value">{{ item.value | number }}</span>
+        <div class="breakdown-bar"><i [style.width.%]="report!.breakdown[0].value ? item.value / report!.breakdown[0].value * 100 : 0"></i></div>
+      </div>
+    </div>
+  </section>
+</section>

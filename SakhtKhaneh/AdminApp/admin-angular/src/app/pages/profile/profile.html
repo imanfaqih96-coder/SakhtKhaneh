@@ -1,0 +1,86 @@
+<div class="container py-4 admin-page">
+  <div class="page-heading">
+    <div>
+      <h1>حساب کاربری</h1>
+      <p>مشخصات مدیر و تنظیمات امنیتی حساب را مدیریت کنید.</p>
+    </div>
+    <div class="page-heading__visual" aria-hidden="true">
+      <mat-icon fontSet="material-icons-outlined">manage_accounts</mat-icon>
+    </div>
+  </div>
+
+  <div *ngIf="profile.mustChangePassword || route.snapshot.queryParamMap.get('required') === 'password'" class="admin-alert" role="alert">
+    <strong>تغییر رمز عبور الزامی است.</strong>
+    این حساب با رمز اولیه ساخته شده و تا انتخاب یک رمز امن، سایر بخش‌های پنل در دسترس نخواهند بود.
+  </div>
+
+  <div *ngIf="loading" class="profile-loading"><mat-spinner diameter="42"></mat-spinner></div>
+
+  <div *ngIf="!loading" class="row g-4">
+    <div class="col-lg-6">
+      <mat-card class="profile-card">
+        <h2><mat-icon fontSet="material-icons-outlined">badge</mat-icon> مشخصات مدیر</h2>
+        <form #profileForm="ngForm" (ngSubmit)="saveProfile()">
+          <mat-form-field appearance="outline">
+            <mat-label>نام کاربری</mat-label>
+            <input matInput [value]="profile.userName" disabled>
+            <mat-icon matPrefix fontSet="material-icons-outlined">alternate_email</mat-icon>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>نام</mat-label>
+            <input matInput [(ngModel)]="profile.firstName" name="firstName" autocomplete="given-name">
+            <mat-icon matPrefix fontSet="material-icons-outlined">person</mat-icon>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>نام خانوادگی</mat-label>
+            <input matInput [(ngModel)]="profile.lastName" name="lastName" autocomplete="family-name">
+            <mat-icon matPrefix fontSet="material-icons-outlined">person</mat-icon>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>ایمیل</mat-label>
+            <input matInput type="email" [(ngModel)]="profile.email" name="email" required email autocomplete="email">
+            <mat-icon matPrefix fontSet="material-icons-outlined">mail</mat-icon>
+          </mat-form-field>
+          <div *ngIf="profileMessage" class="form-message">{{ profileMessage }}</div>
+          <button mat-flat-button color="primary" type="submit" [disabled]="savingProfile || profileForm.invalid">
+            <mat-spinner *ngIf="savingProfile" diameter="18"></mat-spinner>
+            <mat-icon *ngIf="!savingProfile" fontSet="material-icons-outlined">save</mat-icon>
+            ذخیره مشخصات
+          </button>
+        </form>
+      </mat-card>
+    </div>
+
+    <div class="col-lg-6">
+      <mat-card class="profile-card security-card">
+        <h2><mat-icon fontSet="material-icons-outlined">shield_lock</mat-icon> تغییر رمز عبور</h2>
+        <p class="password-policy">حداقل ۱۰ کاراکتر شامل حرف بزرگ، حرف کوچک، عدد و یک نماد.</p>
+        <form #passwordForm="ngForm" (ngSubmit)="updatePassword()">
+          <mat-form-field appearance="outline">
+            <mat-label>رمز فعلی</mat-label>
+            <input matInput [type]="hideCurrent ? 'password' : 'text'" [(ngModel)]="currentPassword" name="currentPassword" required autocomplete="current-password">
+            <mat-icon matPrefix fontSet="material-icons-outlined">lock</mat-icon>
+            <button mat-icon-button matSuffix type="button" (click)="hideCurrent = !hideCurrent"><mat-icon fontSet="material-icons-outlined">visibility</mat-icon></button>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>رمز جدید</mat-label>
+            <input matInput [type]="hideNew ? 'password' : 'text'" [(ngModel)]="newPassword" name="newPassword" required minlength="10" autocomplete="new-password">
+            <mat-icon matPrefix fontSet="material-icons-outlined">key</mat-icon>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>تکرار رمز جدید</mat-label>
+            <input matInput [type]="hideNew ? 'password' : 'text'" [(ngModel)]="confirmPassword" name="confirmPassword" required autocomplete="new-password">
+            <mat-icon matPrefix fontSet="material-icons-outlined">key</mat-icon>
+          </mat-form-field>
+          <div *ngIf="passwordError" class="form-message error" role="alert">{{ passwordError }}</div>
+          <div *ngIf="passwordMessage" class="form-message success" role="status">{{ passwordMessage }}</div>
+          <button mat-flat-button color="primary" type="submit" [disabled]="changingPassword || passwordForm.invalid">
+            <mat-spinner *ngIf="changingPassword" diameter="18"></mat-spinner>
+            <mat-icon *ngIf="!changingPassword" fontSet="material-icons-outlined">password</mat-icon>
+            تغییر رمز عبور
+          </button>
+        </form>
+      </mat-card>
+    </div>
+  </div>
+</div>

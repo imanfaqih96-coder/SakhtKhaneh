@@ -1,0 +1,682 @@
+/* SakhtKhaneh public shell V4
+   Performance, stable header interactions and accessible zoom gallery.
+   Loaded after the original template and V3 layer; no legacy stylesheet is overwritten. */
+
+:root {
+  --sk4-header-height: 96px;
+  --sk4-header-height-compact: 76px;
+  --sk4-gold: #c99a42;
+  --sk4-ink: #16252d;
+  --sk4-surface: #f5f4f0;
+}
+
+html { scroll-padding-top: calc(var(--sk4-header-height-compact) + 18px); }
+body { font-family: "Vazirmatn", Tahoma, Arial, sans-serif; }
+
+/* Tiny CSS-only loader: it never competes with page imagery for LCP. */
+.preloader-bg,
+.sk-preloader-bg { display: none !important; }
+
+.sk-preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: grid;
+  place-content: center;
+  gap: 12px;
+  color: #fff;
+  background: #17272f;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity .32s ease, visibility .32s ease;
+}
+
+.sk-preloader.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.sk-preloader > span {
+  text-align: center;
+  font-size: .78rem;
+  letter-spacing: .12em;
+}
+
+.sk-preloader-v4__mark {
+  width: 54px;
+  height: 54px;
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  gap: 5px;
+}
+
+.sk-preloader-v4__mark i {
+  width: 7px;
+  border-radius: 8px 8px 2px 2px;
+  background: var(--sk4-gold);
+  animation: sk4-loader .75s ease-in-out infinite alternate;
+}
+
+.sk-preloader-v4__mark i:nth-child(1) { height: 24px; }
+.sk-preloader-v4__mark i:nth-child(2) { height: 42px; animation-delay: .11s; }
+.sk-preloader-v4__mark i:nth-child(3) { height: 32px; animation-delay: .22s; }
+
+@keyframes sk4-loader {
+  to { transform: scaleY(.62); opacity: .55; }
+}
+
+/* Header dimensions remain stable on hover. Only inner decoration changes. */
+.sk-navbar {
+  min-height: var(--sk4-header-height);
+  transition:
+    min-height .28s ease,
+    padding .28s ease,
+    background-color .28s ease,
+    box-shadow .28s ease,
+    transform .28s ease !important;
+}
+
+.sk-navbar.is-scrolled,
+.sk-navbar.nav-scroll {
+  min-height: var(--sk4-header-height-compact);
+  background: rgba(27, 43, 51, .97) !important;
+  border-bottom-color: rgba(255,255,255,.08);
+  box-shadow: 0 12px 34px rgba(9, 20, 27, .18);
+}
+
+.sk-navbar__container {
+  min-height: inherit;
+  transition: min-height .28s ease;
+}
+
+.sk-brand {
+  width: auto !important;
+  min-width: 204px;
+  height: 70px;
+  flex: 0 0 auto;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px;
+  padding: 0 !important;
+  transform: none !important;
+  line-height: 1;
+}
+
+.sk-navbar.is-scrolled .sk-brand,
+.sk-navbar.nav-scroll .sk-brand {
+  height: 58px;
+}
+
+.sk-brand__mark {
+  position: relative;
+  width: 62px !important;
+  height: 62px !important;
+  min-width: 62px;
+  flex: 0 0 62px;
+  display: grid;
+  place-items: center;
+  margin: 0 !important;
+  transform: none !important;
+  transition: width .28s ease, height .28s ease, flex-basis .28s ease, filter .25s ease !important;
+}
+
+.sk-brand__mark::after {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  border: 1px solid rgba(201, 154, 66, .25);
+  opacity: 0;
+  transform: scale(.85);
+  transition: opacity .22s ease, transform .22s ease;
+}
+
+.sk-brand__mark img {
+  width: 58px !important;
+  height: 58px !important;
+  max-width: none !important;
+  object-fit: contain;
+  display: block;
+  margin: 0 !important;
+  transform: none !important;
+  transition: width .28s ease, height .28s ease, filter .22s ease !important;
+}
+
+.sk-brand:hover,
+.sk-brand:focus-visible,
+.sk-brand:hover .sk-brand__mark,
+.sk-brand:focus-visible .sk-brand__mark,
+.sk-brand:hover .sk-brand__mark img,
+.sk-brand:focus-visible .sk-brand__mark img {
+  transform: none !important;
+}
+
+.sk-brand:hover .sk-brand__mark,
+.sk-brand:focus-visible .sk-brand__mark {
+  filter: drop-shadow(0 5px 12px rgba(201, 154, 66, .22));
+}
+
+.sk-brand:hover .sk-brand__mark::after,
+.sk-brand:focus-visible .sk-brand__mark::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.sk-navbar.is-scrolled .sk-brand__mark,
+.sk-navbar.nav-scroll .sk-brand__mark {
+  width: 49px !important;
+  height: 49px !important;
+  min-width: 49px;
+  flex-basis: 49px;
+}
+
+.sk-navbar.is-scrolled .sk-brand__mark img,
+.sk-navbar.nav-scroll .sk-brand__mark img {
+  width: 46px !important;
+  height: 46px !important;
+}
+
+.sk-brand__copy {
+  width: 130px;
+  min-width: 130px;
+  height: 46px;
+  display: flex !important;
+  justify-content: center;
+  flex-direction: column;
+  transform: none !important;
+  overflow: hidden;
+}
+
+.sk-brand__copy strong,
+.sk-brand__copy small {
+  position: static !important;
+  display: block;
+  margin: 0 !important;
+  transform: none !important;
+  white-space: nowrap;
+}
+
+.sk-brand__copy strong { line-height: 1.35; }
+.sk-brand__copy small {
+  line-height: 1.65;
+  opacity: .72;
+  transition: opacity .2s ease, max-height .2s ease;
+}
+
+.sk-navbar.is-scrolled .sk-brand__copy small,
+.sk-navbar.nav-scroll .sk-brand__copy small {
+  max-height: 18px;
+  opacity: .55;
+}
+
+/* Buttons maintain the exact baseline and box geometry on hover. */
+.sk-button,
+.sk-navbar__cta,
+.butn-light,
+button[type="submit"],
+input[type="submit"] {
+  min-height: 48px;
+  line-height: 1 !important;
+  vertical-align: middle;
+}
+
+.sk-button,
+.sk-button:hover,
+.sk-button:focus-visible,
+.sk-navbar__cta,
+.sk-navbar__cta:hover,
+.sk-navbar__cta:focus-visible,
+.butn-light,
+.butn-light:hover {
+  transform: none !important;
+}
+
+.sk-button > span,
+.sk-navbar__cta > span,
+.butn-light > span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.25em;
+  line-height: 1.25 !important;
+  transform: none !important;
+}
+
+.sk-button:hover,
+.sk-button:focus-visible,
+.sk-navbar__cta:hover,
+.sk-navbar__cta:focus-visible {
+  box-shadow: 0 12px 26px rgba(201, 154, 66, .2);
+}
+
+.sk-button svg,
+.sk-navbar__cta svg {
+  transition: transform .2s ease;
+}
+
+.sk-button:hover svg,
+.sk-navbar__cta:hover svg {
+  transform: translateX(-3px);
+}
+
+/* Lower sections can skip layout/paint until close to the viewport. */
+.sk-deferred-section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 760px;
+}
+
+/* Gallery viewer on project/journal detail pages */
+.sk-detail-gallery {
+  display: grid;
+  gap: 15px;
+  margin-bottom: clamp(24px, 4vw, 46px);
+}
+
+.sk-detail-gallery__main {
+  position: relative;
+  min-height: min(66vw, 680px);
+  border-radius: 22px;
+  overflow: hidden;
+  background: #111d23;
+  box-shadow: 0 22px 60px rgba(17, 31, 40, .16);
+}
+
+.sk-detail-gallery__slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  cursor: zoom-in;
+  background: transparent;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .35s ease, visibility .35s ease;
+}
+
+.sk-detail-gallery__slide.is-active {
+  position: relative;
+  opacity: 1;
+  visibility: visible;
+}
+
+.sk-detail-gallery__slide img {
+  width: 100%;
+  height: min(66vw, 680px);
+  display: block;
+  object-fit: contain;
+  background: #111d23;
+}
+
+.sk-detail-gallery__zoom-hint {
+  position: absolute;
+  inset: auto auto 18px 18px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 38px;
+  padding: 7px 11px;
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(10, 20, 26, .72);
+  backdrop-filter: blur(12px);
+  pointer-events: none;
+  font-size: .73rem;
+}
+
+.sk-detail-gallery__zoom-hint svg { width: 17px; height: 17px; }
+
+.sk-detail-gallery__controls {
+  position: absolute;
+  z-index: 4;
+  inset: 50% 18px auto;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.sk-detail-gallery__controls button {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 50%;
+  background: rgba(12, 23, 29, .66);
+  backdrop-filter: blur(10px);
+  pointer-events: auto;
+  transition: background-color .2s ease, transform .2s ease;
+}
+
+.sk-detail-gallery__controls button:hover { background: #c99a42; transform: scale(1.05); }
+.sk-detail-gallery__controls svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+
+.sk-detail-gallery__thumbs {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(82px, 112px);
+  gap: 10px;
+  overflow-x: auto;
+  padding: 4px 2px 8px;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+}
+
+.sk-detail-gallery__thumb {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #e7e6e1;
+  opacity: .72;
+  scroll-snap-align: start;
+  transition: opacity .2s ease, border-color .2s ease, transform .2s ease;
+}
+
+.sk-detail-gallery__thumb:hover,
+.sk-detail-gallery__thumb.is-active {
+  opacity: 1;
+  border-color: var(--sk4-gold);
+  transform: translateY(-2px);
+}
+
+.sk-detail-gallery__thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+body.sk-lightbox-open { overflow: hidden; }
+
+/* Fullscreen lightbox with zoom/pan/thumbnails */
+.sk-lightbox[hidden] { display: none !important; }
+.sk-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.sk-lightbox__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 12, 16, .94);
+  backdrop-filter: blur(14px);
+}
+
+.sk-lightbox__dialog {
+  position: relative;
+  z-index: 1;
+  width: min(1480px, 100%);
+  height: min(94vh, 980px);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 20px;
+  overflow: hidden;
+  background: #101b21;
+  box-shadow: 0 30px 100px rgba(0,0,0,.48);
+  animation: sk4-lightbox-in .24s ease both;
+}
+
+@keyframes sk4-lightbox-in {
+  from { opacity: 0; transform: scale(.975); }
+}
+
+.sk-lightbox__header {
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 14px 10px 20px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.sk-lightbox__header > div:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.sk-lightbox__header strong { font-size: .92rem; }
+.sk-lightbox__header span { color: rgba(255,255,255,.58); font-size: .72rem; }
+
+.sk-lightbox__tools { display: flex; align-items: center; gap: 7px; }
+.sk-lightbox__tools button,
+.sk-lightbox__nav {
+  min-width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  padding: 0 10px;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 10px;
+  background: rgba(255,255,255,.06);
+}
+.sk-lightbox__tools button:hover,
+.sk-lightbox__nav:hover { background: rgba(201,154,66,.9); }
+.sk-lightbox__tools svg,
+.sk-lightbox__nav svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+
+.sk-lightbox__stage {
+  position: relative;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr) 54px;
+  align-items: center;
+  gap: 9px;
+  padding: 12px;
+}
+
+.sk-lightbox__viewport {
+  min-width: 0;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+}
+
+.sk-lightbox__viewport.is-dragging { cursor: grabbing; }
+
+.sk-lightbox__viewport img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  user-select: none;
+  will-change: transform;
+  transition: transform .12s ease-out;
+}
+
+.sk-lightbox__thumbs {
+  min-height: 92px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 14px;
+  overflow-x: auto;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+
+.sk-lightbox__thumbs button {
+  width: 86px;
+  min-width: 86px;
+  aspect-ratio: 4/3;
+  padding: 0;
+  overflow: hidden;
+  border: 2px solid transparent;
+  border-radius: 9px;
+  opacity: .56;
+  background: #0a1115;
+}
+
+.sk-lightbox__thumbs button.is-active {
+  border-color: var(--sk4-gold);
+  opacity: 1;
+}
+
+.sk-lightbox__thumbs img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Owl accessibility and stable controls */
+.owl-dots .owl-dot {
+  min-width: 44px !important;
+  min-height: 44px !important;
+  display: inline-grid !important;
+  place-items: center;
+}
+.owl-dots .owl-dot span { margin: 0 !important; }
+
+/* Images below the fold should not block first paint. */
+.sk-content-card__image,
+.sk-project-card__image,
+.sk-service-card img {
+  content-visibility: auto;
+}
+
+/* Avoid a blank first screen while webfont is still downloading. */
+h1, h2, h3, h4, h5, h6,
+.sk-brand__copy,
+.sk-button { font-display: swap; }
+
+@media (max-width: 991.98px) {
+  :root { --sk4-header-height: 80px; --sk4-header-height-compact: 68px; }
+
+  .sk-brand {
+    min-width: 176px;
+    height: 60px;
+    gap: 8px;
+  }
+
+  .sk-brand__mark {
+    width: 50px !important;
+    height: 50px !important;
+    min-width: 50px;
+    flex-basis: 50px;
+  }
+
+  .sk-brand__mark img { width: 47px !important; height: 47px !important; }
+  .sk-brand__copy { min-width: 116px; width: 116px; }
+  .sk-brand__copy small { font-size: .61rem; }
+
+  .sk-navbar.is-scrolled .sk-brand__mark,
+  .sk-navbar.nav-scroll .sk-brand__mark {
+    width: 43px !important;
+    height: 43px !important;
+    min-width: 43px;
+    flex-basis: 43px;
+  }
+
+  .sk-navbar.is-scrolled .sk-brand__mark img,
+  .sk-navbar.nav-scroll .sk-brand__mark img {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .sk-detail-gallery__main,
+  .sk-detail-gallery__slide img { min-height: 52vw; height: 62vw; }
+
+  .sk-lightbox { padding: 0; }
+  .sk-lightbox__dialog { width: 100%; height: 100%; border: 0; border-radius: 0; }
+  .sk-lightbox__stage { grid-template-columns: 42px minmax(0,1fr) 42px; padding: 8px 4px; }
+  .sk-lightbox__nav { min-width: 38px; padding: 0; }
+}
+
+@media (max-width: 560px) {
+  .sk-brand { min-width: 150px; }
+  .sk-brand__copy { min-width: 92px; width: 92px; }
+  .sk-brand__copy strong { font-size: .88rem !important; }
+  .sk-brand__copy small { font-size: .53rem !important; }
+
+  .sk-detail-gallery__main,
+  .sk-detail-gallery__slide img { min-height: 66vw; height: 76vw; }
+  .sk-detail-gallery__controls { inset-inline: 8px; }
+  .sk-detail-gallery__controls button { width: 40px; height: 40px; }
+  .sk-detail-gallery__zoom-hint { inset-inline-start: 10px; bottom: 10px; font-size: .65rem; }
+
+  .sk-lightbox__header { min-height: 58px; padding: 8px 10px; }
+  .sk-lightbox__header > div:first-child { max-width: 40%; }
+  .sk-lightbox__tools { gap: 4px; }
+  .sk-lightbox__tools button { min-width: 34px; height: 36px; padding: 0 8px; }
+  .sk-lightbox__thumbs { min-height: 78px; }
+  .sk-lightbox__thumbs button { min-width: 68px; width: 68px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk-preloader-v4__mark i,
+  .sk-lightbox__dialog { animation: none !important; }
+  .sk-detail-gallery__slide,
+  .sk-lightbox__viewport img { transition: none !important; }
+}
+
+
+/* V6.2 hotfix: approved brand asset + fail-open visibility. */
+body.sk-site .sk-navbar,
+body.sk-site main,
+body.sk-site .main-footer {
+  opacity: 1;
+}
+
+/* Reveal effects are opt-in only after JS marks an element pending.
+   Without JS or when an initializer fails, content remains readable. */
+[data-sk-reveal],
+.js .animate-box {
+  opacity: 1;
+  transform: none;
+}
+
+[data-sk-reveal].sk-reveal-pending,
+.js .animate-box.sk-reveal-pending {
+  opacity: 0;
+  transform: translateY(28px);
+}
+
+[data-sk-reveal="left"].sk-reveal-pending { transform: translateX(-30px); }
+[data-sk-reveal="right"].sk-reveal-pending { transform: translateX(30px); }
+[data-sk-reveal="scale"].sk-reveal-pending { transform: scale(.965); }
+
+[data-sk-reveal].is-revealed,
+.js .animate-box.is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* The official logo itself must not be visually altered. */
+.sk-brand__mark::after { display: none !important; }
+.sk-brand:hover .sk-brand__mark,
+.sk-brand:focus-visible .sk-brand__mark,
+.sk-brand__mark,
+.sk-brand__mark img {
+  filter: none !important;
+}
+
+.sk-brand__mark img {
+  object-fit: contain;
+  object-position: center;
+}
+
+/* CSS fail-safe: a JavaScript failure cannot leave the loader blocking the site. */
+.sk-preloader {
+  animation: sk4-preloader-failsafe .01s linear 3s forwards;
+}
+
+.sk-preloader.is-hidden {
+  animation: none;
+}
+
+@keyframes sk4-preloader-failsafe {
+  to {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}

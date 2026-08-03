@@ -173,6 +173,9 @@ namespace SakhtKhaneh.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime?>("LastLoginAt")
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("INTEGER");
 
@@ -185,6 +188,12 @@ namespace SakhtKhaneh.Migrations
 
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("MustChangePassword")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("PasswordChangedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PasswordHash")
@@ -224,11 +233,31 @@ namespace SakhtKhaneh.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("IsVisible")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(180)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Title")
                         .IsRequired()
+                        .HasMaxLength(180)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ParentId", "SortOrder");
+
+                    b.HasIndex("Slug")
+                        .IsUnique();
 
                     b.ToTable("BlogCategories", (string)null);
                 });
@@ -261,11 +290,23 @@ namespace SakhtKhaneh.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("ImageAlt")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("LastUpdateDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MetaDescription")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SeoTitle")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Tags")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
@@ -276,7 +317,96 @@ namespace SakhtKhaneh.Migrations
 
                     b.HasIndex("CategoryId");
 
+                    b.HasIndex("CreationDate");
+
+                    b.HasIndex("EndpointPath");
+
                     b.ToTable("BlogPosts", (string)null);
+                });
+
+
+            modelBuilder.Entity("SakhtKhaneh.Models.Journals.Journal", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Author")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("EndpointPath")
+                        .IsRequired()
+                        .HasMaxLength(180)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ImageAlt")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsPublished")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("LastUpdateDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Tags")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EndpointPath")
+                        .IsUnique();
+
+                    b.HasIndex("IsPublished", "CreationDate");
+
+                    b.ToTable("Journals", (string)null);
+                });
+
+            modelBuilder.Entity("SakhtKhaneh.Models.Journals.JournalGalleryItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ImageAlt")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("JournalId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JournalId", "SortOrder");
+
+                    b.ToTable("JournalGalleryItems", (string)null);
                 });
 
             modelBuilder.Entity("SakhtKhaneh.Models.Messages.Message", b =>
@@ -315,8 +445,14 @@ namespace SakhtKhaneh.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid?>("CategoryId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Content")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CoverImageAlt")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("CoverImageUrl")
@@ -333,8 +469,17 @@ namespace SakhtKhaneh.Migrations
                     b.Property<string>("Location")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("MetaDescription")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Owner")
                         .HasColumnType("TEXT");
+
+                    b.Property<string>("SeoTitle")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Time")
                         .HasColumnType("TEXT");
@@ -345,7 +490,46 @@ namespace SakhtKhaneh.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("Endpoint_Path");
+
                     b.ToTable("Projects", (string)null);
+                });
+
+            modelBuilder.Entity("SakhtKhaneh.Models.Projects.ProjectCategory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsVisible")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid?>("ParentId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(180)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(180)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentId", "SortOrder");
+
+                    b.HasIndex("Slug")
+                        .IsUnique();
+
+                    b.ToTable("ProjectCategories", (string)null);
                 });
 
             modelBuilder.Entity("SakhtKhaneh.Models.Projects.ProjectGalleryItem", b =>
@@ -397,6 +581,48 @@ namespace SakhtKhaneh.Migrations
                     b.ToTable("Services", (string)null);
                 });
 
+            modelBuilder.Entity("SakhtKhaneh.Models.Template.SocialLink", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("IconName")
+                        .HasMaxLength(80)
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsVisible")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Platform")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Username")
+                        .HasMaxLength(250)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IsVisible", "SortOrder");
+
+                    b.ToTable("SocialLinks", (string)null);
+                });
+
             modelBuilder.Entity("SakhtKhaneh.Models.Template.TemplatesProperty", b =>
                 {
                     b.Property<Guid>("Id")
@@ -422,6 +648,8 @@ namespace SakhtKhaneh.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Path", "Key");
 
                     b.ToTable("TemplateProperties", (string)null);
                 });
@@ -480,6 +708,10 @@ namespace SakhtKhaneh.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Path");
+
+                    b.HasIndex("Time");
+
                     b.ToTable("Visits", (string)null);
                 });
 
@@ -534,6 +766,16 @@ namespace SakhtKhaneh.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SakhtKhaneh.Models.Blog.BlogCategory", b =>
+                {
+                    b.HasOne("SakhtKhaneh.Models.Blog.BlogCategory", "Parent")
+                        .WithMany("Children")
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Parent");
+                });
+
             modelBuilder.Entity("SakhtKhaneh.Models.Blog.BlogPost", b =>
                 {
                     b.HasOne("SakhtKhaneh.Models.Blog.BlogCategory", "Category")
@@ -545,6 +787,35 @@ namespace SakhtKhaneh.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("SakhtKhaneh.Models.Journals.JournalGalleryItem", b =>
+                {
+                    b.HasOne("SakhtKhaneh.Models.Journals.Journal", null)
+                        .WithMany("Gallery")
+                        .HasForeignKey("JournalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SakhtKhaneh.Models.Projects.Project", b =>
+                {
+                    b.HasOne("SakhtKhaneh.Models.Projects.ProjectCategory", "Category")
+                        .WithMany("Projects")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("SakhtKhaneh.Models.Projects.ProjectCategory", b =>
+                {
+                    b.HasOne("SakhtKhaneh.Models.Projects.ProjectCategory", "Parent")
+                        .WithMany("Children")
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Parent");
+                });
+
             modelBuilder.Entity("SakhtKhaneh.Models.Projects.ProjectGalleryItem", b =>
                 {
                     b.HasOne("SakhtKhaneh.Models.Projects.Project", null)
@@ -554,9 +825,25 @@ namespace SakhtKhaneh.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SakhtKhaneh.Models.Journals.Journal", b =>
+                {
+                    b.Navigation("Gallery");
+                });
+
+            modelBuilder.Entity("SakhtKhaneh.Models.Blog.BlogCategory", b =>
+                {
+                    b.Navigation("Children");
+                });
+
             modelBuilder.Entity("SakhtKhaneh.Models.Projects.Project", b =>
                 {
                     b.Navigation("Gallery");
+                });
+
+            modelBuilder.Entity("SakhtKhaneh.Models.Projects.ProjectCategory", b =>
+                {
+                    b.Navigation("Children");
+                    b.Navigation("Projects");
                 });
 #pragma warning restore 612, 618
         }

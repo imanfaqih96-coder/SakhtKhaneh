@@ -1,9 +1,9 @@
-﻿namespace SakhtKhaneh.Models
+namespace SakhtKhaneh.Models;
+
+public class AuthResponse
 {
-    public class AuthResponse
-    {
-        public string Status { get; set; } // success, fail, pending
-        public string Message { get; set; } = "";
-        public string? Token { get; internal set; }
-    }
+    public string Status { get; set; } = "fail";
+    public string Message { get; set; } = string.Empty;
+    public bool MustChangePassword { get; set; }
+    public string? UserName { get; set; }
 }

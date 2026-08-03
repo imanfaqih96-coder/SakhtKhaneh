@@ -1,0 +1,28 @@
+# .NET build output
+bin/
+obj/
+*.user
+*.suo
+*.pubxml.user
+
+# Angular / Node
+AdminApp/admin-angular/node_modules/
+AdminApp/admin-angular/dist/
+AdminApp/admin-angular/.angular/
+
+# Runtime data: keep these on the production server and back them up separately
+app.db-wal
+app.db-shm
+wwwroot/uploads/*
+!wwwroot/uploads/.gitkeep
+
+# Local secrets
+appsettings.Production.json
+.env
+
+# OS / IDE
+.vs/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

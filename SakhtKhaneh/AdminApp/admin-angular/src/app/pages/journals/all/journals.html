@@ -1,0 +1,30 @@
+<div class="container py-4 admin-page">
+  <div class="journals-heading">
+    <div><h1>ژورنال‌ها</h1><p>مدیریت شیت‌ها، تصاویر و توضیحات ژورنال‌های طراحی.</p></div>
+    <a mat-flat-button color="primary" routerLink="/journals/new"><mat-icon fontSet="material-icons-outlined">add_photo_alternate</mat-icon> ژورنال جدید</a>
+  </div>
+
+  <mat-card class="journals-card">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>جستجو در ژورنال‌ها</mat-label>
+      <input matInput #search (input)="applyFilter(search.value)">
+      <mat-icon matPrefix fontSet="material-icons-outlined">search</mat-icon>
+    </mat-form-field>
+
+    <div *ngIf="loading" class="loading"><mat-spinner diameter="44"></mat-spinner></div>
+    <div *ngIf="!loading" class="table-wrap">
+      <table mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="image"><th mat-header-cell *matHeaderCellDef>تصویر</th><td mat-cell *matCellDef="let item"><img class="thumb" [src]="item.imageUrl" [alt]="item.imageAlt || item.title"></td></ng-container>
+        <ng-container matColumnDef="title"><th mat-header-cell *matHeaderCellDef>عنوان</th><td mat-cell *matCellDef="let item"><strong>{{ item.title }}</strong></td></ng-container>
+        <ng-container matColumnDef="path"><th mat-header-cell *matHeaderCellDef>مسیر</th><td mat-cell *matCellDef="let item"><code>{{ item.endpointPath }}</code></td></ng-container>
+        <ng-container matColumnDef="status"><th mat-header-cell *matHeaderCellDef>وضعیت</th><td mat-cell *matCellDef="let item"><mat-chip [class.published]="item.isPublished">{{ item.isPublished ? 'منتشرشده' : 'پیش‌نویس' }}</mat-chip></td></ng-container>
+        <ng-container matColumnDef="date"><th mat-header-cell *matHeaderCellDef>تاریخ</th><td mat-cell *matCellDef="let item">{{ (item.lastUpdateDate || item.creationDate) | persianDate }}</td></ng-container>
+        <ng-container matColumnDef="actions"><th mat-header-cell *matHeaderCellDef>عملیات</th><td mat-cell *matCellDef="let item"><a mat-icon-button color="primary" [routerLink]="['/journals/edit', item.id]" aria-label="ویرایش"><mat-icon fontSet="material-icons-outlined">edit</mat-icon></a><button mat-icon-button color="warn" (click)="delete(item)" aria-label="حذف"><mat-icon fontSet="material-icons-outlined">delete</mat-icon></button></td></ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+      <div *ngIf="!dataSource.data.length" class="empty">هنوز ژورنالی ثبت نشده است.</div>
+    </div>
+    <mat-paginator [pageSize]="10" [pageSizeOptions]="[5,10,20]" showFirstLastButtons></mat-paginator>
+  </mat-card>
+</div>

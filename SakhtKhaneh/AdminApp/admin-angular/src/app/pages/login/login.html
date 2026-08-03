@@ -1,0 +1,38 @@
+<div class="login-page admin-page">
+  <mat-card class="login-card">
+    <div class="login-brand">
+      <img src="/assets/img/logo_transparent_bg.png" alt="ساخت خانه" width="92" height="92">
+      <div>
+        <h1>پنل مدیریت ساخت خانه</h1>
+        <p>ورود مدیران سامانه</p>
+      </div>
+    </div>
+
+    <form #loginForm="ngForm" (ngSubmit)="login()" novalidate>
+      <mat-form-field appearance="outline">
+        <mat-label>ایمیل مدیر</mat-label>
+        <input matInput type="email" [(ngModel)]="username" name="username" autocomplete="username" required email>
+        <mat-icon matPrefix fontSet="material-icons-outlined">mail</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>رمز عبور</mat-label>
+        <input matInput [type]="hidePassword ? 'password' : 'text'" [(ngModel)]="password" name="password" autocomplete="current-password" required>
+        <mat-icon matPrefix fontSet="material-icons-outlined">lock</mat-icon>
+        <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword" [attr.aria-label]="hidePassword ? 'نمایش رمز' : 'مخفی‌کردن رمز'">
+          <mat-icon fontSet="material-icons-outlined">{{ hidePassword ? 'visibility' : 'visibility_off' }}</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <div *ngIf="message" class="login-message" role="alert">{{ message }}</div>
+
+      <button mat-flat-button color="primary" class="login-submit" type="submit" [disabled]="loading || loginForm.invalid">
+        <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+        <mat-icon *ngIf="!loading" fontSet="material-icons-outlined">login</mat-icon>
+        <span>{{ loading ? 'در حال ورود...' : 'ورود امن' }}</span>
+      </button>
+    </form>
+
+    <p class="login-note">دسترسی این بخش فقط برای مدیران تأییدشده سامانه مجاز است.</p>
+  </mat-card>
+</div>

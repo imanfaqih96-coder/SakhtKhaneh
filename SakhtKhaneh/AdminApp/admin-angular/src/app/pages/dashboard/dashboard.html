@@ -1,0 +1,109 @@
+<section class="dashboard-page admin-page">
+  <header class="dashboard-heading">
+    <div>
+      <span class="eyebrow">مرکز فرمان داده</span>
+      <h1>داشبورد مدیریت</h1>
+      <p>نمای زنده عملکرد سایت در ۳۰ روز اخیر، همراه با مقایسه دوره قبل.</p>
+    </div>
+    <div class="heading-actions">
+      <span class="live-badge"><i></i>به‌روزرسانی خودکار</span>
+      <button mat-stroked-button type="button" (click)="openReport('visits')">
+        <mat-icon>monitoring</mat-icon>
+        گزارش جامع
+      </button>
+    </div>
+  </header>
+
+  <div class="stats-grid" [class.is-loading]="loading">
+    <button class="kpi-card kpi-card--primary" type="button" (click)="openReport('visits')">
+      <div class="kpi-card__top">
+        <span class="kpi-card__icon"><mat-icon>visibility</mat-icon></span>
+        <span class="kpi-card__period">۳۰ روز اخیر</span>
+      </div>
+      <div class="kpi-card__value">{{ stats.totalVisits | number:'1.0-0' }}</div>
+      <div class="kpi-card__label">مجموع بازدیدها</div>
+      <div class="kpi-card__trend" #visitsTrend aria-label="نمودار روند بازدید ۳۰ روز اخیر"></div>
+      <div class="kpi-card__footer" [class.is-negative]="stats.changePercent < 0">
+        <span><mat-icon>{{ stats.changePercent >= 0 ? 'trending_up' : 'trending_down' }}</mat-icon>{{ stats.changePercent | number:'1.0-1' }}٪ نسبت به دوره قبل</span>
+        <mat-icon>arrow_back</mat-icon>
+      </div>
+    </button>
+
+    <button class="kpi-card" type="button" (click)="openReport('users')">
+      <div class="kpi-card__top">
+        <span class="kpi-card__icon"><mat-icon>person_search</mat-icon></span>
+        <span class="kpi-card__period">کاربر یکتا</span>
+      </div>
+      <div class="kpi-card__value">{{ stats.totalUsers | number:'1.0-0' }}</div>
+      <div class="kpi-card__label">بازدیدکنندگان یکتا</div>
+      <div class="kpi-card__micro"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="kpi-card__footer"><span>تحلیل رفتار مخاطب</span><mat-icon>arrow_back</mat-icon></div>
+    </button>
+
+    <button class="kpi-card" type="button" (click)="openReport('cities')">
+      <div class="kpi-card__top">
+        <span class="kpi-card__icon"><mat-icon>location_city</mat-icon></span>
+        <span class="kpi-card__period">پراکندگی</span>
+      </div>
+      <div class="kpi-card__value">{{ stats.citiesCount | number:'1.0-0' }}</div>
+      <div class="kpi-card__label">شهر شناسایی‌شده</div>
+      <div class="kpi-card__micro"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="kpi-card__footer"><span>جزئیات جغرافیایی</span><mat-icon>arrow_back</mat-icon></div>
+    </button>
+
+    <button class="kpi-card" type="button" (click)="openReport('countries')">
+      <div class="kpi-card__top">
+        <span class="kpi-card__icon"><mat-icon>public</mat-icon></span>
+        <span class="kpi-card__period">بین‌المللی</span>
+      </div>
+      <div class="kpi-card__value">{{ stats.countriesCount | number:'1.0-0' }}</div>
+      <div class="kpi-card__label">کشور شناسایی‌شده</div>
+      <div class="kpi-card__micro"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="kpi-card__footer"><span>مشاهده گزارش کامل</span><mat-icon>arrow_back</mat-icon></div>
+    </button>
+  </div>
+
+  <section class="table-card">
+    <div class="table-heading">
+      <div>
+        <span class="eyebrow">رفتار مخاطبان · ۳۰ روز اخیر</span>
+        <h2>محبوب‌ترین صفحات</h2>
+      </div>
+      <button mat-button type="button" (click)="openReport('visits')">مشاهده گزارش کامل</button>
+    </div>
+
+    <div class="table-scroll">
+      <table mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="index">
+          <th mat-header-cell *matHeaderCellDef>#</th>
+          <td mat-cell *matCellDef="let element; let i = index"><span class="row-index">{{ i + 1 }}</span></td>
+        </ng-container>
+        <ng-container matColumnDef="path">
+          <th mat-header-cell *matHeaderCellDef>مسیر</th>
+          <td mat-cell *matCellDef="let element"><strong dir="ltr">{{ element.path }}</strong></td>
+        </ng-container>
+        <ng-container matColumnDef="count">
+          <th mat-header-cell *matHeaderCellDef>بازدید</th>
+          <td mat-cell *matCellDef="let element"><span class="count-pill">{{ element.count | number }}</span></td>
+        </ng-container>
+        <ng-container matColumnDef="lastVisit">
+          <th mat-header-cell *matHeaderCellDef>آخرین بازدید</th>
+          <td mat-cell *matCellDef="let element">{{ element.lastVisit | persianDate:true }}</td>
+        </ng-container>
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>نوع</th>
+          <td mat-cell *matCellDef="let element">{{ element.type || '—' }}</td>
+        </ng-container>
+        <ng-container matColumnDef="link">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element">
+            <a class="open-link" [href]="element.link" target="_blank" rel="noopener" aria-label="باز کردن صفحه"><mat-icon>open_in_new</mat-icon></a>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+    <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </section>
+</section>

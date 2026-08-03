@@ -1,176 +1,157 @@
-﻿@using Newtonsoft.Json
-@using SakhtKhaneh.Models.Projects
-
-@model Project;
-
+@using System.Text.Json
+@model Project
+@inject IConfiguration Configuration
 @{
-    ViewData["Title"] = Model?.Title;
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    var siteBaseUrl = (Configuration["Site:BaseUrl"] ?? $"{Context.Request.Scheme}://{Context.Request.Host}").TrimEnd('/');
+    var canonicalUrl = $"{siteBaseUrl}/Projects/{Model.Endpoint_Path}";
+    var title = string.IsNullOrWhiteSpace(Model.SeoTitle) ? Model.Title : Model.SeoTitle;
+    var description = string.IsNullOrWhiteSpace(Model.MetaDescription) ? Model.Description ?? Model.Title : Model.MetaDescription;
+    if (description.Length > 165) description = $"{description[..162].TrimEnd()}...";
+
+    var coverImageUrl = WebAssetUrl.Normalize(Model.CoverImageUrl, "/assets/img/banner-1600.webp");
+    var imageUrl = WebAssetUrl.Absolute(coverImageUrl, siteBaseUrl);
+    var imageAlt = string.IsNullOrWhiteSpace(Model.CoverImageAlt) ? Model.Title : Model.CoverImageAlt;
+
+    var images = new List<(string Url, string Alt)> { (coverImageUrl, imageAlt) };
+    if (Model.Gallery is { Count: > 0 })
+    {
+        var index = 1;
+        foreach (var item in Model.Gallery.Where(item => !string.IsNullOrWhiteSpace(item.ImageUrl)))
+        {
+            var normalized = WebAssetUrl.Normalize(item.ImageUrl);
+            if (!images.Any(existing => existing.Url.Equals(normalized, StringComparison.OrdinalIgnoreCase)))
+                images.Add((normalized, $"تصویر {index++} از پروژه {Model.Title}"));
+        }
+    }
+
+    ViewData["Title"] = title;
+    ViewData["MetaDescription"] = description;
+    ViewData["CanonicalUrl"] = canonicalUrl;
+    ViewData["OpenGraphImage"] = imageUrl;
+    ViewData["VisitType"] = "project";
+    ViewData["VisitParam"] = Model.Id.ToString();
+
+    var schema = new Dictionary<string, object?>
+    {
+        ["@context"] = "https://schema.org",
+        ["@type"] = "CreativeWork",
+        ["name"] = Model.Title,
+        ["description"] = description,
+        ["url"] = canonicalUrl,
+        ["image"] = images.Select(item => WebAssetUrl.Absolute(item.Url, siteBaseUrl)),
+        ["creator"] = new Dictionary<string, object?> { ["@type"] = "Organization", ["name"] = "ساخت خانه" },
+        ["locationCreated"] = Model.Location
+    };
+    var breadcrumb = new Dictionary<string, object?>
+    {
+        ["@context"] = "https://schema.org", ["@type"] = "BreadcrumbList",
+        ["itemListElement"] = new object[]
+        {
+            new Dictionary<string, object?> { ["@type"] = "ListItem", ["position"] = 1, ["name"] = "صفحه اصلی", ["item"] = siteBaseUrl },
+            new Dictionary<string, object?> { ["@type"] = "ListItem", ["position"] = 2, ["name"] = "پروژه‌ها", ["item"] = $"{siteBaseUrl}/Projects" },
+            new Dictionary<string, object?> { ["@type"] = "ListItem", ["position"] = 3, ["name"] = Model.Title, ["item"] = canonicalUrl }
+        }
+    };
+}
+@section Preloads {
+    <link rel="preload" as="image" href="@coverImageUrl" fetchpriority="high" />
+}
+@section Seo {
+    <script type="application/ld+json">@Html.Raw(JsonSerializer.Serialize(schema))</script>
+    <script type="application/ld+json">@Html.Raw(JsonSerializer.Serialize(breadcrumb))</script>
 }
 
+@await Html.PartialAsync("_PageHeroPartialView", new PageHeroViewModel
+{
+    Eyebrow = "پروژه ساخت خانه",
+    Title = Model.Title,
+    Description = description,
+    CurrentPageTitle = Model.Title,
+    ParentTitle = "پروژه‌ها",
+    ParentUrl = "/Projects",
+    BackgroundImage = coverImageUrl,
+    Compact = true
+})
 
-<!-- Content -->
 <div class="content-wrapper">
-
-    <!-- Lines -->
-    <section class="content-lines-wrapper">
-        <div class="content-lines-inner">
-            <div class="content-lines"></div>
-        </div>
-    </section>
-    <!-- Header Banner -->
-    <section class="banner-header banner-img valign bg-img bg-fixed" data-overlay-darkgray="5" data-background="/assets/img/banner.jpg"> </section>
-
-    <!-- Project Page -->
+    <section class="content-lines-wrapper" aria-hidden="true"><div class="content-lines-inner"><div class="content-lines"></div></div></section>
     <section class="project-page section-padding2">
         <div class="container">
-            <!-- project slider -->
-            <div class="row justify-content-center" dir="ltr">
-                <div class="col-md-12">
-                    <div class="owl-carousel owl-theme" dir="ltr">
-                        <div class="portfolio-item"> <img class="img-fluid" src="@Model.CoverImageUrl" alt=""> </div>
-                        @if (Model.Gallery != null && Model.Gallery.Count > 0)
+            <div class="sk-content-shell">
+                <div class="sk-detail-gallery" data-detail-gallery data-sk-reveal="scale">
+                    <div class="sk-detail-gallery__main">
+                        @for (var index = 0; index < images.Count; index++)
                         {
-                            @foreach (var item in Model.Gallery)
-                            {
-                                <div class="portfolio-item"> <img class="img-fluid" src="@item.ImageUrl" alt=""> </div>
-                            }
+                            var item = images[index];
+                            <button class="sk-detail-gallery__slide @(index == 0 ? "is-active" : string.Empty)"
+                                    type="button"
+                                    data-gallery-slide
+                                    data-gallery-group="project-@Model.Id"
+                                    data-gallery-src="@item.Url"
+                                    data-gallery-alt="@item.Alt"
+                                    data-gallery-title="@Model.Title"
+                                    aria-label="بزرگ‌نمایی تصویر @(index + 1) پروژه">
+                                <img src="@item.Url"
+                                     alt="@item.Alt"
+                                     width="1400"
+                                     height="900"
+                                     loading="@(index == 0 ? "eager" : "lazy")"
+                                     fetchpriority="@(index == 0 ? "high" : "auto")"
+                                     decoding="async" />
+                            </button>
                         }
-                    </div>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="project-bar">
-                                <div class="row justify-content-between align-items-center text-left text-lg-start">
-                                    <div class="col-md-3 col-sm-6 col-6 mb-15">
-                                        <h5>تاریخ پروژه</h5>
-                                        <h6>@Model.Time</h6>
-                                    </div>
-                                    <div class="col-md-3 col-sm-6 col-6 mb-15">
-                                        <h5>مالک پروژه</h5>
-                                        <h6>@Model.Owner</h6>
-                                    </div>
-                                    <div class="col-md-3 col-sm-6 col-6 mb-15">
-                                        <h5>نام پروژه</h5>
-                                        <h6>@Model.Title</h6>
-                                    </div>
-                                    <div class="col-md-3 col-sm-6 col-6 mb-15">
-                                        <h5>موقعیت پروژه</h5>
-                                        <h6>@Model.Location</h6>
-                                    </div>
-                                </div>
+
+                        @if (images.Count > 1)
+                        {
+                            <div class="sk-detail-gallery__controls">
+                                <button type="button" data-gallery-prev aria-label="تصویر قبلی">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>
+                                </button>
+                                <button type="button" data-gallery-next aria-label="تصویر بعدی">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+                                </button>
                             </div>
-                        </div>
+                        }
+                        <span class="sk-detail-gallery__zoom-hint">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.3-4.3m2.3-5.2A7.5 7.5 0 1 1 4 11.5a7.5 7.5 0 0 1 15 0Zm-7.5-3v6m-3-3h6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                            برای بزرگ‌نمایی کلیک کنید
+                        </span>
                     </div>
-                </div>
-            </div>
-            <!-- project content -->
-            <div class="row">
-                <div class="col-md-12">
-                    <h2 class="section-title2">@Model.Title</h2>
-                    <p class="mb-30">
-                        @Model.Description
-                    </p>
 
+                    @if (images.Count > 1)
+                    {
+                        <div class="sk-detail-gallery__thumbs" aria-label="انتخاب تصویر پروژه">
+                            @for (var index = 0; index < images.Count; index++)
+                            {
+                                var item = images[index];
+                                <button class="sk-detail-gallery__thumb @(index == 0 ? "is-active" : string.Empty)"
+                                        type="button"
+                                        data-gallery-thumb
+                                        aria-label="نمایش تصویر @(index + 1)">
+                                    <img src="@item.Url" alt="" width="112" height="84" loading="lazy" decoding="async" />
+                                </button>
+                            }
+                        </div>
+                    }
+                </div>
+
+                <div class="project-meta-grid" dir="rtl" data-sk-reveal="up">
+                    <div><h2 class="h6">وضعیت پروژه</h2><p><span class="sk-project-status sk-project-status--inline @ProjectPresentation.StatusCss(Model.Status)">@ProjectPresentation.StatusTitle(Model.Status)</span></p></div>
+                    <div><h2 class="h6">دسته‌بندی</h2><p>@if (Model.Category is null) { <span>—</span> } else { <a href="/Projects/Category/@Model.Category.Slug">@Model.Category.Title</a> }</p></div>
+                    <div><h2 class="h6">تاریخ پروژه</h2><p>@IranDateTime.ToPersianDigits(Model.Time ?? "—")</p></div>
+                    <div><h2 class="h6">مالک پروژه</h2><p>@(Model.Owner ?? "—")</p></div>
+                    <div><h2 class="h6">نام پروژه</h2><p>@Model.Title</p></div>
+                    <div><h2 class="h6">موقعیت پروژه</h2><p>@(Model.Location ?? "—")</p></div>
+                </div>
+
+                <article class="project-content" data-sk-reveal="up">
+                    @if (!string.IsNullOrWhiteSpace(Model.Description))
+                    {
+                        <p class="sk-article-intro">@Model.Description</p>
+                    }
                     @Html.Raw(Model.Content)
-
-                </div>
+                </article>
             </div>
         </div>
     </section>
-
 </div>
-
-<style>
-    .owl-nav {
-        position: relative !important;
-        top: -115px !important;
-        width: 96px !important;
-        left: calc(100% - 115px) !important;
-    }
-</style>
-
-
-@section Scripts {
-    <script src="/assets/js/modernizr-2.6.2.min.js"></script>
-    <script src="/assets/js/imagesloaded.pkgd.min.js"></script>
-    <script src="/assets/js/jquery.isotope.v3.0.2.js"></script>
-    <script src="/assets/js/popper.min.js"></script>
-    <script src="/assets/js/bootstrap.min.js"></script>
-    <script src="/assets/js/scrollIt.min.js"></script>
-    <script src="/assets/js/jquery.waypoints.min.js"></script>
-    <script src="/assets/js/owl.carousel.min.js"></script>
-    <script src="/assets/js/jquery.stellar.min.js"></script>
-    <script src="/assets/js/jquery.magnific-popup.js"></script>
-    <script src="/assets/js/YouTubePopUp.js"></script>
-    <script src="/assets/js/before-after.js"></script>
-    <script src="/assets/js/vegas.slider.min.js"></script>
-    <script src="/assets/js/home.js"></script>
-
-    <script>
-        const geolocation_api_key = '97c62498a168489898a05d474162b7ab';
-
-        function geolocate() {
-        const myHeaders = new Headers();
-
-
-        const requestOptions = {
-        method: "GET",
-        headers: myHeaders,
-        redirect: "follow"
-        };
-
-        fetch("https://api.ipgeolocation.io/v2/ipgeo?apiKey=" + geolocation_api_key + "", requestOptions)
-        .then((response) => response.text())
-        .then((result) => {
-        console.log(result)
-        })
-        .catch((error) => console.error(error));
-        }
-
-        function recordVisit() {
-        var path = window.location.href.replace(window.location.origin, '');
-        const myHeaders = new Headers();
-
-
-        const requestOptions = {
-        method: "GET",
-        headers: myHeaders,
-        redirect: "follow"
-        };
-
-        fetch("https://api.ipgeolocation.io/v2/ipgeo?apiKey=" + geolocation_api_key + "", requestOptions)
-        .then((response) => response.text())
-        .then((result) => {
-        var geolocation = result;
-        var data = {
-        path: path,
-        pathType: 'project',
-        pathParam: '@Model.Id',
-        geolocation: JSON.parse(geolocation)
-        }
-        var stringified = JSON.stringify(data);
-
-        fetch('/api/submitVisitRecord', {
-        method: 'POST',
-        headers: {
-        'Content-Type': 'application/json'
-        },
-        body: stringified
-        })
-        .then(async res => {
-        const result = res;
-        console.log("✅ visit recorded:", result);
-        })
-        .catch(err => {
-        console.error("❌ Visit record failed:", err);
-        });
-
-        })
-        .catch((error) => console.error(error));
-        }
-
-        recordVisit();
-
-        console.log(@JsonConvert.SerializeObject(Model.Gallery))
-    </script>
-}

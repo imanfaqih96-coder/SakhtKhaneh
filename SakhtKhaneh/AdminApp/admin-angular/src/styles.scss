@@ -1,0 +1,94 @@
+@use '@angular/material' as mat;
+
+// Primary: dark blue shades
+$primary: mat.m2-define-palette( ( 50: #e3eaf8, 100: #bac7f0, 200: #8ea0e6, 300: #6280db, 400: #4267d5, 500: #1e4ecf, // main
+600: #1b49c4, 700: #1740b5, 800: #1337a6, 900: #0d2390, A100: #6f99ff, A200: #497cff, A400: #1e4ecf, A700: #173eab, contrast: ( 50: black, 100: black, 200: black, 300: white, 400: white, 500: white, 600: white, 700: white, 800: white, 900: white, A100: black, A200: white, A400: white, A700: white ) ) );
+
+// Accent: gold
+$accent: mat.m2-define-palette( ( 50: #fff8e6, 100: #ffedc2, 200: #ffe099, 300: #ffd466, 400: #ffca3f, 500: #ffc107, // main
+600: #ffb800, 700: #ffa500, 800: #ff9900, 900: #ff8800, A100: #ffe58f, A200: #ffd73f, A400: #ffc107, A700: #ffb300, contrast: ( 50: black, 100: black, 200: black, 300: black, 400: black, 500: black, 600: black, 700: black, 800: black, 900: black, A100: black, A200: black, A400: black, A700: black ) ) );
+
+// Warn: pink
+$warn: mat.m2-define-palette(mat.$m2-pink-palette);
+
+// Theme
+$brand-theme: mat.m2-define-light-theme(( color: ( primary: $primary, accent: $accent, warn: $warn ) ));
+
+@include mat.all-component-themes($brand-theme);
+
+mat-icon.local-svg-icon,
+.mat-icon.local-svg-icon {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  font-size: 24px;
+  line-height: 1;
+  overflow: visible;
+  direction: ltr;
+}
+
+mat-icon.local-svg-icon svg,
+.mat-icon.local-svg-icon svg {
+  display: block;
+  width: 1em;
+  height: 1em;
+  pointer-events: none;
+}
+
+
+:root {
+  color-scheme: light;
+  --admin-surface: #f5f7fb;
+  --admin-card: #ffffff;
+  --admin-border: rgba(15, 35, 61, .10);
+  --admin-text-muted: #667085;
+}
+
+html, body { min-height: 100%; }
+body {
+  margin: 0;
+  font-family: 'Vazirmatn', sans-serif !important;
+  direction: rtl;
+  text-align: right;
+  background: var(--admin-surface);
+}
+
+* { box-sizing: border-box; }
+img { max-width: 100%; }
+.mat-mdc-form-field { width: 100%; }
+
+.admin-page { animation: adminPageEnter .32s ease-out both; }
+@keyframes adminPageEnter {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+.admin-alert {
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(245, 158, 11, .28);
+  background: #fffbeb;
+  color: #92400e;
+  margin-bottom: 20px;
+}
+
+.admin-card {
+  background: var(--admin-card);
+  border: 1px solid var(--admin-border);
+  border-radius: 16px;
+  box-shadow: 0 10px 35px rgba(15, 35, 61, .07);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+
+/* V7 interaction stability and mobile zoom protection. */
+html, body { touch-action: manipulation; }
+button, a, input, textarea, select, .mat-mdc-button-base { -webkit-tap-highlight-color: transparent; }
+.mat-mdc-button-base, .mat-mdc-button-base:hover, .mat-mdc-button-base:focus-visible { transform: none !important; }
+.mat-mdc-button-base .mdc-button__label { display: inline-flex; align-items: center; line-height: 1.2; white-space: nowrap; transform: none !important; }
+@media (max-width: 991.98px) { input, textarea, select, .mat-mdc-input-element { font-size: 16px !important; } }

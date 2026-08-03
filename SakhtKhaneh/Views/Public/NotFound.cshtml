@@ -1,0 +1,29 @@
+@{
+    ViewData["Title"] = "صفحه پیدا نشد";
+    ViewData["MetaDescription"] = "صفحه درخواستی در وب‌سایت ساخت خانه پیدا نشد.";
+    ViewData["Robots"] = "noindex,follow";
+}
+
+@await Html.PartialAsync("_PageHeroPartialView", new PageHeroViewModel
+{
+    Eyebrow = "خطای 404",
+    Title = "صفحه موردنظر",
+    AccentTitle = "پیدا نشد",
+    Description = "ممکن است نشانی صفحه تغییر کرده باشد یا محتوای موردنظر دیگر در دسترس نباشد.",
+    CurrentPageTitle = "صفحه پیدا نشد",
+    Compact = true
+})
+
+<section class="sk-section section-padding">
+    <div class="container">
+        <div class="sk-empty-state" data-sk-reveal="scale">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16Zm-3 8h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            <h2>مسیر درست را از اینجا ادامه دهید</h2>
+            <p>می‌توانید به صفحه اصلی برگردید یا پروژه‌ها و مطالب منتشرشده را مشاهده کنید.</p>
+            <div class="sk-home-hero__actions justify-content-center mt-20">
+                <a class="sk-button sk-button--primary" href="/"><span>صفحه اصلی</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+                <a class="sk-button sk-button--outline" href="/Projects"><span>مشاهده پروژه‌ها</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            </div>
+        </div>
+    </div>
+</section>

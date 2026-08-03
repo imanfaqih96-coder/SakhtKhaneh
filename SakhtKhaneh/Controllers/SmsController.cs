@@ -1,39 +1,29 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SakhtKhaneh.Models.Messages;
+using SakhtKhaneh.Services;
 
-namespace SakhtKhaneh.Controllers
+namespace SakhtKhaneh.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+[Authorize(Roles = AdminSeedService.AdministratorRole)]
+public class SmsController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class SmsController : ControllerBase
+    private readonly ISmsService _smsService;
+
+    public SmsController(ISmsService smsService)
     {
-        private string API_KEY = "6Q2ed8peysii7PoP9kv15JejTgspMZ9ygWHVbdZyDu0xuaXt";
-        private string USERNAME = "9124058249";
-        private string LINE_NUMBER = "30002108014870";
+        _smsService = smsService;
+    }
 
-        [HttpPost("Send")]
-        public async Task<IActionResult> SendSms(SendSmsModel model)
-        {
-            try
-            {
-                HttpClient httpClient = new HttpClient();
-                var raw_response = await httpClient.GetAsync(
-                "https://api.sms.ir/v1/send?" + 
-                "username=" + USERNAME + 
-                "&password=" + API_KEY + 
-                "&mobile=" + model.Target + 
-                "&line=" + LINE_NUMBER +
-                "&text=" + model.Message
-                );
-                var result = await raw_response.Content.ReadAsStringAsync();
+    [HttpPost("Send")]
+    public async Task<IActionResult> SendSms([FromBody] SendSmsModel model, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(model.Target) || string.IsNullOrWhiteSpace(model.Message))
+            return BadRequest();
 
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+        var success = await _smsService.SendAsync(model.Target.Trim(), model.Message.Trim(), cancellationToken);
+        return success ? Ok() : StatusCode(StatusCodes.Status502BadGateway);
     }
 }

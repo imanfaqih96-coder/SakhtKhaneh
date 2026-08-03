@@ -1,0 +1,38 @@
+<nav class="menu" aria-label="منوی مدیریت">
+  <ng-container *ngFor="let item of menu">
+    <button
+      *ngIf="!item.children"
+      type="button"
+      class="menu-item"
+      [class.active]="isActive(item.route)"
+      (click)="navigate(item.route)">
+      <span class="menu-icon"><mat-icon>{{ item.icon }}</mat-icon></span>
+      <span>{{ item.title }}</span>
+    </button>
+
+    <mat-expansion-panel
+      *ngIf="item.children"
+      class="menu-group"
+      [expanded]="hasActiveChild(item)">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <span class="menu-icon"><mat-icon>{{ item.icon }}</mat-icon></span>
+          <span>{{ item.title }}</span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div class="submenu">
+        <button
+          *ngFor="let child of item.children"
+          type="button"
+          class="submenu-item"
+          [class.active]="isActive(child.route)"
+          (click)="navigate(child.route)">
+          <span class="submenu-dot"></span>
+          <span>{{ child.title }}</span>
+          <mat-icon class="submenu-arrow">arrow_forward</mat-icon>
+        </button>
+      </div>
+    </mat-expansion-panel>
+  </ng-container>
+</nav>

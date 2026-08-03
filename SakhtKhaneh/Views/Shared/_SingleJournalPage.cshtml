@@ -1,0 +1,175 @@
+@using System.Text.Json
+@model Journal
+@inject IConfiguration Configuration
+@{
+    var siteBaseUrl = (Configuration["Site:BaseUrl"] ?? $"{Context.Request.Scheme}://{Context.Request.Host}").TrimEnd('/');
+    var canonicalUrl = $"{siteBaseUrl}/Journals/{Model.EndpointPath}";
+    var normalizedImage = WebAssetUrl.Normalize(Model.ImageUrl, "/assets/img/banner-1600.webp");
+    var imageUrl = WebAssetUrl.Absolute(normalizedImage, siteBaseUrl);
+
+    var images = new List<(string Url, string Alt)>();
+    if (Model.Gallery is { Count: > 0 })
+    {
+        foreach (var item in Model.Gallery.OrderBy(item => item.SortOrder))
+        {
+            var url = WebAssetUrl.Normalize(item.ImageUrl);
+            var alt = string.IsNullOrWhiteSpace(item.ImageAlt) ? Model.Title : item.ImageAlt;
+            if (!images.Any(existing => existing.Url.Equals(url, StringComparison.OrdinalIgnoreCase)))
+                images.Add((url, alt));
+        }
+    }
+    if (images.Count == 0)
+        images.Add((normalizedImage, string.IsNullOrWhiteSpace(Model.ImageAlt) ? Model.Title : Model.ImageAlt));
+
+    var plainDescription = System.Net.WebUtility.HtmlDecode(
+        System.Text.RegularExpressions.Regex.Replace(Model.Description ?? string.Empty, "<.*?>", string.Empty));
+    if (plainDescription.Length > 165) plainDescription = $"{plainDescription[..162].TrimEnd()}...";
+
+    var tags = (Model.Tags ?? string.Empty).Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+    var publishedAt = DateTime.SpecifyKind(Model.CreationDate, DateTimeKind.Utc).ToString("O");
+    var modifiedAt = Model.LastUpdateDate.HasValue
+        ? DateTime.SpecifyKind(Model.LastUpdateDate.Value, DateTimeKind.Utc).ToString("O")
+        : publishedAt;
+
+    ViewData["Title"] = Model.Title;
+    ViewData["MetaDescription"] = plainDescription;
+    ViewData["CanonicalUrl"] = canonicalUrl;
+    ViewData["OpenGraphType"] = "article";
+    ViewData["OpenGraphImage"] = WebAssetUrl.Absolute(images[0].Url, siteBaseUrl);
+    ViewData["Author"] = Model.Author;
+    ViewData["VisitType"] = "journal";
+    ViewData["VisitParam"] = Model.Id.ToString();
+
+    var schema = new Dictionary<string, object?>
+    {
+        ["@context"] = "https://schema.org",
+        ["@type"] = "ImageGallery",
+        ["name"] = Model.Title,
+        ["description"] = plainDescription,
+        ["url"] = canonicalUrl,
+        ["datePublished"] = publishedAt,
+        ["dateModified"] = modifiedAt,
+        ["creator"] = new Dictionary<string, object?> { ["@type"] = "Person", ["name"] = Model.Author },
+        ["keywords"] = tags,
+        ["associatedMedia"] = images.Select(item => new Dictionary<string, object?>
+        {
+            ["@type"] = "ImageObject",
+            ["contentUrl"] = WebAssetUrl.Absolute(item.Url, siteBaseUrl),
+            ["caption"] = item.Alt
+        })
+    };
+
+    var breadcrumbSchema = new Dictionary<string, object?>
+    {
+        ["@context"] = "https://schema.org",
+        ["@type"] = "BreadcrumbList",
+        ["itemListElement"] = new object[]
+        {
+            new Dictionary<string, object?> { ["@type"] = "ListItem", ["position"] = 1, ["name"] = "صفحه اصلی", ["item"] = $"{siteBaseUrl}/" },
+            new Dictionary<string, object?> { ["@type"] = "ListItem", ["position"] = 2, ["name"] = "ژورنال‌ها", ["item"] = $"{siteBaseUrl}/Journals" },
+            new Dictionary<string, object?> { ["@type"] = "ListItem", ["position"] = 3, ["name"] = Model.Title, ["item"] = canonicalUrl }
+        }
+    };
+}
+@section Preloads {
+    <link rel="preload" as="image" href="@images[0].Url" fetchpriority="high" />
+}
+@section Seo {
+    <script type="application/ld+json">@Html.Raw(JsonSerializer.Serialize(schema))</script>
+    <script type="application/ld+json">@Html.Raw(JsonSerializer.Serialize(breadcrumbSchema))</script>
+}
+
+@await Html.PartialAsync("_PageHeroPartialView", new PageHeroViewModel
+{
+    Eyebrow = $"ژورنال تصویری · {images.Count} صفحه",
+    Title = Model.Title,
+    Description = plainDescription,
+    CurrentPageTitle = Model.Title,
+    ParentTitle = "ژورنال‌ها",
+    ParentUrl = "/Journals",
+    BackgroundImage = images[0].Url,
+    Compact = true
+})
+
+<div class="content-wrapper journal-page">
+    <section class="content-lines-wrapper" aria-hidden="true"><div class="content-lines-inner"><div class="content-lines"></div></div></section>
+    <section class="section-padding2">
+        <div class="container">
+            <article class="sk-content-shell">
+                <div class="sk-detail-gallery" data-detail-gallery data-sk-reveal="scale">
+                    <div class="sk-detail-gallery__main">
+                        @for (var index = 0; index < images.Count; index++)
+                        {
+                            var item = images[index];
+                            <button class="sk-detail-gallery__slide @(index == 0 ? "is-active" : string.Empty)"
+                                    type="button"
+                                    data-gallery-slide
+                                    data-gallery-group="journal-@Model.Id"
+                                    data-gallery-src="@item.Url"
+                                    data-gallery-alt="@item.Alt"
+                                    data-gallery-title="@Model.Title"
+                                    aria-label="بزرگ‌نمایی صفحه @(index + 1) ژورنال">
+                                <img src="@item.Url"
+                                     alt="@item.Alt"
+                                     width="1400"
+                                     height="900"
+                                     loading="@(index == 0 ? "eager" : "lazy")"
+                                     fetchpriority="@(index == 0 ? "high" : "auto")"
+                                     decoding="async" />
+                            </button>
+                        }
+                        @if (images.Count > 1)
+                        {
+                            <div class="sk-detail-gallery__controls">
+                                <button type="button" data-gallery-prev aria-label="صفحه قبلی">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>
+                                </button>
+                                <button type="button" data-gallery-next aria-label="صفحه بعدی">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+                                </button>
+                            </div>
+                        }
+                        <span class="sk-detail-gallery__zoom-hint">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.3-4.3m2.3-5.2A7.5 7.5 0 1 1 4 11.5a7.5 7.5 0 0 1 15 0Zm-7.5-3v6m-3-3h6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                            کلیک برای مشاهده و زوم
+                        </span>
+                    </div>
+
+                    @if (images.Count > 1)
+                    {
+                        <div class="sk-detail-gallery__thumbs" aria-label="انتخاب صفحه ژورنال">
+                            @for (var index = 0; index < images.Count; index++)
+                            {
+                                var item = images[index];
+                                <button class="sk-detail-gallery__thumb @(index == 0 ? "is-active" : string.Empty)"
+                                        type="button"
+                                        data-gallery-thumb
+                                        aria-label="نمایش صفحه @(index + 1)">
+                                    <img src="@item.Url" alt="" width="112" height="84" loading="lazy" decoding="async" />
+                                </button>
+                            }
+                        </div>
+                    }
+                </div>
+
+                <div class="journal-description" data-sk-reveal="up">@Html.Raw(Model.Description)</div>
+
+                @if (tags.Length > 0)
+                {
+                    <ul class="journal-tags" aria-label="برچسب‌های ژورنال">
+                        @foreach (var tag in tags) { <li>#@tag</li> }
+                    </ul>
+                }
+
+                <div class="sk-author-card" data-sk-reveal="up">
+                    <img src="/assets/img/author-320.webp" alt="تصویر نویسنده، @Model.Author" width="64" height="64" loading="lazy" decoding="async" />
+                    <div>
+                        <small>تهیه و انتشار</small>
+                        <strong>@Model.Author</strong>
+                        <time datetime="@Model.CreationDate.ToString("yyyy-MM-dd")">@IranDateTime.ToPersianDate(Model.CreationDate, true)</time>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+</div>

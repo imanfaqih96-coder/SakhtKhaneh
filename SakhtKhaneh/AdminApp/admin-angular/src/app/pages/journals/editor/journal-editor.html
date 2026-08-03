@@ -1,0 +1,135 @@
+<div class="container py-4 admin-page">
+  <div class="editor-heading">
+    <div>
+      <span class="eyebrow">ژورنال چندصفحه‌ای</span>
+      <h1>{{ id ? 'ویرایش ژورنال' : 'ژورنال جدید' }}</h1>
+      <p>تمام صفحات ژورنال را بارگذاری، مرتب و برای هر تصویر متن جایگزین ثبت کنید.</p>
+    </div>
+    <a mat-stroked-button routerLink="/journals/all">
+      <mat-icon>arrow_forward</mat-icon>
+      بازگشت
+    </a>
+  </div>
+
+  <div *ngIf="loading" class="loading"><mat-spinner diameter="44"></mat-spinner></div>
+
+  <mat-card *ngIf="!loading" class="editor-card">
+    <form #form="ngForm" (ngSubmit)="save()">
+      <div class="row g-3">
+        <div class="col-lg-7">
+          <mat-form-field appearance="outline">
+            <mat-label>عنوان ژورنال</mat-label>
+            <input matInput [(ngModel)]="model.title" name="title" required maxlength="180" />
+            <mat-icon matPrefix>title</mat-icon>
+          </mat-form-field>
+        </div>
+        <div class="col-lg-5">
+          <mat-form-field appearance="outline">
+            <mat-label>مسیر انگلیسی</mat-label>
+            <input matInput dir="ltr" [(ngModel)]="model.endpointPath" name="endpointPath" required placeholder="modern-lighting-journal" />
+            <mat-icon matPrefix>route</mat-icon>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <section class="gallery-manager">
+        <div class="gallery-manager__heading">
+          <div>
+            <span class="eyebrow">صفحات تصویری</span>
+            <h2>گالری ژورنال</h2>
+            <p>تصویر اول به‌عنوان جلد در فهرست ژورنال‌ها نمایش داده می‌شود.</p>
+          </div>
+          <div>
+            <input #fileInput type="file" hidden multiple accept="image/jpeg,image/png,image/webp" (change)="onFilesSelected($event)" />
+            <button mat-flat-button type="button" class="upload-button" (click)="fileInput.click()" [disabled]="uploading">
+              <mat-icon>add_photo_alternate</mat-icon>
+              افزودن تصاویر
+            </button>
+          </div>
+        </div>
+
+        <mat-progress-bar *ngIf="uploading" mode="determinate" [value]="uploadProgress"></mat-progress-bar>
+
+        <div *ngIf="model.gallery.length; else emptyGallery" class="gallery-workspace">
+          <div class="gallery-preview">
+            <img
+              [src]="model.gallery[activePreview].url"
+              [alt]="model.gallery[activePreview].alt || model.title" />
+            <span>{{ activePreview + 1 }} از {{ model.gallery.length }}</span>
+          </div>
+
+          <div class="gallery-pages">
+            <article
+              *ngFor="let image of model.gallery; let i = index; trackBy: trackGallery"
+              class="gallery-page"
+              [class.is-active]="i === activePreview"
+              [class.is-cover]="i === 0">
+              <button type="button" class="gallery-page__image" (click)="selectPreview(i)">
+                <img [src]="image.url" [alt]="image.alt || model.title" />
+                <span *ngIf="i === 0">جلد</span>
+              </button>
+
+              <mat-form-field appearance="outline">
+                <mat-label>متن جایگزین صفحه {{ i + 1 }}</mat-label>
+                <input matInput [(ngModel)]="image.alt" [name]="'galleryAlt' + i" maxlength="220" />
+              </mat-form-field>
+
+              <div class="gallery-page__actions">
+                <button mat-icon-button type="button" (click)="move(i, -1)" [disabled]="i === 0" aria-label="انتقال به قبل">
+                  <mat-icon>arrow_forward</mat-icon>
+                </button>
+                <button mat-icon-button type="button" (click)="move(i, 1)" [disabled]="i === model.gallery.length - 1" aria-label="انتقال به بعد">
+                  <mat-icon>arrow_back</mat-icon>
+                </button>
+                <button mat-icon-button type="button" class="remove-button" (click)="remove(i)" aria-label="حذف تصویر">
+                  <mat-icon>delete_outline</mat-icon>
+                </button>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <ng-template #emptyGallery>
+          <button type="button" class="empty-gallery" (click)="fileInput.click()">
+            <mat-icon>collections</mat-icon>
+            <strong>هنوز تصویری اضافه نشده است</strong>
+            <span>برای انتخاب هم‌زمان چند صفحه کلیک کنید.</span>
+          </button>
+        </ng-template>
+      </section>
+
+      <div class="editor-field">
+        <label>توضیحات ژورنال</label>
+        <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"></ngx-editor-menu>
+        <ngx-editor
+          [editor]="editor"
+          [(ngModel)]="model.description"
+          name="description"
+          [placeholder]="'توضیحات ژورنال را بنویسید...'"
+          required>
+        </ngx-editor>
+      </div>
+
+      <mat-form-field appearance="outline">
+        <mat-label>برچسب‌ها</mat-label>
+        <input matInput [(ngModel)]="model.tags" name="tags" placeholder="نورپردازی، لاینر، طراحی داخلی" />
+        <mat-icon matPrefix>tag</mat-icon>
+        <mat-hint>برچسب‌ها را با ویرگول جدا کنید.</mat-hint>
+      </mat-form-field>
+
+      <div class="publish-row">
+        <mat-slide-toggle [(ngModel)]="model.isPublished" name="isPublished" color="primary">
+          {{ model.isPublished ? 'منتشر شود' : 'به‌صورت پیش‌نویس ذخیره شود' }}
+        </mat-slide-toggle>
+      </div>
+
+      <div class="form-actions">
+        <button mat-flat-button type="submit" [disabled]="saving || uploading || form.invalid || !model.gallery.length">
+          <mat-spinner *ngIf="saving" diameter="18"></mat-spinner>
+          <mat-icon *ngIf="!saving">save</mat-icon>
+          ذخیره ژورنال
+        </button>
+      </div>
+    </form>
+  </mat-card>
+</div>

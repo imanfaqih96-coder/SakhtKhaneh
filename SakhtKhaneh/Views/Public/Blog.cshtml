@@ -1,145 +1,78 @@
-﻿@using SakhtKhaneh.Models.Blog;
-
-@model List<BlogPost>?;
-
+@model List<BlogPost>
 @{
-    ViewData["Title"] = "بلاگ";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "مقالات معماری و ساخت‌وساز";
+    ViewData["MetaDescription"] = "مقالات تخصصی ساخت خانه درباره معماری، طراحی داخلی، متریال، بازسازی و نکات اجرایی ساختمان.";
+    ViewData["VisitType"] = "static";
+    ViewData["VisitParam"] = "blog";
+
+    string PlainText(string? html, int maxLength = 170)
+    {
+        var value = System.Net.WebUtility.HtmlDecode(System.Text.RegularExpressions.Regex.Replace(html ?? string.Empty, "<.*?>", string.Empty));
+        value = System.Text.RegularExpressions.Regex.Replace(value, @"\s+", " ").Trim();
+        return value.Length <= maxLength ? value : $"{value[..(maxLength - 3)].TrimEnd()}...";
+    }
 }
 
-<!-- Content -->
+@await Html.PartialAsync("_PageHeroPartialView", new PageHeroViewModel
+{
+    Eyebrow = "دانش و تجربه",
+    Title = "مقالات تخصصی برای",
+    AccentTitle = "تصمیم‌گیری بهتر",
+    Description = "بررسی متریال‌ها، روش‌های اجرا، جزئیات فنی و موضوعاتی که در طراحی و ساخت یک پروژه اهمیت دارند.",
+    CurrentPageTitle = "بلاگ"
+})
+
 <div class="content-wrapper">
-
-    <!-- Lines -->
-    <section class="content-lines-wrapper">
-        <div class="content-lines-inner">
-            <div class="content-lines"></div>
-        </div>
-    </section>
-    <!-- Header Banner -->
-    <section class="banner-header banner-img valign bg-img bg-fixed" data-overlay-darkgray="5" data-background="/assets/img/banner.jpg"> </section>
-
-    <!-- Blog  -->
-    <section class="bauen-blog section-padding2">
+    <section class="content-lines-wrapper" aria-hidden="true"><div class="content-lines-inner"><div class="content-lines"></div></div></section>
+    <section class="sk-section section-padding">
         <div class="container">
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <h2 class="section-title">بلاگ <span>ما</span></h2>
+            <div class="sk-section-heading" data-sk-reveal="up">
+                <div class="sk-section-heading__copy">
+                    <p class="sk-section-heading__eyebrow">آخرین مطالب</p>
+                    <h2 class="sk-section-heading__title">دانش اجرایی، بدون <span>توضیحات سطحی</span></h2>
                 </div>
             </div>
-            <div class="row">
-                @foreach(var item in Model)
-                {
-                    <div class="col-lg-6 col-md-12">
-                        <div class="item">
-                            <div class="position-re o-hidden"> <img src="@item.ImageUrl" alt=""> </div>
-                            <div class="con">
-                                <span class="category">
-                                    <a href="/Blog/@item.EndpointPath">@item.Category.Title </a> - @item.CreationDate.ToShortDateString() @item.CreationDate.ToShortTimeString()
-                                </span>
-                                <h5><a href="/Blog/@item.EndpointPath">@item.Title</a></h5>
+
+            @if (Model.Count > 0)
+            {
+                <div class="sk-card-grid">
+                    @for (var i = 0; i < Model.Count; i++)
+                    {
+                        var post = Model[i];
+                        <article class="sk-content-card" data-sk-reveal="up" data-sk-delay-index="@(i % 5)">
+                            <a class="sk-content-card__media" href="/Blog/@post.EndpointPath">
+                                <img class="sk-content-card__image"
+                                     src="@WebAssetUrl.Normalize(post.ImageUrl)"
+                                     alt="@(post.ImageAlt ?? post.Title)"
+                                     width="1200"
+                                     height="800"
+                                     loading="lazy"
+                                     decoding="async" />
+                            </a>
+                            <div class="sk-content-card__body">
+                                <p class="sk-content-card__meta">
+                                    <a href="/Blog/Category/@post.Category.Slug">@post.Category.Title</a>
+                                    <span aria-hidden="true">—</span>
+                                    <time datetime="@post.CreationDate.ToString("yyyy-MM-dd")">@IranDateTime.ToPersianDate(post.CreationDate)</time>
+                                </p>
+                                <h2 class="sk-content-card__title"><a href="/Blog/@post.EndpointPath">@post.Title</a></h2>
+                                <p class="sk-content-card__excerpt">@PlainText(post.Description)</p>
+                                <div class="sk-content-card__footer">
+                                    <a class="sk-content-card__more" href="/Blog/@post.EndpointPath">
+                                        <span>مطالعه مقاله</span>
+                                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    </a>
+                                    <span class="sk-content-card__index">@((i + 1).ToString("00"))</span>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                }
-            </div>
-            <div class="row d-none">
-                <div class="col-md-12 text-center">
-                    <!-- Pagination -->
-                    <ul class="bauen-pagination-wrap align-center mb-30 mt-30">
-                        <li><a href="#"><i class="ti-angle-left"></i></a></li>
-                        <li><a href="#">1</a></li>
-                        <li><a href="#" class="active">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#"><i class="ti-angle-right"></i></a></li>
-                    </ul>
+                        </article>
+                    }
                 </div>
-            </div>
+            }
+            else
+            {
+                <div class="sk-empty-state"><h2>مقاله‌ای برای نمایش ثبت نشده است</h2></div>
+            }
         </div>
     </section>
-
 </div>
-
-
-@section Scripts {
-    <script src="/assets/js/modernizr-2.6.2.min.js"></script>
-    <script src="/assets/js/imagesloaded.pkgd.min.js"></script>
-    <script src="/assets/js/jquery.isotope.v3.0.2.js"></script>
-    <script src="/assets/js/popper.min.js"></script>
-    <script src="/assets/js/bootstrap.min.js"></script>
-    <script src="/assets/js/scrollIt.min.js"></script>
-    <script src="/assets/js/jquery.waypoints.min.js"></script>
-    <script src="/assets/js/owl.carousel.min.js"></script>
-    <script src="/assets/js/jquery.stellar.min.js"></script>
-    <script src="/assets/js/jquery.magnific-popup.js"></script>
-    <script src="/assets/js/YouTubePopUp.js"></script>
-    <script src="/assets/js/before-after.js"></script>
-    <script src="/assets/js/vegas.slider.min.js"></script>
-    <script src="/assets/js/home.js"></script>
-
-    <script>
-        const geolocation_api_key = '97c62498a168489898a05d474162b7ab';
-
-        function geolocate() {
-        const myHeaders = new Headers();
-
-
-        const requestOptions = {
-            method: "GET",
-            headers: myHeaders,
-            redirect: "follow"
-        };
-
-        fetch("https://api.ipgeolocation.io/v2/ipgeo?apiKey=" + geolocation_api_key + "", requestOptions)
-            .then((response) => response.text())
-            .then((result) => {
-                console.log(result)
-            })
-            .catch((error) => console.error(error));
-        }
-
-        function recordVisit() {
-            var path = window.location.href.replace(window.location.origin, '');
-            const myHeaders = new Headers();
-
-
-            const requestOptions = {
-                method: "GET",
-                headers: myHeaders,
-                redirect: "follow"
-            };
-
-            fetch("https://api.ipgeolocation.io/v2/ipgeo?apiKey=" + geolocation_api_key + "", requestOptions)
-                .then((response) => response.text())
-                .then((result) => {
-                    var geolocation = result;
-                    var data = {
-                        path: path,
-                        pathType: 'static',
-                        pathParam: 'blog',
-                        geolocation: JSON.parse(geolocation)
-                    }
-                    var stringified = JSON.stringify(data);
-
-                    fetch('/api/submitVisitRecord', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: stringified
-                    })
-                        .then(async res => {
-                            const result = res;
-                            console.log("✅ visit recorded:", result);
-                        })
-                        .catch(err => {
-                            console.error("❌ Visit record failed:", err);
-                        });
-
-                })
-                .catch((error) => console.error(error));
-        }
-
-        recordVisit();
-    </script>
-}
